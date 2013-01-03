@@ -1,81 +1,72 @@
-#include <QtDeclarative/QDeclarativeExtensionPlugin>
-#include <QtDeclarative/qdeclarative.h>
-#include <QProcess>
-#include <qdebug.h>
-#include <qapplication.h>
+#include <QDebug>
+#include <QtQuick>
+#include <QtQml/qqml.h>
+#include <QtQml/QQmlExtensionPlugin>
 
-#include <QTextCodec>
 #include <zinnia.h>
 
+class ZinniaModel : public QObject
+{
+	Q_OBJECT
 
- class TimeModel : public QObject
- {
-     Q_OBJECT
+public:
+	ZinniaModel(QObject *parent=0) : QObject(parent)
+	{
+		recognizer = zinnia::Recognizer::create();
+		if (!recognizer->open("/usr/share/tegaki/models/zinnia/handwriting-zh_TW.model"))
+			qDebug("can't load model file");
+		else qDebug("model \"handwriting-zh_TW.model\" loaded");
 
- public:
-     TimeModel(QObject *parent=0) : QObject(parent)
-     {
+		character = zinnia::Character::create();
+		character->clear();
 
-        recognizer = zinnia::Recognizer::create();
-        if (!recognizer->open("/usr/share/tegaki/models/zinnia/handwriting-zh_TW.model"))
-            qDebug("can't load model file");
-        else qDebug("model \"handwriting-zh_TW.model\" loaded");
+		character->set_width(300);
+		character->set_height(300);
+	}
 
-        character = zinnia::Character::create();
-        character->clear();
+	~ZinniaModel()
+	{
+	}
 
-        character->set_width(300);
-        character->set_height(300);
+	Q_INVOKABLE void clear() {
+		qDebug() << "character cleared";
+		character->clear();
+	}
 
-     }
+	Q_INVOKABLE QString query(int s, int x, int y) {
 
-     ~TimeModel()
-     {
-     }
+		str = QString("");
+		character->add(s, x, y);
 
-    Q_INVOKABLE void clear() {
-        qDebug() << "character cleared";
-        character->clear();
-    }
+		result = recognizer->classify(*character, 8);
+		if (!result) qDebug("can't find resule");
 
+		for (size_t i = 0; i < result->size(); ++i) {
+			str.append(result->value(i)).append(" ");
+			//qDebug() << result->value(i);
+		}
 
-Q_INVOKABLE QString query(int s, int x, int y) {
-
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-
-    str = QString("");
-    character->add(s, x, y);
-
-    result = recognizer->classify(*character, 8);
-    if (!result) qDebug("can't find resule");
-
-    for (size_t i = 0; i < result->size(); ++i) {
-        str.append(result->value(i)).append(" ");
-        //qDebug() << result->value(i);
-    }
-
-    return str;
-    }
+		return str;
+	}
 
 public: 
-    zinnia::Recognizer *recognizer;
-    zinnia::Character *character;
-    zinnia::Result *result;
-    QString str;
+	zinnia::Recognizer *recognizer;
+	zinnia::Character *character;
+	zinnia::Result *result;
+	QString str;
+};
 
- };
+class ZinniaPlugin : public QQmlExtensionPlugin
+{
+	Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.slatekit.Zinnia" FILE "zinnia.json")
 
- class QZinniaQmlPlugin : public QDeclarativeExtensionPlugin
- {
-     Q_OBJECT
- public:
-     void registerTypes(const char *uri)
-     {
-         Q_ASSERT(uri == QLatin1String("org.slatekit.Zinnia"));
-         qmlRegisterType<TimeModel>(uri, 1, 0, "Zinnia");
-     }
- };
+public:
+	 void registerTypes(const char *uri)
+	 {
+		qmlRegisterType<ZinniaModel>(uri, 1, 0, "Zinnia");
+	 }
 
- #include "plugin.moc"
+};
 
- Q_EXPORT_PLUGIN2(qmlzinniaplugin, QZinniaQmlPlugin);
+#include "plugin.moc"

@@ -1,5 +1,7 @@
-import "org/slatekit/Zinnia"
-import QtQuick 1.0
+import QtQuick 2.0
+import Zinnia 1.0
+
+// QML_IMPORT_TRACE=1 qmlscene test.qml -I . 
 
 Item {
 
