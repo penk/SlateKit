@@ -3,59 +3,66 @@
 #include <QtQml/qqml.h>
 #include <QtQml/QQmlExtensionPlugin>
 
-#include <X11/Xlib.h>
-#include <fakekey/fakekey.h>
+#include <QGuiApplication>
+#include <QQuickItem>
+#include <QQuickWindow>
 
 class FakekeyModel : public QObject
 {
-	Q_OBJECT
+Q_OBJECT
 
 public:
-	FakekeyModel(QObject *parent=0) : QObject(parent)
-	{
-		display = XOpenDisplay(NULL);
-		fakekey = fakekey_init(display);
-	}
+  FakekeyModel(QObject *parent=0) : QObject(parent) {
+}
 
-	~FakekeyModel()
-	{
-	}
+~FakekeyModel() {
+}
 
-	Q_INVOKABLE int sendKey(const QString &msg) {
+Q_INVOKABLE int sendKey(const QString &msg) {
 
-		if(msg.startsWith(":enter")){
-			fakekey_press_keysym(fakekey, XK_Return, 0);
-			fakekey_release(fakekey);
-			return 0;
-    	}
+    QQuickItem * receiver = qobject_cast<QQuickItem *>(QGuiApplication::focusObject());
+    if (!receiver) { 
+        qDebug() << "simulateKeyPressEvent(): GuiApplication::focusObject() is 0 or not a QQuickItem."; 
+        return 1; 
+    }
 
-		if(msg.startsWith(":backspace")){
-			fakekey_press_keysym(fakekey, XK_BackSpace, 0);
-			fakekey_release(fakekey);
-			return 0;
-		}
+    if(msg.startsWith(":enter")){
+        QKeyEvent pressEvent = QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier);
+        QKeyEvent releaseEvent = QKeyEvent(QEvent::KeyRelease, Qt::Key_Return, Qt::NoModifier);
+        receiver->window()->sendEvent(receiver, &pressEvent);
+        receiver->window()->sendEvent(receiver, &releaseEvent);
+        return 0;
+    }
 
-		QByteArray array = msg.toUtf8();
-		fakekey_press(fakekey, (unsigned char *)(array.constData()), array.length(), 0);
-		fakekey_release(fakekey);
-		return 0;
-	}
+    if(msg.startsWith(":backspace")){
+        QKeyEvent pressEvent = QKeyEvent(QEvent::KeyPress, Qt::Key_Backspace, Qt::NoModifier);
+        QKeyEvent releaseEvent = QKeyEvent(QEvent::KeyRelease, Qt::Key_Backspace, Qt::NoModifier);
+        receiver->window()->sendEvent(receiver, &pressEvent);
+        receiver->window()->sendEvent(receiver, &releaseEvent);
+        return 0;
+    }
+
+    QKeyEvent pressEvent = QKeyEvent(QEvent::KeyPress, 0, Qt::NoModifier, QString(msg));
+    QKeyEvent releaseEvent = QKeyEvent(QEvent::KeyRelease, 0, Qt::NoModifier, QString(msg));
+    receiver->window()->sendEvent(receiver, &pressEvent);
+    receiver->window()->sendEvent(receiver, &releaseEvent);
+    return 0;
+}
 
 public: 
-	Display* display;
-	FakeKey *fakekey;
+QQuickItem *receiver;
 };
 
 class FakekeyPlugin : public QQmlExtensionPlugin
 {
-	Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.slatekit.Fakekey" FILE "fakekey.json")
+Q_OBJECT
+  Q_PLUGIN_METADATA(IID "org.slatekit.Fakekey" FILE "fakekey.json")
 
 public:
-	 void registerTypes(const char *uri)
-	 {
-		qmlRegisterType<FakekeyModel>(uri, 1, 0, "Fakekey");
-	 }
+  void registerTypes(const char *uri)
+  {
+      qmlRegisterType<FakekeyModel>(uri, 1, 0, "Fakekey");
+  }
 
 };
 

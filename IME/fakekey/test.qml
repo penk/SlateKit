@@ -25,6 +25,7 @@ Item {
 			keyboard.sendKey('o');
 			keyboard.sendKey('c');
 			keyboard.sendKey('k');
+			keyboard.sendKey(' 中文');
 			keyboard.sendKey(':enter');
 		}
 	} 
