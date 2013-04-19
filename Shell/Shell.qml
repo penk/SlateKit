@@ -4,12 +4,14 @@ import QtWebKit.experimental 1.0
 import "script.js" as Tab 
 
 Item {
-    width: 800
-    height: 600
+    width: 320 // 800
+    height: 480 // 600
 
     // TODO: move New_Tab button out of ListModel
     property string currentTab: "new_tab"
-    property variant drawerWIDTH: 230 
+    property variant drawerWIDTH: 280 
+    property variant drawerHEIGHT: 40 
+    property variant drawerMARGIN: 10 
 
     function openNewTab(pageid, url) {
         console.log("openNewTab: "+ pageid);
@@ -100,15 +102,15 @@ Item {
                 spacing: 10
                 Rectangle {
                     width: drawerWIDTH
-                    height: 30
+                    height: drawerHEIGHT //30
                     color: "transparent"
                     Image { 
                         height: 16; width: 16; source: (index==0) ? "" : model.favicon; // FIXME: new-tab icon?
-                        anchors { top: parent.top; left: parent.left; margins: 4; } 
+                        anchors { top: parent.top; left: parent.left; margins: drawerMARGIN; } 
                     }
                     Text { 
                         text: model.title; color: "white"; 
-                        anchors { top: parent.top; left: parent.left; margins: 5; leftMargin: 25 } 
+                        anchors { top: parent.top; left: parent.left; margins: drawerMARGIN; leftMargin: drawerMARGIN+20 } 
                     }
                     MouseArea { 
                         anchors.fill: parent; 
@@ -131,8 +133,7 @@ Item {
             delegate: tabDelegate 
             highlight: 
             
-            //Rectangle { color: "#292930"; width: drawerWIDTH; height: 30 } // FIXME: dark gray, should use gradient  
-            Rectangle { width: drawerWIDTH; height: 30
+            Rectangle { width: drawerWIDTH; height: drawerHEIGHT 
                 gradient: Gradient {
                     GradientStop { position: 0.1; color: "#1F1F23" }
                     GradientStop { position: 0.5; color: "#28282F" }
@@ -169,7 +170,7 @@ Item {
         Item { 
             id: drawerButton
             width: 30; height: 30; anchors { top: parent.top; left: parent.left; margins: 5 } 
-            Image { source: "64-List-w_-Images.png"; anchors.fill: parent; }
+            Image { source: "icon/64-List-w_-Images.png"; anchors.fill: parent; }
             MouseArea {
                 anchors.fill: parent;
                 onClicked: { container.state == "closed" ? container.state = "opened" : container.state = "closed"; }
