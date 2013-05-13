@@ -11,6 +11,8 @@ Item {
     property string currentTab: ""
     property bool noTabLeft: (tabModel.count === 0)
 
+    FontLoader { id: fontAwesome; source: "http://netdna.bootstrapcdn.com/font-awesome/3.0/font/fontawesome-webfont.ttf" }
+
     function openNewTab(pageid, url) {
         console.log("openNewTab: "+ pageid);
         //console.log(tabListView.model.get(tabListView.currentIndex).title);
@@ -43,12 +45,12 @@ Item {
     }
 
     function closeTab(deleteIndex, pageid) { 
-        //console.log('remove: ' + tabModel.get(deleteIndex))
+        console.log('remove: ' + tabModel.get(deleteIndex))
+        // FIXME: TypeError of undefined 
         Tab.itemMap[pageid].visible = false; 
         tabModel.remove(deleteIndex);
         Tab.itemMap[pageid].destroy(); 
         delete(Tab.itemMap[pageid])
-
         if (noTabLeft) { 
             urlText.text = "";
         } else { 
@@ -113,7 +115,7 @@ Item {
                         text: (typeof(Tab.itemMap[model.pageid]) !== "undefined" && Tab.itemMap[model.pageid].title !== "") ? 
                         Tab.itemMap[model.pageid].title : "Loading..";
                         color: "white"; 
-                        anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+20 } 
+                        anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+30 } 
                     }
                     MouseArea { 
                         anchors.fill: parent; 
@@ -126,10 +128,11 @@ Item {
 
                     Text { 
                         visible: tabListView.currentIndex === index
-                        anchors.top: parent.top;
-                        anchors.topMargin: Tab.DrawerMargin 
-                        anchors.right: parent.right; text: "[X]"
-                        color: "white"
+                        anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin }
+                        text: "\uF057"
+                        font.family: fontAwesome.name
+                        font.pointSize: 16
+                        color: "gray"
                         MouseArea { 
                             anchors.fill: parent; 
                             onClicked: closeTab(model.index, model.pageid)
@@ -148,9 +151,13 @@ Item {
                 height: Tab.DrawerHeight
                 color: "transparent"
                 Text { 
-                    text: "+ New Tab"
+                    text: "\uF067"; font.family: fontAwesome.name; color: "white"; 
+                    anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin+2; leftMargin: Tab.DrawerMargin+10 }
+                }
+                Text { 
+                    text: "New Tab"
                     color: "white"
-                    anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+20 }
+                    anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+30 }
                 }
                 MouseArea { 
                     anchors.fill: parent;
@@ -201,8 +208,13 @@ Item {
         // drawer button 
         Item { 
             id: drawerButton
-            width: 30; height: 30; anchors { top: parent.top; left: parent.left; margins: 5 } 
-            Image { source: "icon/64-List-w_-Images.png"; anchors.fill: parent; }
+            width: 30; height: 30; anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; topMargin: 5 } 
+            Text { 
+                text: (fontAwesome.status === FontLoader.Ready) ? "\uF0C9" : ""; 
+                font.family: fontAwesome.name
+                font.pointSize: 28 
+                color: "gray"
+            }
             MouseArea {
                 anchors.fill: parent;
                 onClicked: { container.state == "closed" ? container.state = "opened" : container.state = "closed"; }
@@ -250,10 +262,12 @@ Item {
                 }
             }            
 
-            Image {
+            Text {
                 id: stopButton
                 anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
-                source: "icon/bt_browser_stop.png"
+                text: "\uF00D"
+                font { family: fontAwesome.name; pointSize: 20 }
+                color: "gray"
                 visible: ( typeof(Tab.itemMap[currentTab]) !== "undefined" && Tab.itemMap[currentTab].loadProgress < 100 && !urlText.focus) ? 
                 true : false
                 MouseArea {
@@ -261,10 +275,12 @@ Item {
                     onClicked: { Tab.itemMap[currentTab].stop(); }
                 }
             }
-            Image {
+            Text {
                 id: reloadButton
                 anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
-                source: "icon/bt_browser_reload.png"
+                text: "\uF021"
+                font { family: fontAwesome.name; pointSize: 20 }
+                color: "gray"
                 visible: ( typeof(Tab.itemMap[currentTab]) !== "undefined" && Tab.itemMap[currentTab].loadProgress == 100 && !urlText.focus ) ? 
                 true : false 
                 MouseArea {
@@ -272,10 +288,12 @@ Item {
                     onClicked: { Tab.itemMap[currentTab].reload(); }
                 }
             }
-            Image {
+            Text {
                 id: clearButton
                 anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
-                source: "icon/bt_browser_clear.png"
+                text: "\uF057"
+                font { family: fontAwesome.name; pointSize: 20 }
+                color: "gray"
                 visible: urlText.focus
                 MouseArea {
                     anchors { fill: parent; margins: -10; }
