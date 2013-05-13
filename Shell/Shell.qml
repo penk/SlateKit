@@ -4,23 +4,23 @@ import QtWebKit.experimental 1.0
 import "script.js" as Tab 
 
 Item {
-    width: 320 // 800
-    height: 480 // 600
+    width: 960 
+    height: 640 
 
-    // TODO: move New_Tab button out of ListModel
+    // FIXME: handle first tab / webview case 
     property string currentTab: "new_tab"
+
     property variant drawerWIDTH: 280 
     property variant drawerHEIGHT: 40 
     property variant drawerMARGIN: 10 
 
     function openNewTab(pageid, url) {
         console.log("openNewTab: "+ pageid);
-        console.log(tabListView.model.get(tabListView.currentIndex).title);
+        //console.log(tabListView.model.get(tabListView.currentIndex).title);
         var webView = tabView.createObject(container, { id: pageid, objectName: pageid } );
         webView.url = url; // FIXME: should use loadUrl() wrapper 
 
-        // FIXME: should bind loading / indicator to tab icon and load progress 
-        tabModel.append( { "title": "Loading..", "url": url, "favicon": "icon/favicon.png" } );
+        tabModel.append( { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
         Tab.itemMap[pageid] = webView;
         if (currentTab.match(/^page/)) // hide current tab and display the new
         Tab.itemMap[currentTab].visible = false;
@@ -29,18 +29,30 @@ Item {
     }
 
     function switchToTab(pageid) {
-        //console.log("switchToTab: "+ pageid + ", currentTab: " + currentTab);
-        Tab.itemMap[currentTab].visible = false;
-        currentTab = pageid;
+        console.log("switchToTab: "+ pageid + ", currentTab: " + currentTab);
+        if (currentTab !== pageid ) { 
+            Tab.itemMap[currentTab].visible = false;
+            currentTab = pageid;
+        }
         Tab.itemMap[currentTab].visible = true;
-
         // assign url to text bar
         urlText.text = Tab.itemMap[currentTab].url;
-        //console.log(currentTab + ":"+ Tab.itemMap[currentTab]);
-
     }
 
-    function closeTab(pageid) { } // TODO: destroy item, delete from itemMap, switch tab to previous one
+    function closeTab(deleteIndex, pageid) { 
+        // FIXME: handle last tab close 
+        console.log('remove: ' + tabModel.get(deleteIndex))
+        Tab.itemMap[pageid].visible = false; 
+        tabModel.remove(deleteIndex);
+        Tab.itemMap[pageid].destroy(); 
+
+        console.log('delete: ' + Tab.itemMap[pageid])
+        delete(Tab.itemMap[pageid])
+
+        // TODO: switch to previous tab? 
+        currentTab = tabListView.model.get( tabListView.currentIndex ).pageid
+        switchToTab( currentTab ); 
+    } 
 
     function fixUrl(url) {
         // FIXME: get rid of space 
@@ -61,19 +73,9 @@ Item {
             z: 2 // for drawer open/close control  
             anchors.topMargin: 40 // FIXME: should use navigator bar item
             experimental.userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3"
-
             onLoadingChanged: { 
                 urlText.text = Tab.itemMap[currentTab].url;
                 if (loadRequest.status == WebView.LoadSucceededStatus) {
-                    // set title & favicon to listview
-                    // FIXME: get page index 
-                    // should binding listview title to page title & favicon 
-                    tabListView.model.get( objectName.slice(4) ).title = title;
-
-                    // FIXME: favicon doesn't display in redirect request 
-                    if(icon)
-                    tabModel.setProperty( objectName.slice(4), "favicon", ""+icon );
-                    else tabModel.setProperty( objectName.slice(4), "favicon", "icon/favicon.png" );
                 }
             }
         }
@@ -90,9 +92,10 @@ Item {
         ListModel {
             id: tabModel
             ListElement {
-                title: "+ New Page"
-                url: "http://google.com"
-                favicon: "icon/favicon.png" 
+                title: ""
+                pageid: "init"
+                url: ""
+                favicon: "" 
             }
         }
 
@@ -100,50 +103,86 @@ Item {
             id: tabDelegate
             Row {
                 spacing: 10
+                // FIXME: handle very first ListElement, using dynamicRoles? 
+                visible: (model.pageid === "init") ? false : true 
                 Rectangle {
                     width: drawerWIDTH
-                    height: drawerHEIGHT //30
+                    height: drawerHEIGHT 
                     color: "transparent"
                     Image { 
-                        height: 16; width: 16; source: (index==0) ? "" : model.favicon; // FIXME: new-tab icon?
+                        height: 16; width: 16; 
+                        source: (typeof(Tab.itemMap[model.pageid]) !== "undefined" && Tab.itemMap[model.pageid].icon !== "") ?
+                        Tab.itemMap[model.pageid].icon : "icon/favicon.png"; 
                         anchors { top: parent.top; left: parent.left; margins: drawerMARGIN; } 
                     }
                     Text { 
-                        text: model.title; color: "white"; 
+                        text: (typeof(Tab.itemMap[model.pageid]) !== "undefined" && Tab.itemMap[model.pageid].title !== "") ? 
+                        Tab.itemMap[model.pageid].title : "Loading..";
+                        color: "white"; 
                         anchors { top: parent.top; left: parent.left; margins: drawerMARGIN; leftMargin: drawerMARGIN+20 } 
                     }
                     MouseArea { 
                         anchors.fill: parent; 
+                        anchors.rightMargin: 20
                         onClicked: { 
                             tabListView.currentIndex = index;
-                            if (index === 0) { // new tab
-                                openNewTab("page"+tabModel.count, url);
-                            } else {  // change tab visibility 
-                                switchToTab("page"+index);
-                            }
+                            switchToTab(model.pageid);
+                        }
+                    }
+
+                    Text { 
+                        visible: tabListView.currentIndex === index
+                        anchors.top: parent.top;
+                        anchors.topMargin: 10
+                        anchors.right: parent.right; text: "[X]"
+                        color: "white"
+                        MouseArea { 
+                            anchors.fill: parent; 
+                            onClicked: { 
+                                console.log('closeTab(' + model.index + ', ' + model.pageid +')')
+                            closeTab(model.index, model.pageid)
                         }
                     }
                 }
             }
         }
-        ListView {
-            id: tabListView
-            anchors.fill: parent
-            model: tabModel
-            delegate: tabDelegate 
-            highlight: 
-            
-            Rectangle { width: drawerWIDTH; height: drawerHEIGHT 
-                gradient: Gradient {
-                    GradientStop { position: 0.1; color: "#1F1F23" }
-                    GradientStop { position: 0.5; color: "#28282F" }
-                    GradientStop { position: 0.8; color: "#2A2B31" }
-                    GradientStop { position: 1.0; color: "#25252A" }
-                
+    }
+    ListView {
+        id: tabListView
+        anchors.fill: parent
+
+        header: Rectangle { // new tab button 
+            width: drawerWIDTH
+            height: drawerHEIGHT
+            color: "transparent"
+            Text { 
+                text: "+ New Tab"
+                color: "white"
+                anchors { top: parent.top; left: parent.left; margins: drawerMARGIN; leftMargin: drawerMARGIN+20 }
+            }
+            MouseArea { 
+                anchors.fill: parent;
+                onClicked: {
+                    openNewTab("page"+tabModel.count, "http://google.com"); 
                 }
             }
-            highlightFollowsCurrentItem: true 
         }
+
+        model: tabModel
+        delegate: tabDelegate 
+        highlight: 
+
+        Rectangle { width: drawerWIDTH; height: drawerHEIGHT 
+        gradient: Gradient {
+            GradientStop { position: 0.1; color: "#1F1F23" }
+            GradientStop { position: 0.5; color: "#28282F" }
+            GradientStop { position: 0.8; color: "#2A2B31" }
+            GradientStop { position: 1.0; color: "#25252A" }
+
+        }
+    }
+    highlightFollowsCurrentItem: true 
+}
     }
 
     Rectangle {
@@ -160,9 +199,9 @@ Item {
             height: 40; width: parent.width; anchors.top: parent.top; anchors.left: parent.left
             radius: 3 
             gradient: Gradient { 
-                GradientStop { position: 0.0; color: "#FAFAFA" }
-                GradientStop { position: 0.5; color: "#E8E9EC" }
-                GradientStop { position: 1.0; color: "#E2E3E7" }
+                GradientStop { position: 0.0; color: "#f8f8f8" } // "#FAFAFA" }
+                //GradientStop { position: 0.5; color: "#E8E9EC" }
+                GradientStop { position: 1.0; color: "#eaeaea" } // "#E2E3E7" }
             }
         }
         // Navigator Bar, should use verticalCenter: parent.verticalCenter
