@@ -8,24 +8,27 @@ Item {
     height: 640 
 
     // FIXME: handle first tab / webview case 
-    property string currentTab: "new_tab"
-
-    property variant drawerWIDTH: 280 
-    property variant drawerHEIGHT: 40 
-    property variant drawerMARGIN: 10 
+    property string currentTab: ""
+    property bool noTabLeft: (tabModel.count === 0)
 
     function openNewTab(pageid, url) {
         console.log("openNewTab: "+ pageid);
         //console.log(tabListView.model.get(tabListView.currentIndex).title);
+
+        if (noTabLeft) {      
+            tabModel.set(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
+        } else {
+            tabModel.append( { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
+            // hide current tab and display the new
+            Tab.itemMap[currentTab].visible = false;
+        }
+
         var webView = tabView.createObject(container, { id: pageid, objectName: pageid } );
         webView.url = url; // FIXME: should use loadUrl() wrapper 
 
-        tabModel.append( { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
         Tab.itemMap[pageid] = webView;
-        if (currentTab.match(/^page/)) // hide current tab and display the new
-        Tab.itemMap[currentTab].visible = false;
-        currentTab = pageid; 
-        tabListView.currentIndex = tabModel.count - 1;
+        currentTab = pageid;
+        tabListView.currentIndex = tabModel.count - 1; // move hightlight down
     }
 
     function switchToTab(pageid) {
@@ -40,18 +43,19 @@ Item {
     }
 
     function closeTab(deleteIndex, pageid) { 
-        // FIXME: handle last tab close 
-        console.log('remove: ' + tabModel.get(deleteIndex))
+        //console.log('remove: ' + tabModel.get(deleteIndex))
         Tab.itemMap[pageid].visible = false; 
         tabModel.remove(deleteIndex);
         Tab.itemMap[pageid].destroy(); 
-
-        console.log('delete: ' + Tab.itemMap[pageid])
         delete(Tab.itemMap[pageid])
 
-        // TODO: switch to previous tab? 
-        currentTab = tabListView.model.get( tabListView.currentIndex ).pageid
-        switchToTab( currentTab ); 
+        if (noTabLeft) { 
+            urlText.text = "";
+        } else { 
+            // TODO: switch to previous tab? 
+            currentTab = tabListView.model.get( tabListView.currentIndex ).pageid
+            switchToTab( currentTab ); 
+        }
     } 
 
     function fixUrl(url) {
@@ -85,41 +89,31 @@ Item {
         id: drawer
         anchors.left: parent.left
         anchors.top: parent.top
-        width: drawerWIDTH 
+        width: Tab.DrawerWidth
         height: parent.height
         color: "#33343E" 
 
-        ListModel {
-            id: tabModel
-            ListElement {
-                title: ""
-                pageid: "init"
-                url: ""
-                favicon: "" 
-            }
-        }
+        ListModel { id: tabModel }
 
         Component {
             id: tabDelegate
             Row {
                 spacing: 10
-                // FIXME: handle very first ListElement, using dynamicRoles? 
-                visible: (model.pageid === "init") ? false : true 
                 Rectangle {
-                    width: drawerWIDTH
-                    height: drawerHEIGHT 
+                    width: Tab.DrawerWidth
+                    height: Tab.DrawerHeight
                     color: "transparent"
                     Image { 
                         height: 16; width: 16; 
                         source: (typeof(Tab.itemMap[model.pageid]) !== "undefined" && Tab.itemMap[model.pageid].icon !== "") ?
                         Tab.itemMap[model.pageid].icon : "icon/favicon.png"; 
-                        anchors { top: parent.top; left: parent.left; margins: drawerMARGIN; } 
+                        anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; } 
                     }
                     Text { 
                         text: (typeof(Tab.itemMap[model.pageid]) !== "undefined" && Tab.itemMap[model.pageid].title !== "") ? 
                         Tab.itemMap[model.pageid].title : "Loading..";
                         color: "white"; 
-                        anchors { top: parent.top; left: parent.left; margins: drawerMARGIN; leftMargin: drawerMARGIN+20 } 
+                        anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+20 } 
                     }
                     MouseArea { 
                         anchors.fill: parent; 
@@ -133,56 +127,55 @@ Item {
                     Text { 
                         visible: tabListView.currentIndex === index
                         anchors.top: parent.top;
-                        anchors.topMargin: 10
+                        anchors.topMargin: Tab.DrawerMargin 
                         anchors.right: parent.right; text: "[X]"
                         color: "white"
                         MouseArea { 
                             anchors.fill: parent; 
-                            onClicked: { 
-                                console.log('closeTab(' + model.index + ', ' + model.pageid +')')
-                            closeTab(model.index, model.pageid)
+                            onClicked: closeTab(model.index, model.pageid)
                         }
                     }
                 }
             }
         }
-    }
-    ListView {
-        id: tabListView
-        anchors.fill: parent
+        ListView {
+            id: tabListView
+            anchors.fill: parent
 
-        header: Rectangle { // new tab button 
-            width: drawerWIDTH
-            height: drawerHEIGHT
-            color: "transparent"
-            Text { 
-                text: "+ New Tab"
-                color: "white"
-                anchors { top: parent.top; left: parent.left; margins: drawerMARGIN; leftMargin: drawerMARGIN+20 }
-            }
-            MouseArea { 
-                anchors.fill: parent;
-                onClicked: {
-                    openNewTab("page"+tabModel.count, "http://google.com"); 
+            // new tab button 
+            header: Rectangle { 
+                width: Tab.DrawerWidth
+                height: Tab.DrawerHeight
+                color: "transparent"
+                Text { 
+                    text: "+ New Tab"
+                    color: "white"
+                    anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+20 }
+                }
+                MouseArea { 
+                    anchors.fill: parent;
+                    onClicked: {
+                        openNewTab("page"+tabModel.count, "http://google.com"); 
+                    }
                 }
             }
+
+            model: tabModel
+            delegate: tabDelegate 
+            highlight: 
+
+            Rectangle { 
+                width: Tab.DrawerWidth; height: Tab.DrawerHeight 
+                gradient: Gradient {
+                    GradientStop { position: 0.1; color: "#1F1F23" }
+                    GradientStop { position: 0.5; color: "#28282F" }
+                    GradientStop { position: 0.8; color: "#2A2B31" }
+                    GradientStop { position: 1.0; color: "#25252A" }
+
+                }
+            }
+            highlightFollowsCurrentItem: true 
         }
-
-        model: tabModel
-        delegate: tabDelegate 
-        highlight: 
-
-        Rectangle { width: drawerWIDTH; height: drawerHEIGHT 
-        gradient: Gradient {
-            GradientStop { position: 0.1; color: "#1F1F23" }
-            GradientStop { position: 0.5; color: "#28282F" }
-            GradientStop { position: 0.8; color: "#2A2B31" }
-            GradientStop { position: 1.0; color: "#25252A" }
-
-        }
-    }
-    highlightFollowsCurrentItem: true 
-}
     }
 
     Rectangle {
@@ -230,22 +223,22 @@ Item {
             Rectangle {
                 anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
                 radius: 3
-                // FIXME: first tab should be webview or not? 
-                width: (currentTab !== "new_tab" ) ? 
-                parent.width / 100 * Math.max(5, Tab.itemMap[currentTab].loadProgress) : 0
+
+                width: (typeof(Tab.itemMap[currentTab]) !== "undefined") ? 
+                parent.width / 100 * Math.max(5, Tab.itemMap[currentTab].loadProgress) : 0 
                 color: "#FED164" // light yellow 
                 opacity: 0.4
-                visible: (currentTab !== "new_tab" ) ? Tab.itemMap[currentTab].loading : false 
+                visible: (typeof(Tab.itemMap[currentTab]) !== "undefined") ? Tab.itemMap[currentTab].loading : false 
             }
 
             TextInput { 
                 id: urlText
-                text: (currentTab != "new_tab") ? Tab.itemMap[currentTab].url : ""
+                text: (typeof(Tab.itemMap[currentTab]) !== "undefined") ? Tab.itemMap[currentTab].url : ""
                 anchors { fill: parent; margins: 5 }
                 Keys.onReturnPressed: { 
-                    if (currentTab != "new_tab") { 
+                    if (!noTabLeft) { 
                         Tab.itemMap[currentTab].url = fixUrl(text) 
-                    } else { // FIXME: open first page, should be done while initialize?  
+                    } else { 
                         openNewTab("page"+tabModel.count, fixUrl(text));
                     }
                     Tab.itemMap[currentTab].focus = true;
@@ -261,7 +254,7 @@ Item {
                 id: stopButton
                 anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
                 source: "icon/bt_browser_stop.png"
-                visible: ( (currentTab != "new_tab") && Tab.itemMap[currentTab].loadProgress < 100 && !urlText.focus) ? 
+                visible: ( typeof(Tab.itemMap[currentTab]) !== "undefined" && Tab.itemMap[currentTab].loadProgress < 100 && !urlText.focus) ? 
                 true : false
                 MouseArea {
                     anchors { fill: parent; margins: -10; }
@@ -272,7 +265,7 @@ Item {
                 id: reloadButton
                 anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
                 source: "icon/bt_browser_reload.png"
-                visible: ( (currentTab != "new_tab") && Tab.itemMap[currentTab].loadProgress == 100 && !urlText.focus ) ? 
+                visible: ( typeof(Tab.itemMap[currentTab]) !== "undefined" && Tab.itemMap[currentTab].loadProgress == 100 && !urlText.focus ) ? 
                 true : false 
                 MouseArea {
                     anchors { fill: parent; margins: -10; }
@@ -300,7 +293,7 @@ Item {
         states: [
             State{
                 name: "opened"
-                PropertyChanges { target: container; anchors.leftMargin: drawerWIDTH }
+                PropertyChanges { target: container; anchors.leftMargin: Tab.DrawerWidth }
             },
             State {
                 name: "closed"
