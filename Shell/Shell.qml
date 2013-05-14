@@ -7,16 +7,14 @@ Item {
     width: 960 
     height: 640 
 
-    // FIXME: handle first tab / webview case 
     property string currentTab: ""
     property bool noTabLeft: (tabModel.count === 0)
 
-    FontLoader { id: fontAwesome; source: "http://netdna.bootstrapcdn.com/font-awesome/3.0/font/fontawesome-webfont.ttf" }
+    //FontLoader { id: fontAwesome; source: "http://netdna.bootstrapcdn.com/font-awesome/3.0/font/fontawesome-webfont.ttf" }
+    FontLoader { id: fontAwesome; source: "icon/fontawesome-webfont.ttf" }  
 
     function openNewTab(pageid, url) {
-        console.log("openNewTab: "+ pageid);
-        //console.log(tabListView.model.get(tabListView.currentIndex).title);
-
+        //console.log("openNewTab: "+ pageid + ', currentTab: ' + currentTab);
         if (noTabLeft) {      
             tabModel.set(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
         } else {
@@ -24,7 +22,6 @@ Item {
             // hide current tab and display the new
             Tab.itemMap[currentTab].visible = false;
         }
-
         var webView = tabView.createObject(container, { id: pageid, objectName: pageid } );
         webView.url = url; // FIXME: should use loadUrl() wrapper 
 
@@ -34,7 +31,7 @@ Item {
     }
 
     function switchToTab(pageid) {
-        console.log("switchToTab: "+ pageid + ", currentTab: " + currentTab);
+        //console.log("switchToTab: "+ pageid + " , from: " + currentTab + ' , at ' + tabListView.currentIndex);
         if (currentTab !== pageid ) { 
             Tab.itemMap[currentTab].visible = false;
             currentTab = pageid;
@@ -45,18 +42,20 @@ Item {
     }
 
     function closeTab(deleteIndex, pageid) { 
-        console.log('remove: ' + tabModel.get(deleteIndex))
-        // FIXME: TypeError of undefined 
+        //console.log('closeTab: ' + pageid + ' at ' + deleteIndex + ': ' + tabModel.get(deleteIndex))
+        //console.log('\ttabListView.model.get(deleteIndex): ' + tabListView.model.get(deleteIndex).pageid)
         Tab.itemMap[pageid].visible = false; 
         tabModel.remove(deleteIndex);
         Tab.itemMap[pageid].destroy(); 
         delete(Tab.itemMap[pageid])
+
         if (noTabLeft) { 
             urlText.text = "";
+            currentTab = ""; // clean currentTab 
         } else { 
             // TODO: switch to previous tab? 
             currentTab = tabListView.model.get( tabListView.currentIndex ).pageid
-            switchToTab( currentTab ); 
+            switchToTab(currentTab)
         }
     } 
 
@@ -118,21 +117,26 @@ Item {
                         anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+30 } 
                     }
                     MouseArea { 
-                        anchors.fill: parent; 
-                        anchors.rightMargin: 20
+                        anchors { top: parent.top; left: parent.left; bottom: parent.bottom; right: parent.right; rightMargin: 40}
                         onClicked: { 
                             tabListView.currentIndex = index;
                             switchToTab(model.pageid);
                         }
                     }
 
-                    Text { 
-                        visible: tabListView.currentIndex === index
-                        anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin }
-                        text: "\uF057"
-                        font.family: fontAwesome.name
-                        font.pointSize: 16
-                        color: "gray"
+                    Rectangle {
+                        width: 40; height: 40
+                        color: "transparent"
+                        anchors { right: parent.right; top: parent.top}
+                        Text {  // closeTab button
+                            visible: tabListView.currentIndex === index
+                            anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin }
+                            text: "\uF057"
+                            font.family: fontAwesome.name
+                            font.pointSize: 16
+                            color: "gray"
+                        }
+
                         MouseArea { 
                             anchors.fill: parent; 
                             onClicked: closeTab(model.index, model.pageid)
@@ -162,7 +166,11 @@ Item {
                 MouseArea { 
                     anchors.fill: parent;
                     onClicked: {
-                        openNewTab("page"+tabModel.count, "http://google.com"); 
+                        var salt = ""
+                        for( var i=0; i < 5; i++ ) {
+                            salt += Tab.RandomString.charAt(Math.floor(Math.random() * Tab.RandomString.length));
+                        }
+                        openNewTab("page-"+salt, Tab.HomePage); 
                     }
                 }
             }
