@@ -219,21 +219,38 @@ Item {
             width: 30; height: 30; anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; topMargin: 5 } 
             Text { 
                 text: (fontAwesome.status === FontLoader.Ready) ? "\uF0C9" : ""; 
-                font.family: fontAwesome.name
-                font.pointSize: 28 
+                font { family: fontAwesome.name; pointSize: 28 } 
                 color: "gray"
             }
             MouseArea {
                 anchors.fill: parent;
+                anchors.margins: -5; // trick to handle touch 
                 onClicked: { container.state == "closed" ? container.state = "opened" : container.state = "closed"; }
             }
         }
 
-        // TODO: back / forward button 
+        Item {
+            id: backButton
+            width: 30; height: 30; anchors { top: parent.top; left: drawerButton.right; margins: Tab.DrawerMargin; topMargin: 5}
+            Text { 
+                text: "\uF060"
+                font { family: fontAwesome.name; pointSize: 26 }
+                color: { 
+                    if (typeof(Tab.itemMap[currentTab]) !== "undefined") 
+                        { Tab.itemMap[currentTab].canGoBack ? "gray" : "lightgray" } 
+                    else { "lightgray" }
+                }
+            }
+            MouseArea { 
+                anchors.fill: parent; anchors.margins: -5; 
+                onClicked: { if (Tab.itemMap[currentTab].canGoBack) Tab.itemMap[currentTab].goBack()  }
+            }
+        }
+        // TODO: forward button? \uF061 
 
         Rectangle { 
             id: urlBar 
-            anchors { left: drawerButton.right; top: parent.top; margins: 6 } 
+            anchors { left: backButton.right; top: parent.top; right: exportButton.left; margins: 6; rightMargin: 10 } 
             color: "white"
             height: 25 
             border { width: 1; color: "black" }
@@ -307,6 +324,16 @@ Item {
                     anchors { fill: parent; margins: -10; }
                     onClicked: { urlText.text = ""; }
                 }
+            }
+        }
+
+        Item {
+            id: exportButton
+            width: 30; height: 30; anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin; topMargin: 5}
+            Text { 
+                text: "\uF045"
+                font { family: fontAwesome.name; pointSize: 28 }
+                color: "lightgray"
             }
         }
 
