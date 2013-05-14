@@ -18,7 +18,7 @@ Item {
         if (noTabLeft) {      
             tabModel.set(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
         } else {
-            tabModel.append( { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
+            tabModel.insert(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
             // hide current tab and display the new
             Tab.itemMap[currentTab].visible = false;
         }
@@ -27,7 +27,7 @@ Item {
 
         Tab.itemMap[pageid] = webView;
         currentTab = pageid;
-        tabListView.currentIndex = tabModel.count - 1; // move hightlight down
+        tabListView.currentIndex = 0 // move hightlight to top  
     }
 
     function switchToTab(pageid) {
