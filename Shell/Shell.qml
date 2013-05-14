@@ -3,12 +3,15 @@ import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import "script.js" as Tab 
 
-Item {
-    width: 960 
-    height: 640 
+import QtQuick.Window 2.0
 
+Item {
+    id: root 
+    width: Screen.width //960 
+    height: Screen.height //640 
     property string currentTab: ""
     property bool noTabLeft: (tabModel.count === 0)
+    property string title: ""
 
     //FontLoader { id: fontAwesome; source: "http://netdna.bootstrapcdn.com/font-awesome/3.0/font/fontawesome-webfont.ttf" }
     FontLoader { id: fontAwesome; source: "icon/fontawesome-webfont.ttf" }  
@@ -39,6 +42,7 @@ Item {
         Tab.itemMap[currentTab].visible = true;
         // assign url to text bar
         urlText.text = Tab.itemMap[currentTab].url;
+        root.title = Tab.itemMap[currentTab].title;
     }
 
     function closeTab(deleteIndex, pageid) { 
@@ -81,6 +85,7 @@ Item {
             onLoadingChanged: { 
                 urlText.text = Tab.itemMap[currentTab].url;
                 if (loadRequest.status == WebView.LoadSucceededStatus) {
+                    root.title = Tab.itemMap[currentTab].title;
                 }
             }
         }

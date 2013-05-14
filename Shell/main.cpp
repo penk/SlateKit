@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
     QQuickView view;
 
     view.setSource(QUrl("./Shell.qml"));
+//    view.setMinimumSize(QSize(480, 320));
     view.show();
 
     return app.exec();
