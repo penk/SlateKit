@@ -1,4 +1,6 @@
 import QtQuick 2.0
+import QtQuick.LocalStorage 2.0
+
 import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import "script.js" as Tab 
@@ -13,6 +15,13 @@ Item {
 
     //FontLoader { id: fontAwesome; source: "http://netdna.bootstrapcdn.com/font-awesome/3.0/font/fontawesome-webfont.ttf" }
     FontLoader { id: fontAwesome; source: "icon/fontawesome-webfont.ttf" }  
+
+    Component.onCompleted: {
+        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
+        db.transaction(
+            function(tx) { tx.executeSql('CREATE TABLE IF NOT EXISTS history (url TEXT, title TEXT, icon TEXT, date INTEGER)')}
+        );
+    }
 
     function openNewTab(pageid, url) {
         //console.log("openNewTab: "+ pageid + ', currentTab: ' + currentTab);
@@ -61,13 +70,81 @@ Item {
         }
     } 
 
+    function salt(){
+        var salt = ""
+        for( var i=0; i < 5; i++ ) {
+            salt += Tab.RandomString.charAt(Math.floor(Math.random() * Tab.RandomString.length));
+        }
+        return salt
+    }
+
     function fixUrl(url) {
-        // FIXME: get rid of space 
+        url = url.replace( /^\s+/, "");
+        url = url.replace( /\s+$/, "")
+        url = url.replace( /(<([^>]+)>)/ig, ""); // remove <b> tag 
         if (url == "") return url;
         if (url[0] == "/") { return "file://"+url; }
         //FIXME: search engine support here
         if (url.indexOf(":")<0) { return "http://"+url; }
         else { return url;}
+    }
+
+    function loadUrl(url) {
+        if (hasTabOpen) {
+            Tab.itemMap[currentTab].url = fixUrl(url)
+        } else { 
+            openNewTab("page"+salt(), fixUrl(url));
+        }
+        Tab.itemMap[currentTab].focus = true;
+    }
+    function updateHistory(url, title, icon) { 
+        var date = new Date();
+        //console.log('updateHistory: '+ url+', '+ date.getTime())
+        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
+        db.transaction(
+            function(tx) {
+                var result = tx.executeSql('delete from history where url=(?);',[url])
+            }
+        );
+        db.transaction(
+            function(tx) {
+                var result = tx.executeSql('INSERT INTO history VALUES (?,?,?,?);',[url, title, icon, date.getTime()])
+                if (result.rowsAffected < 1) {
+                    console.log("Error inserting url: " + url)
+                } else {
+                    console.log("Insert into DB: " + url)
+                }
+            }
+        );
+    }
+
+    function highlightTerms(text, terms) {
+        if (text === undefined) {
+            return ''
+        }
+        var highlighted = text.toString()
+        highlighted = highlighted.replace(new RegExp(terms, 'ig'), '<b>$&</b>')
+        return highlighted
+    }
+
+    function queryHistory(str)
+    {
+        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
+        var result; 
+        db.transaction(
+            function(tx) {
+                result = tx.executeSql("select * from history where url like ?", ['%'+str+'%']) // , ['ce'] ) 
+                for (var i=0; i < result.rows.length; i++) {
+                    console.log(result.rows.item(i).url)
+                }
+            }
+        );
+        historyModel.clear();
+        for (var i=0; i < result.rows.length; i++) {
+            historyModel.insert(0, {"url": highlightTerms(result.rows.item(i).url, str), 
+            "title": result.rows.item(i).title});
+        }
+        return result;
     }
 
     Component {
@@ -84,6 +161,7 @@ Item {
                 urlText.text = Tab.itemMap[currentTab].url;
                 if (loadRequest.status == WebView.LoadSucceededStatus) {
                     root.title = Tab.itemMap[currentTab].title;
+                    updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }
             }
         }
@@ -168,11 +246,7 @@ Item {
                 MouseArea { 
                     anchors.fill: parent;
                     onClicked: {
-                        var salt = ""
-                        for( var i=0; i < 5; i++ ) {
-                            salt += Tab.RandomString.charAt(Math.floor(Math.random() * Tab.RandomString.length));
-                        }
-                        openNewTab("page-"+salt, Tab.HomePage); 
+                        openNewTab("page-"+salt(), Tab.HomePage); 
                     }
                 }
             }
@@ -268,21 +342,37 @@ Item {
             TextInput { 
                 id: urlText
                 text: hasTabOpen ? Tab.itemMap[currentTab].url : ""
-                anchors { fill: parent; margins: 5 }
-                Keys.onReturnPressed: { 
-                    if (hasTabOpen) { 
-                        Tab.itemMap[currentTab].url = fixUrl(text) 
-                    } else { 
-                        openNewTab("page"+tabModel.count, fixUrl(text));
-                    }
-                    Tab.itemMap[currentTab].focus = true;
+                wrapMode: TextInput.Wrap
+                anchors { fill: parent; margins: 5; rightMargin: 15 }
+                onAccepted: { 
+                    (Tab.TempUrl !== "") ? loadUrl(Tab.TempUrl) : loadUrl(text)
+                    Tab.TempUrl = ""
                 }
+                Keys.onUpPressed: {
+                    if (historyListView.currentIndex > 0) {
+                        historyListView.currentIndex-- 
+                    } else { historyListView.currentIndex = 0 }
+                    Tab.TempUrl = historyListView.model.get(historyListView.currentIndex).url
+                }
+                Keys.onDownPressed: {
+                    if (historyListView.currentIndex < historyModel.count-1) {
+                        historyListView.currentIndex++ 
+                    } else { historyListView.currentIndex = historyModel.count-1 }
+                    Tab.TempUrl = historyListView.model.get(historyListView.currentIndex).url
+                }
+                Keys.onEscapePressed: { urlText.focus = false }
                 onActiveFocusChanged: { 
                     // FIXME: use State to change property  
                     if (urlText.activeFocus) { urlText.selectAll(); parent.border.color = "#2E6FFD"; parent.border.width = 2;} 
                     else { parent.border.color = "black"; parent.border.width = 1; } 
                 }
+                onTextChanged: {
+                    if (urlText.activeFocus && urlText.text !== "") {
+                        queryHistory(urlText.text)
+                    } else { historyModel.clear() }
+                }
             }            
+
 
             Text {
                 id: stopButton
@@ -334,6 +424,58 @@ Item {
             }
         }
 
+        Rectangle {
+            id: suggestionDialog
+            visible: (urlText.focus && historyModel.count > 0)
+            color: "lightgray"
+            radius: 5 
+            width: parent.width - 180
+            height: 200
+            anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
+            z: 5 // highest z index so far.. 
+
+            Text { // caret-up 
+                anchors.top: parent.top
+                anchors.topMargin: -34
+                anchors.left: parent.horizontalCenter
+                anchors.leftMargin: -30
+                font { family: fontAwesome.name; pointSize: 50 }
+                text: "\uF0D8"; 
+                color: "lightgray" 
+            }
+
+            ListView { 
+                id: historyListView
+                anchors.fill: parent
+                model: historyModel 
+                delegate: historyDelegate
+                ListModel { 
+                    id: historyModel
+                }
+                Component {
+                    id: historyDelegate
+                    Rectangle { 
+                        color: "transparent"
+                        height: Tab.DrawerHeight
+                        width: parent.width 
+                        Text { 
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            text: model.url + ' - ' + model.title 
+                            font.pointSize: 16 
+                        }
+                        MouseArea { 
+                            anchors.fill: parent; 
+                            onClicked: loadUrl(model.url) 
+                        }
+                    }
+                }
+                highlight: Rectangle { 
+                    width: parent.width; height: Tab.DrawerHeight
+                    color: "darkgray"
+                }
+            } // end of historyListView
+        }
         MouseArea { 
             z: (container.state == "opened") ? 3 : 1
             anchors.fill: parent
