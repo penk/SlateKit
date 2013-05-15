@@ -17,11 +17,34 @@ Item {
     FontLoader { id: fontAwesome; source: "icons/fontawesome-webfont.ttf" }  
 
     Component.onCompleted: {
-        bounce.start()
         var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
         db.transaction(
-            function(tx) { tx.executeSql('CREATE TABLE IF NOT EXISTS history (url TEXT, title TEXT, icon TEXT, date INTEGER)')}
+            function(tx) { 
+                tx.executeSql('CREATE TABLE IF NOT EXISTS history (url TEXT, title TEXT, icon TEXT, date INTEGER)');
+            }
         );
+        db.transaction(
+            function(tx) {
+                var result = tx.executeSql("SELECT * FROM previous"); 
+                for (var i=0; i < result.rows.length; i++) {
+                    // FIXME: favicon doesn't display when re-open 
+                    openNewTab('page-'+salt(), result.rows.item(i).url)
+                }
+                tx.executeSql("DROP TABLE IF EXISTS previous");
+            }
+        );
+        bounce.start()
+    }
+    Component.onDestruction: { 
+        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000);
+        db.transaction(function(tx) {tx.executeSql('CREATE TABLE IF NOT EXISTS previous (url TEXT)'); });
+        for (var openedUrl in Tab.itemMap) {
+            db.transaction(
+                function(tx) { 
+                    tx.executeSql('insert into previous values (?);',[Tab.itemMap[openedUrl].url]);
+                }
+            );
+        }
     }
 
     SequentialAnimation { 
