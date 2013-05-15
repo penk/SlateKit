@@ -296,7 +296,8 @@ Item {
             Text { 
                 text: (fontAwesome.status === FontLoader.Ready) ? "\uF0C9" : ""; 
                 font { family: fontAwesome.name; pointSize: 28 } 
-                color: "gray"
+                color: "#AAAAAA" 
+                style: Text.Sunken; styleColor: "gray"
             }
             MouseArea {
                 anchors.fill: parent;
@@ -311,7 +312,8 @@ Item {
             Text { 
                 text: "\uF060"
                 font { family: fontAwesome.name; pointSize: 26 }
-                color: hasTabOpen ? (Tab.itemMap[currentTab].canGoBack ? "gray" : "lightgray") : "lightgray"
+                color: hasTabOpen ? (Tab.itemMap[currentTab].canGoBack ? "#AAAAAA" : "lightgray") : "lightgray"
+                style: Text.Sunken; styleColor: "gray"
             }
             MouseArea { 
                 anchors.fill: parent; anchors.margins: -5; 
@@ -420,7 +422,8 @@ Item {
             Text { 
                 text: "\uF045"
                 font { family: fontAwesome.name; pointSize: 28 }
-                color: "lightgray"
+                color: "#AAAAAA" 
+                style: Text.Sunken; styleColor: "gray"
             }
         }
 
