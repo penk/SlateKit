@@ -3,14 +3,12 @@ import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import "script.js" as Tab 
 
-import QtQuick.Window 2.0
-
 Item {
     id: root 
-    width: Screen.width //960 
-    height: Screen.height //640 
+    width: 960 
+    height: 640 
     property string currentTab: ""
-    property bool noTabLeft: (tabModel.count === 0)
+    property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property string title: ""
 
     //FontLoader { id: fontAwesome; source: "http://netdna.bootstrapcdn.com/font-awesome/3.0/font/fontawesome-webfont.ttf" }
@@ -18,12 +16,12 @@ Item {
 
     function openNewTab(pageid, url) {
         //console.log("openNewTab: "+ pageid + ', currentTab: ' + currentTab);
-        if (noTabLeft) {      
-            tabModel.set(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
-        } else {
+        if (hasTabOpen) {      
             tabModel.insert(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
             // hide current tab and display the new
             Tab.itemMap[currentTab].visible = false;
+        } else {
+            tabModel.set(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
         }
         var webView = tabView.createObject(container, { id: pageid, objectName: pageid } );
         webView.url = url; // FIXME: should use loadUrl() wrapper 
@@ -53,13 +51,13 @@ Item {
         Tab.itemMap[pageid].destroy(); 
         delete(Tab.itemMap[pageid])
 
-        if (noTabLeft) { 
-            urlText.text = "";
-            currentTab = ""; // clean currentTab 
-        } else { 
+        if (hasTabOpen) { 
             // TODO: switch to previous tab? 
             currentTab = tabListView.model.get( tabListView.currentIndex ).pageid
             switchToTab(currentTab)
+        } else {
+            urlText.text = "";
+            currentTab = ""; // clean currentTab 
         }
     } 
 
@@ -111,8 +109,7 @@ Item {
                     color: "transparent"
                     Image { 
                         height: 16; width: 16; 
-                        source: (typeof(Tab.itemMap[model.pageid]) !== "undefined" && Tab.itemMap[model.pageid].icon !== "") ?
-                        Tab.itemMap[model.pageid].icon : "icon/favicon.png"; 
+                        source: hasTabOpen ? Tab.itemMap[model.pageid].icon : "icon/favicon.png";
                         anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; } 
                     }
                     Text { 
@@ -240,11 +237,7 @@ Item {
             Text { 
                 text: "\uF060"
                 font { family: fontAwesome.name; pointSize: 26 }
-                color: { 
-                    if (typeof(Tab.itemMap[currentTab]) !== "undefined") 
-                        { Tab.itemMap[currentTab].canGoBack ? "gray" : "lightgray" } 
-                    else { "lightgray" }
-                }
+                color: hasTabOpen ? (Tab.itemMap[currentTab].canGoBack ? "gray" : "lightgray") : "lightgray"
             }
             MouseArea { 
                 anchors.fill: parent; anchors.margins: -5; 
@@ -266,19 +259,18 @@ Item {
                 anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
                 radius: 3
 
-                width: (typeof(Tab.itemMap[currentTab]) !== "undefined") ? 
-                parent.width / 100 * Math.max(5, Tab.itemMap[currentTab].loadProgress) : 0 
+                width: hasTabOpen ?  parent.width / 100 * Math.max(5, Tab.itemMap[currentTab].loadProgress) : 0 
                 color: "#FED164" // light yellow 
                 opacity: 0.4
-                visible: (typeof(Tab.itemMap[currentTab]) !== "undefined") ? Tab.itemMap[currentTab].loading : false 
+                visible: hasTabOpen ? Tab.itemMap[currentTab].loading : false 
             }
 
             TextInput { 
                 id: urlText
-                text: (typeof(Tab.itemMap[currentTab]) !== "undefined") ? Tab.itemMap[currentTab].url : ""
+                text: hasTabOpen ? Tab.itemMap[currentTab].url : ""
                 anchors { fill: parent; margins: 5 }
                 Keys.onReturnPressed: { 
-                    if (!noTabLeft) { 
+                    if (hasTabOpen) { 
                         Tab.itemMap[currentTab].url = fixUrl(text) 
                     } else { 
                         openNewTab("page"+tabModel.count, fixUrl(text));
@@ -298,7 +290,7 @@ Item {
                 text: "\uF00D"
                 font { family: fontAwesome.name; pointSize: 20 }
                 color: "gray"
-                visible: ( typeof(Tab.itemMap[currentTab]) !== "undefined" && Tab.itemMap[currentTab].loadProgress < 100 && !urlText.focus) ? 
+                visible: ( hasTabOpen && Tab.itemMap[currentTab].loadProgress < 100 && !urlText.focus) ? 
                 true : false
                 MouseArea {
                     anchors { fill: parent; margins: -10; }
@@ -311,7 +303,7 @@ Item {
                 text: "\uF021"
                 font { family: fontAwesome.name; pointSize: 20 }
                 color: "gray"
-                visible: ( typeof(Tab.itemMap[currentTab]) !== "undefined" && Tab.itemMap[currentTab].loadProgress == 100 && !urlText.focus ) ? 
+                visible: ( hasTabOpen && Tab.itemMap[currentTab].loadProgress == 100 && !urlText.focus ) ? 
                 true : false 
                 MouseArea {
                     anchors { fill: parent; margins: -10; }
