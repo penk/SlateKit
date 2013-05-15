@@ -14,7 +14,7 @@ Item {
     property string title: ""
 
     //FontLoader { id: fontAwesome; source: "http://netdna.bootstrapcdn.com/font-awesome/3.0/font/fontawesome-webfont.ttf" }
-    FontLoader { id: fontAwesome; source: "icon/fontawesome-webfont.ttf" }  
+    FontLoader { id: fontAwesome; source: "icons/fontawesome-webfont.ttf" }  
 
     Component.onCompleted: {
         var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
@@ -26,11 +26,11 @@ Item {
     function openNewTab(pageid, url) {
         //console.log("openNewTab: "+ pageid + ', currentTab: ' + currentTab);
         if (hasTabOpen) {      
-            tabModel.insert(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
+            tabModel.insert(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icons/favicon.png" } );
             // hide current tab and display the new
             Tab.itemMap[currentTab].visible = false;
         } else {
-            tabModel.set(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icon/favicon.png" } );
+            tabModel.set(0, { "title": "Loading..", "url": url, "pageid": pageid, "favicon": "icons/favicon.png" } );
         }
         var webView = tabView.createObject(container, { id: pageid, objectName: pageid } );
         webView.url = url; // FIXME: should use loadUrl() wrapper 
@@ -187,7 +187,7 @@ Item {
                     color: "transparent"
                     Image { 
                         height: 16; width: 16; 
-                        source: hasTabOpen ? Tab.itemMap[model.pageid].icon : "icon/favicon.png";
+                        source: hasTabOpen ? Tab.itemMap[model.pageid].icon : "icons/favicon.png";
                         anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; } 
                     }
                     Text { 

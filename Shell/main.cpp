@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQuickView view;
 
-    view.setSource(QUrl("./Shell.qml"));
+    view.setSource(QUrl("./qml/Shell.qml"));
 //    view.setMinimumSize(QSize(480, 320));
     view.show();
 
