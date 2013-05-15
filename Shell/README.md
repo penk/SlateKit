@@ -1,7 +1,5 @@
 # SlateKit Shell
-### QML WebKit Browser with Sliding Drawer UI  
-
-> ![Drawer](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/drawer.png)
+### QML WebKit Browser with Sliding Drawer UI ![Drawer](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/drawer.png)
 
 ## Install
 
