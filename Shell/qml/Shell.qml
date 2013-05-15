@@ -17,12 +17,18 @@ Item {
     FontLoader { id: fontAwesome; source: "icons/fontawesome-webfont.ttf" }  
 
     Component.onCompleted: {
+        bounce.start()
         var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
         db.transaction(
             function(tx) { tx.executeSql('CREATE TABLE IF NOT EXISTS history (url TEXT, title TEXT, icon TEXT, date INTEGER)')}
         );
     }
 
+    SequentialAnimation { 
+        id: bounce 
+        PropertyAnimation { target: container; properties: "anchors.leftMargin"; to: Tab.DrawerWidth; duration: 200; easing.type: Easing.InOutQuad; }
+        PropertyAnimation { target: container; properties: "anchors.leftMargin"; to: "0"; duration: 400; easing.type: Easing.InOutQuad; }
+    } 
     function openNewTab(pageid, url) {
         //console.log("openNewTab: "+ pageid + ', currentTab: ' + currentTab);
         if (hasTabOpen) {      
@@ -99,7 +105,6 @@ Item {
     }
     function updateHistory(url, title, icon) { 
         var date = new Date();
-        //console.log('updateHistory: '+ url+', '+ date.getTime())
         var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
         db.transaction(
             function(tx) {
@@ -108,11 +113,10 @@ Item {
         );
         db.transaction(
             function(tx) {
-                var result = tx.executeSql('INSERT INTO history VALUES (?,?,?,?);',[url, title, icon, date.getTime()])
+                var result = tx.executeSql('insert into history values (?,?,?,?);',[url, title, icon, date.getTime()])
                 if (result.rowsAffected < 1) {
                     console.log("Error inserting url: " + url)
                 } else {
-                    console.log("Insert into DB: " + url)
                 }
             }
         );
@@ -127,16 +131,12 @@ Item {
         return highlighted
     }
 
-    function queryHistory(str)
-    {
+    function queryHistory(str) {
         var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
         var result; 
         db.transaction(
             function(tx) {
                 result = tx.executeSql("select * from history where url like ?", ['%'+str+'%']) // , ['ce'] ) 
-                for (var i=0; i < result.rows.length; i++) {
-                    console.log(result.rows.item(i).url)
-                }
             }
         );
         historyModel.clear();
@@ -156,6 +156,27 @@ Item {
 
             z: 2 // for drawer open/close control  
             anchors.topMargin: 40 // FIXME: should use navigator bar item
+            experimental.userScripts: [Qt.resolvedUrl("userscript.js")];
+            experimental.preferences.navigatorQtObjectEnabled: true;
+            experimental.onMessageReceived: {
+                console.log('onMessageReceived: ' + message.data );
+                var data = null
+                try {
+                    data = JSON.parse(message.data)
+                } catch (error) {
+                    console.log('onMessageReceived: ' + message.data );
+                    return
+                }
+                switch (data.type) {
+                    case 'link': {
+                        if (data.target === '_blank') { // open link in new tab
+                            bounce.start()
+                            openNewTab('page-'+salt(), data.href)
+                        }
+                        break;
+                    } 
+                }
+            }
             //experimental.userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3"
             onLoadingChanged: { 
                 urlText.text = Tab.itemMap[currentTab].url;
