@@ -43,7 +43,7 @@ Item {
 
         Tab.itemMap[pageid] = webView;
         currentTab = pageid;
-        tabListView.currentIndex = 0 // move hightlight to top  
+        tabListView.currentIndex = 0 // move highlight to top  
     }
 
     function switchToTab(pageid) {
@@ -123,7 +123,7 @@ Item {
     }
 
     function highlightTerms(text, terms) {
-        if (text === undefined) {
+        if (text === undefined || text === '') {
             return ''
         }
         var highlighted = text.toString()
@@ -136,7 +136,7 @@ Item {
         var result; 
         db.transaction(
             function(tx) {
-                result = tx.executeSql("select * from history where url like ?", ['%'+str+'%']) // , ['ce'] ) 
+                result = tx.executeSql("select * from history where url like ?", ['%'+str+'%']) 
             }
         );
         historyModel.clear();
@@ -144,7 +144,6 @@ Item {
             historyModel.insert(0, {"url": highlightTerms(result.rows.item(i).url, str), 
             "title": result.rows.item(i).title});
         }
-        return result;
     }
 
     Component {
@@ -454,7 +453,7 @@ Item {
             color: "lightgray"
             radius: 5 
             width: parent.width - 180
-            height: historyModel.count * 40
+            height: historyModel.count * 40 
             anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
             z: 5 // highest z index so far.. 
 
@@ -495,7 +494,6 @@ Item {
                     }
                 }
                 highlight: Rectangle { 
-                    width: parent.width; height: Tab.DrawerHeight
                     color: "darkgray"
                 }
             } // end of historyListView
