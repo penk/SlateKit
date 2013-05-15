@@ -12,3 +12,13 @@ document.documentElement.addEventListener('click', (function(e) {
         node = node.parentNode;
     }
 }), true);
+
+var hold;
+function longPressed(x, y) { navigator.qt.postMessage('longpressed: '+x+', '+y) }
+window.document.addEventListener('mousedown', (function(e) {
+//    hold = setTimeout(longPressed, 800, e.clientX, e.clientY); 
+    navigator.qt.postMessage('mousedown: '+e.clientX+', '+e.clientY)
+}), true);
+window.document.addEventListener('mouseup', (function() {
+    clearTimeout(hold); 
+}), true);

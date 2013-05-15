@@ -144,6 +144,7 @@ Item {
             historyModel.insert(0, {"url": highlightTerms(result.rows.item(i).url, str), 
             "title": result.rows.item(i).title});
         }
+        historyListView.currentIndex = 0;
     }
 
     Component {
