@@ -433,7 +433,7 @@ Item {
             color: "lightgray"
             radius: 5 
             width: parent.width - 180
-            height: 200
+            height: historyModel.count * 40
             anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
             z: 5 // highest z index so far.. 
 
