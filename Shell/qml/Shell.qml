@@ -23,27 +23,32 @@ Item {
                 tx.executeSql('CREATE TABLE IF NOT EXISTS history (url TEXT, title TEXT, icon TEXT, date INTEGER)');
             }
         );
-        db.transaction(
-            function(tx) {
-                var result = tx.executeSql("SELECT * FROM previous"); 
-                for (var i=0; i < result.rows.length; i++) {
-                    // FIXME: favicon doesn't display when re-open 
-                    openNewTab('page-'+salt(), result.rows.item(i).url)
+        if (Tab.ReopenPreviousTab) {
+            db.transaction(
+                function(tx) {
+                    var result = tx.executeSql("SELECT * FROM previous"); 
+                    for (var i=0; i < result.rows.length; i++) {
+                        // FIXME: favicon doesn't display when re-open 
+                        openNewTab('page-'+salt(), result.rows.item(i).url)
+                    }
+                    // FIXME: should match opened urls, not just drop 
+                    tx.executeSql("DROP TABLE IF EXISTS previous");
                 }
-                tx.executeSql("DROP TABLE IF EXISTS previous");
-            }
-        );
+            );
+        }
         bounce.start()
     }
     Component.onDestruction: { 
-        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000);
-        db.transaction(function(tx) {tx.executeSql('CREATE TABLE IF NOT EXISTS previous (url TEXT)'); });
-        for (var openedUrl in Tab.itemMap) {
-            db.transaction(
-                function(tx) { 
-                    tx.executeSql('insert into previous values (?);',[Tab.itemMap[openedUrl].url]);
-                }
-            );
+        if (Tab.ReopenPreviousTab) {
+            var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000);
+            db.transaction(function(tx) {tx.executeSql('CREATE TABLE IF NOT EXISTS previous (url TEXT)'); });
+            for (var openedUrl in Tab.itemMap) {
+                db.transaction(
+                    function(tx) { 
+                        tx.executeSql('insert into previous values (?);',[Tab.itemMap[openedUrl].url]);
+                    }
+                );
+            }
         }
     }
 
@@ -477,7 +482,7 @@ Item {
             color: "lightgray"
             radius: 5 
             width: parent.width - 180
-            height: historyModel.count * 40 
+            height: (historyModel.count > 3) ? historyModel.count * 40 : 120
             anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
             z: 5 // highest z index so far.. 
 
