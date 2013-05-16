@@ -284,12 +284,13 @@ Item {
                 height: Tab.DrawerHeight
                 color: "transparent"
                 Text { 
-                    text: "\uF067"; font.family: fontAwesome.name; color: "white"; 
+                    text: "\uF067"; font.family: fontAwesome.name; color: "white"; font.pointSize: 14
                     anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin+2; leftMargin: Tab.DrawerMargin+10 }
                 }
                 Text { 
-                    text: "New Tab"
+                    text: "<b>New Tab</b>"
                     color: "white"
+                    font.pointSize: 16 
                     anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+30 }
                 }
                 MouseArea { 
@@ -373,7 +374,7 @@ Item {
 
         Rectangle { 
             id: urlBar 
-            anchors { left: backButton.right; top: parent.top; right: exportButton.left; margins: 6; rightMargin: 10 } 
+            anchors { left: backButton.right; top: parent.top; right: exportButton.left; margins: 6; rightMargin: 14 } 
             color: "white"
             height: 25 
             border { width: 1; color: "black" }
@@ -482,7 +483,7 @@ Item {
             color: "lightgray"
             radius: 5 
             width: parent.width - 180
-            height: (historyModel.count > 3) ? historyModel.count * 40 : 120
+            height: (historyModel.count > 3) ? ((historyModel.count * 40 < 550) ? historyModel.count * 40 : 550) : 120
             anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
             z: 5 // highest z index so far.. 
 
