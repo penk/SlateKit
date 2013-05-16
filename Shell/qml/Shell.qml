@@ -95,7 +95,8 @@ Item {
         delete(Tab.itemMap[pageid])
 
         if (hasTabOpen) { 
-            // TODO: switch to previous tab? 
+            // FIXME: after closed, Qt 5.1 doesn't change tabListView.currentIndex  
+            if (tabListView.currentIndex == 1) tabListView.currentIndex = 0;  
             currentTab = tabListView.model.get( tabListView.currentIndex ).pageid
             switchToTab(currentTab)
         } else {
@@ -374,7 +375,7 @@ Item {
 
         Rectangle { 
             id: urlBar 
-            anchors { left: backButton.right; top: parent.top; right: exportButton.left; margins: 6; rightMargin: 14 } 
+            anchors { left: backButton.right; top: parent.top; right: exportButton.left; margins: 6; rightMargin: 14; } 
             color: "white"
             height: 25 
             border { width: 1; color: "black" }
@@ -468,7 +469,7 @@ Item {
 
         Item {
             id: exportButton
-            width: 30; height: 30; anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin; topMargin: 5}
+            width: 30; height: 30; anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin; topMargin: 6}
             Text { 
                 text: "\uF045"
                 font { family: fontAwesome.name; pointSize: 28 }
