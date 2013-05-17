@@ -440,11 +440,9 @@ Item {
         height: parent.height
         //color: "#E4E4E8" // light gray
         z: 1 
-        radius: 3 
 
         Rectangle { 
             height: 40; width: parent.width; anchors.top: parent.top; anchors.left: parent.left
-            radius: 3 
             gradient: Gradient { 
                 GradientStop { position: 0.0; color: "#f8f8f8" } // "#FAFAFA" }
                 //GradientStop { position: 0.5; color: "#E8E9EC" }
@@ -595,8 +593,6 @@ Item {
             visible: (urlText.focus && historyModel.count > 0)
             color: "lightgray"
             radius: 5 
-            border.width: 1
-            border.color: "gray"
             width: parent.width - 180
             height: (historyModel.count > 3) ? ((historyModel.count * 40 < 550) ? historyModel.count * 40 : 550) : 120
             anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
@@ -609,20 +605,14 @@ Item {
                 anchors.leftMargin: -30
                 font { family: fontAwesome.name; pointSize: 53 }
                 text: "\uF0D8"; 
-                color: "gray" 
-                Text {
-                    text: parent.text 
-                    color: "lightgray"
-                    anchors.fill: parent
-                    anchors.margins: 1 
-                    anchors.topMargin: 3
-                    font { family: fontAwesome.name; pointSize: 50 }
-                }
+                color: "lightgray" 
             }
 
             ListView { 
                 id: historyListView
                 anchors.fill: parent
+                anchors.topMargin: 30 
+                anchors.bottomMargin: 30
                 model: historyModel 
                 delegate: historyDelegate
                 ListModel { 
