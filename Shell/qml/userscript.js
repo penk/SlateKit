@@ -17,6 +17,9 @@ document.documentElement.addEventListener('click', (function(e) {
             var select = new Object({'type':'select', 'text': [], 'pageX': e.pageX, 'pageY': e.pageY}); 
             for (var i=0; i < node.options.length; i++) {
                 select.text.push(node.options[i].text);
+                if (node.options[i].hasAttribute('selected')) { // FIXME: mark selected option
+                    select.selected = node.options[i].text;
+                }
             }
             navigator.qt.postMessage( JSON.stringify(select) );
             custom_element_node = node;

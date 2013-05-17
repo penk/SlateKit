@@ -239,10 +239,15 @@ Item {
                     } 
                     case 'select': {
                         console.log(data.text);
-                        var option = new Object({'type':'select', 'index': '1'}); // FIXME: getSelectfromDialog
                         popoverDialog.visible = true;
                         updatePopoverPosition(data.pageX, data.pageY);
-                        experimental.postMessage(JSON.stringify(option))
+                        popoverModel.clear()
+                        for (var i=0; i<data.text.length; i++ ) {
+                            popoverModel.append( { "value": data.text[i] } )
+                            // FIXME: set correct selected option
+                            //if (data.text[i] === data.selected)
+                            //    popoverListView.currentIndex = i;
+                        }
                         break;
                     }
                 }
@@ -258,16 +263,51 @@ Item {
             Rectangle {
                 id: popoverDialog 
                 visible: false 
+
+                // FIXME: change visibility when lose "focus" 
+
                 width: 200
                 height: 300
                 color: "gray"
                 radius: 5
-                // ListView {} 
                 Text { 
                     id: popoverCaret
                     anchors { margins: 20 }
                     color: "gray" 
                     font { family: fontAwesome.name; pointSize: 50 } 
+                }
+                ListView {
+                    id: popoverListView
+                    anchors.fill: parent
+                    anchors.margins: 40
+                    model: popoverModel 
+                    ListModel { id: popoverModel }
+                    delegate: Rectangle {
+                        width: parent.width - 20 
+                        height: 40 
+                        anchors { leftMargin: 10; rightMargin: 10; }
+                        color: "transparent"
+                        Text { 
+                            anchors.fill: parent
+                            text: model.value
+                            font.pointSize: 16
+                            font.weight: Font.Bold
+                            MouseArea { 
+                                anchors.fill: parent
+                                anchors.leftMargin: -20; anchors.rightMargin: -20; 
+                                onClicked: {
+                                    var option = new Object({'type':'select', 'index': model.index}); 
+                                    popoverListView.currentIndex = model.index
+                                    experimental.postMessage(JSON.stringify(option))
+                                    popoverDialog.visible = false;
+                                }
+                            }
+                        }
+                    }
+                    highlight: Text { 
+                        color: "white"; text: "\uF00C"; anchors.right: parent.right 
+                        font { family: fontAwesome.name; pointSize: 20 }
+                    }
                 }
             }
         }
