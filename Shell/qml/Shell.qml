@@ -207,6 +207,8 @@ Item {
                     case 'select': {
                         console.log(data.text);
                         console.log(data.value);
+                        var option = new Object({'type':'select', 'index': '1'});
+                        experimental.postMessage(JSON.stringify(option))
                         break;
                     }
                 }

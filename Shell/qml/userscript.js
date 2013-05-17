@@ -1,10 +1,11 @@
+var custom_element_node;
+
 document.documentElement.addEventListener('click', (function(e) {
     var node = e.target;
     while(node) {
         // hook for Open in New Tab (link with target)
         if (node.tagName === 'A') {
-            var link = new Object
-            link.type = 'link'
+            var link = new Object({'type':'link'})
             if (node.hasAttribute('target'))
                 link.target = node.getAttribute('target');
             link.href = node.getAttribute('href');
@@ -13,22 +14,29 @@ document.documentElement.addEventListener('click', (function(e) {
 
         // custom dialog for select input element
         if (node.tagName === 'SELECT') {
-            var select = new Object; 
-            select.type = 'select';
-            select.name = node.getAttribute('name');
-            select.text = [];
-            select.value = [];
+            var select = new Object({'type':'select', 'text': [], 'value': []}); 
             for (var i=0; i < node.options.length; i++) {
                 select.text.push(node.options[i].text);
                 select.value.push(node.options[i].value); 
             }
-            navigator.qt.postMessage( JSON.stringify(select));
+            navigator.qt.postMessage( JSON.stringify(select) );
+            custom_element_node = node;
         }
 
         node = node.parentNode;
     }
 }), true);
 
+navigator.qt.onmessage = function(ev) {
+    var data = JSON.parse(ev.data)
+    switch (data.type) {
+        case 'select': {
+            if (custom_element_node !== undefined)
+                custom_element_node.options[data.index].selected = true 
+            break;
+        }
+    }
+}
 
 // FIXME: experiementing on tap and hold 
 var hold;
