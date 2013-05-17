@@ -246,9 +246,8 @@ Item {
                         popoverModel.clear()
                         for (var i=0; i<data.text.length; i++ ) {
                             popoverModel.append( { "value": data.text[i] } )
-                            // FIXME: set correct selected option
-                            //if (data.text[i] === data.selected)
-                            //    popoverListView.currentIndex = i;
+                            if (data.text[i] === data.selected)
+                                popoverListView.currentIndex = i;
                         }
                         break;
                     }
@@ -317,10 +316,10 @@ Item {
                             }
                         }
                     }
-                    //highlight: Text { 
-                    //    color: "gray"; text: "\uF00C"; anchors.right: parent.right 
-                    //    font { family: fontAwesome.name; pointSize: 20 }
-                    //}
+                    highlight: Text { 
+                        color: "gray"; text: "\uF00C"; anchors.right: parent.right; anchors.rightMargin: 5;
+                        font { family: fontAwesome.name; pointSize: 20 }
+                    }
                 }
             }
         }
