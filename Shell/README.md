@@ -1,7 +1,7 @@
 # SlateKit Shell
 Qt5/QML WebKit Browser with Sliding Drawer UI 
 
-> ![Drawer](http://i.imgur.com/ZvqY5Zo.png)
+> ![Drawer](https://raw.github.com/penk/SlateKit/master/Shell/screenshot.png)
 
 ## Features 
 
