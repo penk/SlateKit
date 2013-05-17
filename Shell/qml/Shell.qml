@@ -209,11 +209,13 @@ Item {
                     popoverDialog.y = Y + 30 // too high, popover down 
                     popoverCaret.anchors.top = popoverDialog.top;
                     popoverCaret.anchors.topMargin = -32
+                    popoverInnerCaret.anchors.topMargin = 3 
                     popoverCaret.text = "\uF0D8"
                 } else { 
                     popoverDialog.y = Y - popoverDialog.height - 40; // move up 
                     popoverCaret.anchors.top = popoverDialog.bottom;
                     popoverCaret.anchors.topMargin = -20
+                    popoverInnerCaret.anchors.topMargin = 0 
                     popoverCaret.text = "\uF0D7"
                 }
             }
@@ -268,18 +270,29 @@ Item {
 
                 width: 200
                 height: 300
-                color: "gray"
+                color: "lightgray"
+                border.width: 1 
+                border.color: "gray"
                 radius: 5
                 Text { 
                     id: popoverCaret
                     anchors { margins: 20 }
                     color: "gray" 
-                    font { family: fontAwesome.name; pointSize: 50 } 
+                    font { family: fontAwesome.name; pointSize: 53 } 
+                    Text { 
+                        id: popoverInnerCaret
+                        anchors.fill: parent
+                        anchors.leftMargin: 1
+                        text: popoverCaret.text
+                        color: "lightgray"
+                        font { family: fontAwesome.name; pointSize: 50}
+                    }
                 }
                 ListView {
                     id: popoverListView
                     anchors.fill: parent
                     anchors.margins: 40
+                    anchors.leftMargin: 20 
                     model: popoverModel 
                     ListModel { id: popoverModel }
                     delegate: Rectangle {
@@ -304,10 +317,10 @@ Item {
                             }
                         }
                     }
-                    highlight: Text { 
-                        color: "white"; text: "\uF00C"; anchors.right: parent.right 
-                        font { family: fontAwesome.name; pointSize: 20 }
-                    }
+                    //highlight: Text { 
+                    //    color: "gray"; text: "\uF00C"; anchors.right: parent.right 
+                    //    font { family: fontAwesome.name; pointSize: 20 }
+                    //}
                 }
             }
         }
@@ -579,6 +592,8 @@ Item {
             visible: (urlText.focus && historyModel.count > 0)
             color: "lightgray"
             radius: 5 
+            border.width: 1
+            border.color: "gray"
             width: parent.width - 180
             height: (historyModel.count > 3) ? ((historyModel.count * 40 < 550) ? historyModel.count * 40 : 550) : 120
             anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
@@ -589,9 +604,17 @@ Item {
                 anchors.topMargin: -34
                 anchors.left: parent.horizontalCenter
                 anchors.leftMargin: -30
-                font { family: fontAwesome.name; pointSize: 50 }
+                font { family: fontAwesome.name; pointSize: 53 }
                 text: "\uF0D8"; 
-                color: "lightgray" 
+                color: "gray" 
+                Text {
+                    text: parent.text 
+                    color: "lightgray"
+                    anchors.fill: parent
+                    anchors.margins: 1 
+                    anchors.topMargin: 3
+                    font { family: fontAwesome.name; pointSize: 50 }
+                }
             }
 
             ListView { 
