@@ -15,8 +15,9 @@ document.documentElement.addEventListener('click', (function(e) {
         if (node.tagName === 'SELECT') {
             var select = new Object; 
             select.type = 'select';
-            select.text = [''];
-            select.value = [''];
+            select.name = node.getAttribute('name');
+            select.text = [];
+            select.value = [];
             for (var i=0; i < node.options.length; i++) {
                 select.text.push(node.options[i].text);
                 select.value.push(node.options[i].value); 

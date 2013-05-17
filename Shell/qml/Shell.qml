@@ -96,7 +96,7 @@ Item {
 
         if (hasTabOpen) { 
             // FIXME: after closed, Qt 5.1 doesn't change tabListView.currentIndex  
-            if (tabListView.currentIndex == 1) tabListView.currentIndex = 0;  
+            if (tabModel.count == 2 && tabListView.currentIndex == 1) tabListView.currentIndex = 0;  
             currentTab = tabListView.model.get( tabListView.currentIndex ).pageid
             switchToTab(currentTab)
         } else {
@@ -270,11 +270,11 @@ Item {
                             font.family: fontAwesome.name
                             font.pointSize: 16
                             color: "gray"
-                        }
 
-                        MouseArea { 
-                            anchors.fill: parent; 
-                            onClicked: closeTab(model.index, model.pageid)
+                            MouseArea { 
+                                anchors.fill: parent; 
+                                onClicked: closeTab(model.index, model.pageid)
+                            }
                         }
                     }
                 }
@@ -296,7 +296,7 @@ Item {
                 Text { 
                     text: "<b>New Tab</b>"
                     color: "white"
-                    font.pointSize: 16 
+                    font.pointSize: 15
                     anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+30 }
                 }
                 MouseArea { 
