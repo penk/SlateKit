@@ -33,8 +33,14 @@ navigator.qt.onmessage = function(ev) {
     var data = JSON.parse(ev.data)
     switch (data.type) {
         case 'select': {
-            if (custom_element_node !== undefined)
+            if (custom_element_node !== undefined) {
                 custom_element_node.options[data.index].selected = true 
+
+                // trigger onchange event 
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent("change", false, true);
+                custom_element_node.dispatchEvent(evt);
+            }
             break;
         }
     }
