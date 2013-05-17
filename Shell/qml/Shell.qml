@@ -214,7 +214,6 @@ Item {
                         popoverDialog.y = Y - popoverDialog.height - offsetHeight - 20 // Tab.Scale; // move up 
                     else 
                         popoverDialog.y = Y - 300 - offsetHeight - 20
-                    console.log('popoverDialog.y: ' + popoverDialog.y)
                     popoverUpCaret.visible = true;
                     popoverDownCaret.visible = false;
                 }
@@ -320,8 +319,9 @@ Item {
                             }
                         }
                     }
-                    highlight: Text { 
-                        color: "lightgray"; text: "\uF00C"; anchors.right: parent.right; 
+                    highlight: 
+                    Text { 
+                        color: "lightgray"; text: "\uF00C"; x: 180
                         font { family: fontAwesome.name; pointSize: 20 }
                     }
                 }
