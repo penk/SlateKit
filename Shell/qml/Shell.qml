@@ -24,6 +24,7 @@ Item {
             }
         );
         if (Tab.ReopenPreviousTab) {
+            db.transaction(function(tx) {tx.executeSql('CREATE TABLE IF NOT EXISTS previous (url TEXT)'); });
             db.transaction(
                 function(tx) {
                     var result = tx.executeSql("SELECT * FROM previous"); 
@@ -207,6 +208,10 @@ Item {
                     case 'select': {
                         console.log(data.text);
                         var option = new Object({'type':'select', 'index': '1'}); // FIXME: getSelectfromDialog
+                        popoverDialog.visible = true 
+                        popoverDialog.x = parseInt(data.pageX) - 20;
+                        popoverDialog.y = parseInt(data.pageY) - 45;
+
                         experimental.postMessage(JSON.stringify(option))
                         break;
                     }
@@ -219,6 +224,15 @@ Item {
                     root.title = Tab.itemMap[currentTab].title;
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }
+            }
+            Text { 
+                id: popoverDialog
+                visible: false 
+                text: "\uF0D7" 
+                color: "red" 
+                font { family: fontAwesome.name; pointSize: 50 } 
+                x: 300 
+                y: 200 
             }
         }
     }

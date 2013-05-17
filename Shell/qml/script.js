@@ -6,4 +6,4 @@ var DrawerMargin = 10;
 var HomePage = "http://google.com";
 var RandomString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 var TempUrl = "";
-var ReopenPreviousTab = false
+var ReopenPreviousTab = true //false

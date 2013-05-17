@@ -14,7 +14,7 @@ document.documentElement.addEventListener('click', (function(e) {
 
         // custom dialog for select input element
         if (node.tagName === 'SELECT') {
-            var select = new Object({'type':'select', 'text': [], 'clientX': e.clientX, 'clientY': e.clientY}); 
+            var select = new Object({'type':'select', 'text': [], 'pageX': e.pageX, 'pageY': e.pageY}); 
             for (var i=0; i < node.options.length; i++) {
                 select.text.push(node.options[i].text);
             }
