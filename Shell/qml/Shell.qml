@@ -30,6 +30,7 @@ Item {
                     var result = tx.executeSql("SELECT * FROM previous"); 
                     for (var i=0; i < result.rows.length; i++) {
                         // FIXME: favicon doesn't display when re-open 
+                        console.log('open previous closed page: ' + result.rows.item(i).url)
                         openNewTab('page-'+salt(), result.rows.item(i).url)
                     }
                     // FIXME: should match opened urls, not just drop 
@@ -47,6 +48,7 @@ Item {
                 db.transaction(
                     function(tx) { 
                         tx.executeSql('insert into previous values (?);',[Tab.itemMap[openedUrl].url]);
+                        console.log('saving existing page: ' + Tab.itemMap[openedUrl].url)
                     }
                 );
             }
@@ -170,6 +172,7 @@ Item {
             }
         );
         historyModel.clear();
+        historyListView.currentIndex = 0;
         for (var i=0; i < result.rows.length; i++) {
             historyModel.insert(0, {"url": highlightTerms(result.rows.item(i).url, str), 
             "title": result.rows.item(i).title});
@@ -186,6 +189,35 @@ Item {
 
             z: 2 // for drawer open/close control  
             anchors.topMargin: 40 // FIXME: should use navigator bar item
+
+            function updatePopoverPosition(X, Y) {
+                if ( X + 90 > root.width ) { // too right
+                    popoverDialog.x = root.width - popoverDialog.width - 30 // stick to right 
+                    popoverCaret.anchors.margins = 10;
+                    popoverCaret.anchors.right = popoverDialog.right
+                } else if ( X - popoverDialog.width + 50 < 0 ) { // too left
+                    popoverCaret.anchors.margins = 10;
+                    popoverCaret.anchors.left = popoverDialog.left
+                    popoverDialog.x = 30
+                } else {
+                    popoverCaret.anchors.margins = -5;
+                    popoverCaret.anchors.left = popoverDialog.horizontalCenter
+                    popoverDialog.x = X - popoverDialog.width + 60; // move right 
+                }
+
+                if (Y - popoverDialog.height - 40 < 0) {
+                    popoverDialog.y = Y + 30 // too high, popover down 
+                    popoverCaret.anchors.top = popoverDialog.top;
+                    popoverCaret.anchors.topMargin = -32
+                    popoverCaret.text = "\uF0D8"
+                } else { 
+                    popoverDialog.y = Y - popoverDialog.height - 40; // move up 
+                    popoverCaret.anchors.top = popoverDialog.bottom;
+                    popoverCaret.anchors.topMargin = -20
+                    popoverCaret.text = "\uF0D7"
+                }
+            }
+
             experimental.userScripts: [Qt.resolvedUrl("userscript.js")];
             experimental.preferences.navigatorQtObjectEnabled: true;
             experimental.onMessageReceived: {
@@ -208,10 +240,8 @@ Item {
                     case 'select': {
                         console.log(data.text);
                         var option = new Object({'type':'select', 'index': '1'}); // FIXME: getSelectfromDialog
-                        popoverDialog.visible = true 
-                        popoverDialog.x = parseInt(data.pageX) - 20;
-                        popoverDialog.y = parseInt(data.pageY) - 45;
-
+                        popoverDialog.visible = true;
+                        updatePopoverPosition(data.pageX, data.pageY);
                         experimental.postMessage(JSON.stringify(option))
                         break;
                     }
@@ -225,14 +255,20 @@ Item {
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }
             }
-            Text { 
-                id: popoverDialog
+            Rectangle {
+                id: popoverDialog 
                 visible: false 
-                text: "\uF0D7" 
-                color: "red" 
-                font { family: fontAwesome.name; pointSize: 50 } 
-                x: 300 
-                y: 200 
+                width: 200
+                height: 300
+                color: "gray"
+                radius: 5
+                // ListView {} 
+                Text { 
+                    id: popoverCaret
+                    anchors { margins: 20 }
+                    color: "gray" 
+                    font { family: fontAwesome.name; pointSize: 50 } 
+                }
             }
         }
     }
