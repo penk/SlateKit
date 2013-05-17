@@ -122,6 +122,11 @@ Item {
         url = url.replace( /(<([^>]+)>)/ig, ""); // remove <b> tag 
         if (url == "") return url;
         if (url[0] == "/") { return "file://"+url; }
+        if (url[0] == '.') { 
+            var str = Tab.itemMap[currentTab].url.toString();
+            var n = str.lastIndexOf('/');
+            return str.substring(0, n)+url.substring(1);
+        }
         //FIXME: search engine support here
         if (url.indexOf(":")<0) { return "http://"+url; }
         else { return url;}
@@ -219,6 +224,9 @@ Item {
                 }
             }
 
+            experimental.preferences.fullScreenEnabled: true;
+            experimental.preferences.developerExtrasEnabled: true;
+
             experimental.userScripts: [Qt.resolvedUrl("userscript.js")];
             experimental.preferences.navigatorQtObjectEnabled: true;
             experimental.onMessageReceived: {
@@ -235,6 +243,8 @@ Item {
                         if (data.target === '_blank') { // open link in new tab
                             bounce.start()
                             openNewTab('page-'+salt(), data.href)
+                        } else {
+                            loadUrl(data.href)
                         }
                         break;
                     } 
@@ -253,6 +263,7 @@ Item {
                 }
             }
             //experimental.userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3"
+
             onLoadingChanged: { 
                 urlText.text = Tab.itemMap[currentTab].url;
                 if (loadRequest.status == WebView.LoadSucceededStatus) {

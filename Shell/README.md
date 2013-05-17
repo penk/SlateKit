@@ -13,6 +13,7 @@ Qt5/QML WebKit Browser with Sliding Drawer UI
 
 ## Usage
 
+    export QTWEBKIT_INSPECTOR_SERVER=9222
     qmlscene ./qml/Shell.qml
 
 Or compile executable by:
