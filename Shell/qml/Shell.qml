@@ -7,8 +7,8 @@ import "script.js" as Tab
 
 Item {
     id: root 
-    width: 960 
-    height: 640 
+    //width: 800; height: 480 
+    width: 960; height: 640
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property string title: ""
@@ -190,33 +190,33 @@ Item {
             z: 2 // for drawer open/close control  
             anchors.topMargin: 40 // FIXME: should use navigator bar item
 
-            function updatePopoverPosition(X, Y) {
-                if ( X + 90 > root.width ) { // too right
+            MouseArea { 
+                id: dimOverlay; anchors.fill: parent; visible: popoverDialog.visible 
+                onClicked: { popoverDialog.visible = false }
+            }
+
+            // FIXME: need to figure out a way to calculate WebView scale (screen.width / window.innerWidth doesn't work)
+            function updatePopoverPosition(X, Y, offsetHeight) {
+                if ( X + popoverDialog.width/2 > root.width ) { // too right
                     popoverDialog.x = root.width - popoverDialog.width - 30 // stick to right 
-                    popoverCaret.anchors.margins = 10;
-                    popoverCaret.anchors.right = popoverDialog.right
-                } else if ( X - popoverDialog.width + 50 < 0 ) { // too left
-                    popoverCaret.anchors.margins = 10;
-                    popoverCaret.anchors.left = popoverDialog.left
+                } else if ( X - popoverDialog.width/2 < 0 ) { // too left
                     popoverDialog.x = 30
                 } else {
-                    popoverCaret.anchors.margins = -5;
-                    popoverCaret.anchors.left = popoverDialog.horizontalCenter
-                    popoverDialog.x = X - popoverDialog.width + 60; // move right 
+                    popoverDialog.x = X - popoverDialog.width/2 - 10; // move right 
                 }
 
                 if (Y - popoverDialog.height - 40 < 0) {
-                    popoverDialog.y = Y + 30 // too high, popover down 
-                    popoverCaret.anchors.top = popoverDialog.top;
-                    popoverCaret.anchors.topMargin = -32
-                    popoverInnerCaret.anchors.topMargin = 3 
-                    popoverCaret.text = "\uF0D8"
+                    popoverDialog.y = Y + offsetHeight // too high, popover down 
+                    popoverUpCaret.visible = false;
+                    popoverDownCaret.visible = true;
                 } else { 
-                    popoverDialog.y = Y - popoverDialog.height - 40; // move up 
-                    popoverCaret.anchors.top = popoverDialog.bottom;
-                    popoverCaret.anchors.topMargin = -20
-                    popoverInnerCaret.anchors.topMargin = 0 
-                    popoverCaret.text = "\uF0D7"
+                    if (popoverModel > 0)
+                        popoverDialog.y = Y - popoverDialog.height - offsetHeight - 20 // Tab.Scale; // move up 
+                    else 
+                        popoverDialog.y = Y - 300 - offsetHeight - 20
+                    console.log('popoverDialog.y: ' + popoverDialog.y)
+                    popoverUpCaret.visible = true;
+                    popoverDownCaret.visible = false;
                 }
             }
 
@@ -242,7 +242,7 @@ Item {
                     case 'select': {
                         console.log(data.text);
                         popoverDialog.visible = true;
-                        updatePopoverPosition(data.pageX, data.pageY);
+                        updatePopoverPosition(data.pageX, data.pageY, data.offsetHeight);
                         popoverModel.clear()
                         for (var i=0; i<data.text.length; i++ ) {
                             popoverModel.append( { "value": data.text[i] } )
@@ -266,32 +266,35 @@ Item {
                 visible: false 
 
                 // FIXME: change visibility when lose "focus" 
-
-                width: 200
-                height: 300
-                color: "lightgray"
-                border.width: 1 
-                border.color: "gray"
+                width: 250
+                height: (popoverModel.count > 6) ? 300 * Tab.Scale : 
+                    40 * (popoverModel.count + 1) * Tab.Scale + 20
+                color: "gray"
                 radius: 5
+        
+                Text { 
+                    id: popoverUpCaret
+                    anchors { left: popoverDialog.horizontalCenter; margins: -10; top: parent.bottom; topMargin: -22; }
+                    text: "\uF0D7"
+                    color: "gray" 
+                    font { family: fontAwesome.name; pointSize: 50 } 
+                }
+                Text { 
+                    id: popoverDownCaret
+                    anchors { left: popoverDialog.horizontalCenter; margins: -10; top: parent.top; topMargin: -32; }
+                    text: "\uF0D8"
+                    color: "gray" 
+                    font { family: fontAwesome.name; pointSize: 50 } 
+                }
                 Text { 
                     id: popoverCaret
                     anchors { margins: 20 }
                     color: "gray" 
                     font { family: fontAwesome.name; pointSize: 53 } 
-                    Text { 
-                        id: popoverInnerCaret
-                        anchors.fill: parent
-                        anchors.leftMargin: 1
-                        text: popoverCaret.text
-                        color: "lightgray"
-                        font { family: fontAwesome.name; pointSize: 50}
-                    }
                 }
                 ListView {
                     id: popoverListView
-                    anchors.fill: parent
-                    anchors.margins: 40
-                    anchors.leftMargin: 20 
+                    anchors { fill: parent; margins: 40; rightMargin: 20; leftMargin: 20; }
                     model: popoverModel 
                     ListModel { id: popoverModel }
                     delegate: Rectangle {
@@ -304,6 +307,7 @@ Item {
                             text: model.value
                             font.pointSize: 16
                             font.weight: Font.Bold
+                            color: "white"
                             MouseArea { 
                                 anchors.fill: parent
                                 anchors.leftMargin: -20; anchors.rightMargin: -20; 
@@ -317,7 +321,7 @@ Item {
                         }
                     }
                     highlight: Text { 
-                        color: "gray"; text: "\uF00C"; anchors.right: parent.right; anchors.rightMargin: 5;
+                        color: "lightgray"; text: "\uF00C"; anchors.right: parent.right; 
                         font { family: fontAwesome.name; pointSize: 20 }
                     }
                 }

@@ -15,6 +15,10 @@ document.documentElement.addEventListener('click', (function(e) {
         // custom dialog for select input element
         if (node.tagName === 'SELECT') {
             var select = new Object({'type':'select', 'text': [], 'pageX': e.pageX, 'pageY': e.pageY}); 
+                select.offsetHeight = node.offsetHeight
+                // FIXME: get WebView scale 
+                //select.screenWidth = screen.width 
+                //select.innerWidth = window.innerWidth
             for (var i=0; i < node.options.length; i++) {
                 select.text.push(node.options[i].text);
                 if (node.options[i].selected) {
