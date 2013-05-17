@@ -96,7 +96,7 @@ Item {
 
         if (hasTabOpen) { 
             // FIXME: after closed, Qt 5.1 doesn't change tabListView.currentIndex  
-            if (tabModel.count == 2 && tabListView.currentIndex == 1) tabListView.currentIndex = 0;  
+            if (tabModel.count == 1 && tabListView.currentIndex == 1) tabListView.currentIndex = 0;  
             currentTab = tabListView.model.get( tabListView.currentIndex ).pageid
             switchToTab(currentTab)
         } else {
@@ -206,8 +206,7 @@ Item {
                     } 
                     case 'select': {
                         console.log(data.text);
-                        console.log(data.value);
-                        var option = new Object({'type':'select', 'index': '1'});
+                        var option = new Object({'type':'select', 'index': '1'}); // FIXME: getSelectfromDialog
                         experimental.postMessage(JSON.stringify(option))
                         break;
                     }
