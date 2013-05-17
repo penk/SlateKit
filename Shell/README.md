@@ -9,6 +9,7 @@ Qt5/QML WebKit Browser with Sliding Drawer UI
 - Sliding-Drawer UI with [side-tab support](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/drawer.gif)
 - Basic search [suggestion and highlight](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/suggestion.png) via LocalStorage 
 - Custom event binding including [Open in New Tab](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/new_tab.gif)
+- Custom popover for [select elements](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/popover.png)
 
 ## Usage
 
