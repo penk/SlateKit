@@ -478,10 +478,10 @@ Item {
             z: 5
             width: 960
             height: 240 
-            state: "hide"
+            state: "show" // "hide"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: -240
+            anchors.bottomMargin: 0 // -240
             Loader { 
                 id: keyboardLoader
                 anchors.fill: parent
@@ -670,7 +670,7 @@ Item {
             color: "lightgray"
             radius: 5 
             width: parent.width - 180
-            height: (historyModel.count > 3) ? ((historyModel.count * 40 < 550) ? historyModel.count * 40 : 550) : 120
+            height: (historyModel.count > 3) ? ((historyModel.count <= 8) ? historyModel.count * 40 : 330) : 120
             anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
             z: 5 // highest z index so far.. 
 
