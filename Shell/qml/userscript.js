@@ -40,6 +40,24 @@ for (var i=0; i<frames.length; i++) {
     }), true);
 }
 
+// virtual keyboard hook
+window.document.addEventListener('click', (function(e) { 
+    if (e.srcElement.tagName === ('INPUT'||'TEXTAREA')) {
+        var inputContext = new Object({'type':'input', 'state':'show'})
+        navigator.qt.postMessage(JSON.stringify(inputContext))
+    }
+}), true); 
+window.document.addEventListener('focus', (function() { 
+    if (e.srcElement.tagName === ('INPUT'||'TEXTAREA')) {
+        var inputContext = new Object({'type':'input', 'state':'show'})
+        navigator.qt.postMessage(JSON.stringify(inputContext))
+    }
+}), true);
+window.document.addEventListener('blur', (function() {
+    var inputContext = new Object({'type':'input', 'state':'hide'})
+    navigator.qt.postMessage(JSON.stringify(inputContext))
+}), true);
+
 document.documentElement.addEventListener('click', (function(e) {
     var node = e.target;
     while(node) {

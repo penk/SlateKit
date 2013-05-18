@@ -284,6 +284,10 @@ Item {
                         }
                         break;
                     }
+                    case 'input': {
+                        keyboard.state = data.state;
+                        break;
+                    }
                 }
             }
             //experimental.userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3"
@@ -478,10 +482,10 @@ Item {
             z: 5
             width: 960
             height: 240 
-            state: "show" // "hide"
+            state: "hide"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0 // -240
+            anchors.bottomMargin: -240
             Loader { 
                 id: keyboardLoader
                 anchors.fill: parent
@@ -491,10 +495,12 @@ Item {
             transitions: [ 
                 Transition {
                     from: "show"; to: "hide"
+                    PropertyAnimation { target: Tab.itemMap[currentTab]; properties: "contentHeight"; to: Tab.itemMap[currentTab].contentHeight-240; duration: 150; easing.type: Easing.InOutQuad; }
                     PropertyAnimation { target: keyboard; properties: "anchors.bottomMargin"; to: "-240"; duration: 150; easing.type: Easing.InOutQuad; }
                 },
                 Transition {
                     from: "hide"; to: "show"
+                    PropertyAnimation { target: Tab.itemMap[currentTab]; properties: "contentHeight"; to: Tab.itemMap[currentTab].contentHeight+240; duration: 150; easing.type: Easing.InOutQuad;}
                     PropertyAnimation { target: keyboard; properties: "anchors.bottomMargin"; to: "0"; duration: 50; easing.type: Easing.InOutQuad;}
                 }
             ]
