@@ -475,6 +475,20 @@ Item {
         //color: "#E4E4E8" // light gray
         z: 1 
 
+        Item { 
+            id: keyboard 
+            z: 5
+            width: 960 
+            height: 240 
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            Loader { 
+                id: keyboardLoader
+                anchors.fill: parent
+                source: Tab.EnableVirtualKeyboard ? "English.qml" : ""
+            }
+        }
+
         Rectangle { 
             height: 40; width: parent.width; anchors.top: parent.top; anchors.left: parent.left
             gradient: Gradient { 
