@@ -216,7 +216,8 @@ Item {
                 }
             } 
             Keys.onReleased: {
-                if(event.key == Tab.MetaKey) Tab.commandKey = false
+                if(event.key == Tab.MetaKey) 
+                    Tab.commandKey = false
             }
 
             MouseArea { 
@@ -291,6 +292,7 @@ Item {
             onLoadingChanged: { 
                 urlText.text = Tab.itemMap[currentTab].url;
                 if (loadRequest.status == WebView.LoadSucceededStatus) {
+                    Tab.commandKey = false;
                     root.title = Tab.itemMap[currentTab].title;
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }

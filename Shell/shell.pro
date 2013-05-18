@@ -1,4 +1,4 @@
-QT += qml quick 
+QT += qml quick quick quick-private webkit webkit-private
 
 #mac:CONFIG -= app_bundle
 
