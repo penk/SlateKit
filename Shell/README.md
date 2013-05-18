@@ -3,6 +3,7 @@ Qt5/QML WebKit Browser with Sliding Drawer UI
 
 ![Drawer](https://raw.github.com/penk/SlateKit/master/Shell/screenshot.png)
 
+More information: [http://penkia.blogspot.com/2013/05/slatekit-shell-qt5qml-webkit-browser.html](http://penkia.blogspot.com/2013/05/slatekit-shell-qt5qml-webkit-browser.html?view=classic)
 ## Features 
 
 - Based on Qt5/QtQuick2, written entirely in QML/JavaScript
