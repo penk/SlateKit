@@ -9,6 +9,7 @@ Item {
     id: root 
     //width: 800; height: 480 
     width: 960; height: 640
+    //width: 1024; height: 600
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property string title: ""
@@ -322,12 +323,6 @@ Item {
                     color: "gray" 
                     font { family: fontAwesome.name; pointSize: 50 } 
                 }
-                Text { 
-                    id: popoverCaret
-                    anchors { margins: 20 }
-                    color: "gray" 
-                    font { family: fontAwesome.name; pointSize: 53 } 
-                }
                 ListView {
                     id: popoverListView
                     anchors { fill: parent; margins: 40; rightMargin: 20; leftMargin: 20; }
@@ -344,6 +339,7 @@ Item {
                             font.pointSize: 16
                             font.weight: Font.Bold
                             color: "white"
+                            elide: Text.ElideRight
                             MouseArea { 
                                 anchors.fill: parent
                                 anchors.leftMargin: -20; anchors.rightMargin: -20; 
@@ -543,25 +539,38 @@ Item {
             TextInput { 
                 id: urlText
                 text: hasTabOpen ? Tab.itemMap[currentTab].url : ""
-                wrapMode: TextInput.Wrap
                 anchors { fill: parent; margins: 5; rightMargin: 15 }
+                Text { 
+                    id: urlDisplayText
+                    anchors.fill: parent; text: urlText.text; color: "black"; elide: Text.ElideRight 
+                    // FIXME: display while urlText.lengh is too long? 
+                    visible: (historyModel.count > 0)
+                }
+                Keys.onPressed: { 
+                    if (event.key == Qt.Key_Backspace && urlDisplayText.text != "") {
+                        urlDisplayText.text =""; event.accepted = true; urlText.color = "black"
+                    }
+                }
                 onAccepted: { 
-                    (Tab.TempUrl !== "") ? loadUrl(Tab.TempUrl) : loadUrl(text)
-                    Tab.TempUrl = ""
+                    (urlDisplayText.text !== urlText.text) ? loadUrl(urlDisplayText.text) : loadUrl(urlText.text)
+                    urlDisplayText.text = urlText.text;
+                    urlText.color = "black"
                 }
                 Keys.onUpPressed: {
                     if (historyListView.currentIndex > 0) {
                         historyListView.currentIndex-- 
                     } else { historyListView.currentIndex = 0 }
-                    Tab.TempUrl = historyListView.model.get(historyListView.currentIndex).url
+                    urlText.color = "white"
+                    urlDisplayText.text = historyListView.model.get(historyListView.currentIndex).url.replace( /(<([^>]+)>)/ig, "")
                 }
                 Keys.onDownPressed: {
                     if (historyListView.currentIndex < historyModel.count-1) {
                         historyListView.currentIndex++ 
                     } else { historyListView.currentIndex = historyModel.count-1 }
-                    Tab.TempUrl = historyListView.model.get(historyListView.currentIndex).url
+                    urlText.color = "white"
+                    urlDisplayText.text = historyListView.model.get(historyListView.currentIndex).url.replace( /(<([^>]+)>)/ig, "")
                 }
-                Keys.onEscapePressed: { urlText.focus = false }
+                Keys.onEscapePressed: { urlText.focus = false; urlDisplayText.text = urlText.text }
                 onActiveFocusChanged: { 
                     // FIXME: use State to change property  
                     if (urlText.activeFocus) { urlText.selectAll(); parent.border.color = "#2E6FFD"; parent.border.width = 2;} 
@@ -667,6 +676,7 @@ Item {
                             anchors.margins: 10
                             text: model.url + ' - ' + model.title 
                             font.pointSize: 16 
+                            elide: Text.ElideRight
                         }
                         MouseArea { 
                             anchors.fill: parent; 
