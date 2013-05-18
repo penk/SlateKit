@@ -269,8 +269,6 @@ Item {
                         if (data.target === '_blank') { // open link in new tab
                             bounce.start()
                             openNewTab('page-'+salt(), data.href)
-                        } else {
-                            loadUrl(data.href)
                         }
                         break;
                     } 
@@ -478,15 +476,28 @@ Item {
         Item { 
             id: keyboard 
             z: 5
-            width: 960 
+            width: 960
             height: 240 
+            state: "hide"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: -240
             Loader { 
                 id: keyboardLoader
                 anchors.fill: parent
                 source: Tab.EnableVirtualKeyboard ? "English.qml" : ""
             }
+            states: [ State { name: "show" }, State { name: "hide" } ]
+            transitions: [ 
+                Transition {
+                    from: "show"; to: "hide"
+                    PropertyAnimation { target: keyboard; properties: "anchors.bottomMargin"; to: "-240"; duration: 150; easing.type: Easing.InOutQuad; }
+                },
+                Transition {
+                    from: "hide"; to: "show"
+                    PropertyAnimation { target: keyboard; properties: "anchors.bottomMargin"; to: "0"; duration: 50; easing.type: Easing.InOutQuad;}
+                }
+            ]
         }
 
         Rectangle { 
@@ -587,8 +598,12 @@ Item {
                 Keys.onEscapePressed: { urlText.focus = false; urlDisplayText.text = urlText.text }
                 onActiveFocusChanged: { 
                     // FIXME: use State to change property  
-                    if (urlText.activeFocus) { urlText.selectAll(); parent.border.color = "#2E6FFD"; parent.border.width = 2;} 
-                    else { parent.border.color = "black"; parent.border.width = 1; } 
+                    if (urlText.activeFocus) { 
+                        urlText.selectAll(); parent.border.color = "#2E6FFD"; parent.border.width = 2;
+                        keyboard.state = 'show'
+                    } else { parent.border.color = "black"; parent.border.width = 1; 
+                        keyboard.state = 'hide'
+                    }
                 }
                 onTextChanged: {
                     if (urlText.activeFocus && urlText.text !== "") {
