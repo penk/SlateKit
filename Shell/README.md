@@ -10,6 +10,7 @@ Qt5/QML WebKit Browser with Sliding Drawer UI
 - Basic search [suggestion and highlight](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/suggestion.png) via LocalStorage 
 - Custom event binding including [Open in New Tab](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/new_tab.gif)
 - Custom popover for [select elements](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/popover.png)
+- Built-in [virtual keyboard](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/keyboard.png) using [Fakekey](https://github.com/penk/SlateKit/tree/master/IME/fakekey)
 
 ## Usage
 
