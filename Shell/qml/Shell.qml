@@ -195,6 +195,30 @@ Item {
             z: 2 // for drawer open/close control  
             anchors.topMargin: 40 // FIXME: should use navigator bar item
 
+            // TODO: proper QShortcut / eventFilter support 
+            Keys.onPressed: {
+                if(event.key == Tab.MetaKey) Tab.commandKey = true
+                if(event.key == 84 && Tab.commandKey) { 
+                    openNewTab('page-'+salt(), ''); 
+                    bounce.start(); urlText.focus = true; 
+                } 
+                if(event.key == 87 && Tab.commandKey) {
+                    closeTab(tabListView.currentIndex, currentTab)
+                    bounce.start()
+                }
+                if(event.key >= 49 && event.key <= 57 && Tab.commandKey) { 
+                    var index = parseInt(event.key) - 49
+                    if (typeof(tabListView.model.get(index)) !== "undefined" ) {
+                        tabListView.currentIndex = index
+                        switchToTab(tabListView.model.get(index).pageid)
+                    }
+                    bounce.start()
+                }
+            } 
+            Keys.onReleased: {
+                if(event.key == Tab.MetaKey) Tab.commandKey = false
+            }
+
             MouseArea { 
                 id: dimOverlay; anchors.fill: parent; visible: popoverDialog.visible 
                 onClicked: { popoverDialog.visible = false }
@@ -439,6 +463,7 @@ Item {
 
                 }
             }
+            highlightMoveDuration: 2
             highlightFollowsCurrentItem: true 
         }
     }
@@ -650,6 +675,7 @@ Item {
                 highlight: Rectangle { 
                     color: "darkgray"
                 }
+                highlightMoveDuration: 2
             } // end of historyListView
         }
         MouseArea { 
