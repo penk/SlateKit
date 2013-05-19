@@ -9,4 +9,4 @@ var HomePage = "http://google.com";
 var RandomString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 var ReopenPreviousTab = true //false
 
-var EnableVirtualKeyboard = true
+var EnableVirtualKeyboard = false //true

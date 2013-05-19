@@ -7,8 +7,9 @@ import "script.js" as Tab
 
 Item {
     id: root 
-    //width: 800; height: 480 
+//    width: 800; height: 480 
     width: 960; height: 640
+    //width: 320; height: 480
     //width: 1024; height: 600
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
@@ -221,35 +222,7 @@ Item {
                     Tab.commandKey = false
             }
 
-            MouseArea { 
-                id: dimOverlay; anchors.fill: parent; visible: popoverDialog.visible 
-                onClicked: { popoverDialog.visible = false }
-            }
-
-            // FIXME: need to figure out a way to calculate WebView scale (screen.width / window.innerWidth doesn't work)
-            function updatePopoverPosition(X, Y, offsetHeight) {
-                if ( X + popoverDialog.width/2 > root.width ) { // too right
-                    popoverDialog.x = root.width - popoverDialog.width - 30 // stick to right 
-                } else if ( X - popoverDialog.width/2 < 0 ) { // too left
-                    popoverDialog.x = 30
-                } else {
-                    popoverDialog.x = X - popoverDialog.width/2 - 10; // move right 
-                }
-
-                if (Y - popoverDialog.height - 40 < 0) {
-                    popoverDialog.y = Y + offsetHeight // too high, popover down 
-                    popoverUpCaret.visible = false;
-                    popoverDownCaret.visible = true;
-                } else { 
-                    if (popoverModel > 0)
-                        popoverDialog.y = Y - popoverDialog.height - offsetHeight - 20 // Tab.Scale; // move up 
-                    else 
-                        popoverDialog.y = Y - 300 - offsetHeight - 20
-                    popoverUpCaret.visible = true;
-                    popoverDownCaret.visible = false;
-                }
-            }
-
+            experimental.itemSelector: PopOver {}
             experimental.preferences.fullScreenEnabled: true;
             experimental.preferences.developerExtrasEnabled: true;
 
@@ -272,18 +245,6 @@ Item {
                         }
                         break;
                     } 
-                    case 'select': {
-                        console.log(data.text);
-                        popoverDialog.visible = true;
-                        updatePopoverPosition(data.pageX, data.pageY, data.offsetHeight);
-                        popoverModel.clear()
-                        for (var i=0; i<data.text.length; i++ ) {
-                            popoverModel.append( { "value": data.text[i] } )
-                            if (data.text[i] === data.selected)
-                                popoverListView.currentIndex = i;
-                        }
-                        break;
-                    }
                     case 'input': {
                         keyboard.state = data.state;
                         break;
@@ -298,67 +259,6 @@ Item {
                     Tab.commandKey = false;
                     root.title = Tab.itemMap[currentTab].title;
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
-                }
-            }
-            Rectangle {
-                id: popoverDialog 
-                visible: false 
-
-                // FIXME: change visibility when lose "focus" 
-                width: 250
-                height: (popoverModel.count > 6) ? 300 * Tab.Scale : 
-                    40 * (popoverModel.count + 1) * Tab.Scale + 20
-                color: "gray"
-                radius: 5
-        
-                Text { 
-                    id: popoverUpCaret
-                    anchors { left: popoverDialog.horizontalCenter; margins: -10; top: parent.bottom; topMargin: -22; }
-                    text: "\uF0D7"
-                    color: "gray" 
-                    font { family: fontAwesome.name; pointSize: 50 } 
-                }
-                Text { 
-                    id: popoverDownCaret
-                    anchors { left: popoverDialog.horizontalCenter; margins: -10; top: parent.top; topMargin: -32; }
-                    text: "\uF0D8"
-                    color: "gray" 
-                    font { family: fontAwesome.name; pointSize: 50 } 
-                }
-                ListView {
-                    id: popoverListView
-                    anchors { fill: parent; margins: 40; rightMargin: 20; leftMargin: 20; }
-                    model: popoverModel 
-                    ListModel { id: popoverModel }
-                    delegate: Rectangle {
-                        width: parent.width - 20 
-                        height: 40 
-                        anchors { leftMargin: 10; rightMargin: 10; }
-                        color: "transparent"
-                        Text { 
-                            anchors.fill: parent
-                            text: model.value
-                            font.pointSize: 16
-                            font.weight: Font.Bold
-                            color: "white"
-                            elide: Text.ElideRight
-                            MouseArea { 
-                                anchors.fill: parent
-                                anchors.leftMargin: -20; anchors.rightMargin: -20; 
-                                onClicked: {
-                                    var option = new Object({'type':'select', 'index': model.index}); 
-                                    popoverListView.currentIndex = model.index
-                                    experimental.postMessage(JSON.stringify(option))
-                                    popoverDialog.visible = false;
-                                }
-                            }
-                        }
-                    }
-                    highlight: 
-                    Text { 
-                        color: "lightgray"; text: "\uF00C"; x: 180
-                        font { family: fontAwesome.name; pointSize: 20 }
-                    }
                 }
             }
         }
