@@ -3,11 +3,10 @@ import QtQuick.LocalStorage 2.0
 
 import QtWebKit 3.0
 import QtWebKit.experimental 1.0
-import "script.js" as Tab 
+import "js/script.js" as Tab 
 
 Item {
     id: root 
-//    width: 800; height: 480 
     width: 960; height: 640
     //width: 320; height: 480
     //width: 1024; height: 600
@@ -226,7 +225,7 @@ Item {
             experimental.preferences.fullScreenEnabled: true;
             experimental.preferences.developerExtrasEnabled: true;
 
-            experimental.userScripts: [Qt.resolvedUrl("userscript.js")];
+            experimental.userScripts: [Qt.resolvedUrl("js/userscript.js")];
             experimental.preferences.navigatorQtObjectEnabled: true;
             experimental.onMessageReceived: {
                 console.log('onMessageReceived: ' + message.data );

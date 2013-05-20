@@ -7,7 +7,7 @@ MouseArea {
 
     Rectangle {
         width: 250
-        height: ( popoverListView.contentItem.height < 300 ) ? popoverListView.contentItem.height + 40 : 300
+        height: 300 //( popoverListView.contentItem.height < 300 ) ? popoverListView.contentItem.height + 40 : 300
         x: { 
             if (popoverModel.elementRect.x + width/2 > root.width) { 
                 root.width - popoverModel.elementRect.x - 40
@@ -58,7 +58,7 @@ MouseArea {
                 width: parent.width
 
                 Text {
-                    anchors { left: parent.left; leftMargin: 10; rightMargin: 10; }
+                    anchors { left: parent.left; leftMargin: 10; right: parent.right; rightMargin: 10; }
                     text: model.text
                     color: "white"
                     font { pointSize: 16; weight: Font.Bold }

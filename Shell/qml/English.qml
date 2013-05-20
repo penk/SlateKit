@@ -123,7 +123,7 @@ Rectangle {
                 if (inPunView) { inPunView = false; inNumView=false;} else {inNumView = !inNumView}; 
             }
         }
-        Button { width: 91; } // onClicked: keyboardLoader.source = 'Handwriting.qml'}
+        Button { width: 91; onClicked: keyboardLoader.source = 'Handwriting.qml'}
         Button { width: 422; onClicked: fakekey.sendKey(' ') }
         Button { 
             width: 150
