@@ -290,7 +290,9 @@ Item {
                         text: (typeof(Tab.itemMap[model.pageid]) !== "undefined" && Tab.itemMap[model.pageid].title !== "") ? 
                         Tab.itemMap[model.pageid].title : "Loading..";
                         color: "white"; 
-                        anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+30 } 
+                        anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; 
+                            leftMargin: Tab.DrawerMargin+30; right: parent.right } 
+                        elide: Text.ElideRight 
                     }
                     MouseArea { 
                         anchors { top: parent.top; left: parent.left; bottom: parent.bottom; right: parent.right; rightMargin: 40}

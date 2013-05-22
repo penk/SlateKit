@@ -12,7 +12,7 @@ MouseArea {
             if (popoverModel.elementRect.x + width/2 > root.width) { 
                 root.width - popoverModel.elementRect.x - 40
             } else if (popoverModel.elementRect.x - width/2 + popoverListView.contentItem.width/2 < 0) { 
-                20 
+                30 
             } else { 
                 popoverModel.elementRect.x - width/2 + 50
             }
