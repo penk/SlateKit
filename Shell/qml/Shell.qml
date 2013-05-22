@@ -435,9 +435,9 @@ Item {
 
         Item {
             id: backButton
-            width: 30; height: 30; anchors { top: parent.top; left: drawerButton.right; margins: Tab.DrawerMargin; topMargin: 5}
+            width: 30; height: 30; anchors { top: parent.top; left: drawerButton.right; margins: Tab.DrawerMargin; topMargin: 7}
             Text { 
-                text: "\uF060"
+                text: "\uF053" 
                 font { family: fontAwesome.name; pointSize: 26 }
                 color: hasTabOpen ? (Tab.itemMap[currentTab].canGoBack ? "#AAAAAA" : "lightgray") : "lightgray"
                 style: Text.Sunken; styleColor: "gray"
@@ -564,7 +564,7 @@ Item {
             id: exportButton
             width: 30; height: 30; anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin; topMargin: 6}
             Text { 
-                text: "\uF045"
+                text: "\uF013"
                 font { family: fontAwesome.name; pointSize: 28 }
                 color: "#AAAAAA" 
                 style: Text.Sunken; styleColor: "gray"
