@@ -524,7 +524,7 @@ Item {
                 id: stopButton
                 anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
                 text: "\uF00D"
-                font { family: fontAwesome.name; pointSize: 20 }
+                font { family: fontAwesome.name; pointSize: 18 }
                 color: "gray"
                 visible: ( hasTabOpen && Tab.itemMap[currentTab].loadProgress < 100 && !urlText.focus) ? 
                 true : false
@@ -536,8 +536,8 @@ Item {
             Text {
                 id: reloadButton
                 anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
-                text: "\uF021"
-                font { family: fontAwesome.name; pointSize: 20 }
+                text: "\uF01E"
+                font { family: fontAwesome.name; pointSize: 16 }
                 color: "gray"
                 visible: ( hasTabOpen && Tab.itemMap[currentTab].loadProgress == 100 && !urlText.focus ) ? 
                 true : false 
@@ -550,7 +550,7 @@ Item {
                 id: clearButton
                 anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
                 text: "\uF057"
-                font { family: fontAwesome.name; pointSize: 20 }
+                font { family: fontAwesome.name; pointSize: 18 }
                 color: "gray"
                 visible: urlText.focus
                 MouseArea {
