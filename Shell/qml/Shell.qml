@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.LocalStorage 2.0
+import QtGraphicalEffects 1.0
 
 import QtWebKit 3.0
 import QtWebKit.experimental 1.0
@@ -410,9 +411,8 @@ Item {
         Rectangle { 
             height: 40; width: parent.width; anchors.top: parent.top; anchors.left: parent.left
             gradient: Gradient { 
-                GradientStop { position: 0.0; color: "#f8f8f8" } // "#FAFAFA" }
-                //GradientStop { position: 0.5; color: "#E8E9EC" }
-                GradientStop { position: 1.0; color: "#eaeaea" } // "#E2E3E7" }
+                GradientStop { position: 0.0; color: "#ffffff" } 
+                GradientStop { position: 1.0; color: "#eaeaea" } 
             }
         }
         // Navigator Bar, should use verticalCenter: parent.verticalCenter
@@ -626,6 +626,7 @@ Item {
                 highlightMoveDuration: 2
             } // end of historyListView
         }
+
         MouseArea { 
             z: (container.state == "opened") ? 3 : 1
             anchors.fill: parent
