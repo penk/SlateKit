@@ -219,7 +219,7 @@ Item {
             } 
             Keys.onReleased: {
                 if(event.key == Tab.MetaKey) 
-                    Tab.commandKey = false
+                Tab.commandKey = false
             }
 
             experimental.itemSelector: PopOver {}
@@ -292,7 +292,7 @@ Item {
                         Tab.itemMap[model.pageid].title : "Loading..";
                         color: "white"; 
                         anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; 
-                            leftMargin: Tab.DrawerMargin+30; right: parent.right } 
+                        leftMargin: Tab.DrawerMargin+30; right: parent.right } 
                         elide: Text.ElideRight 
                     }
                     MouseArea { 
@@ -508,7 +508,8 @@ Item {
                     if (urlText.activeFocus) { 
                         urlText.selectAll(); parent.border.color = "#2E6FFD"; parent.border.width = 2;
                         keyboard.state = 'show'
-                    } else { parent.border.color = "black"; parent.border.width = 1; 
+                    } else { 
+                        parent.border.color = "black"; parent.border.width = 1; 
                         keyboard.state = 'hide'
                     }
                 }
@@ -571,60 +572,84 @@ Item {
             }
         }
 
-        Rectangle {
-            id: suggestionDialog
+        Item { 
+            id: suggestionContainer
+            width: root.width - 180 + 24
+            height: suggestionDialog.height + 24 + 30 
+            anchors { top: parent.top; topMargin: 22; left: parent.left; leftMargin: 100; }
             visible: (urlText.focus && historyModel.count > 0)
-            color: "lightgray"
-            radius: 5 
-            width: parent.width - 180
-            height: (historyModel.count > 3) ? ((historyModel.count <= 8) ? historyModel.count * 40 : 330) : 120
-            anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
-            z: 5 // highest z index so far.. 
+            z: 5
 
-            Text { // caret-up 
-                anchors.top: parent.top
-                anchors.topMargin: -34
-                anchors.left: parent.horizontalCenter
-                anchors.leftMargin: -30
-                font { family: fontAwesome.name; pointSize: 53 }
-                text: "\uF0D8"; 
-                color: "lightgray" 
-            }
+            Rectangle {
+                id: suggestionDialog
+                color: "lightgray"
+                radius: 5 
+                anchors.centerIn: parent 
+                width: root.width - 180 
+                height: (historyModel.count > 3) ? ((historyModel.count <= 8) ? historyModel.count * 40 : 330) : 120
+                anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
 
-            ListView { 
-                id: historyListView
-                anchors.fill: parent
-                anchors.topMargin: 30 
-                anchors.bottomMargin: 30
-                model: historyModel 
-                delegate: historyDelegate
-                ListModel { 
-                    id: historyModel
+                Text { // caret-up 
+                    anchors.top: parent.top
+                    anchors.topMargin: -34
+                    anchors.left: parent.horizontalCenter
+                    anchors.leftMargin: -30
+                    font { family: fontAwesome.name; pointSize: 53 }
+                    text: "\uF0D8"; 
+                    color: "lightgray" 
                 }
-                Component {
-                    id: historyDelegate
-                    Rectangle { 
-                        color: "transparent"
-                        height: Tab.DrawerHeight
-                        width: parent.width 
-                        Text { 
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            text: model.url + ' - ' + model.title 
-                            font.pointSize: 16 
-                            elide: Text.ElideRight
-                        }
-                        MouseArea { 
-                            anchors.fill: parent; 
-                            onClicked: loadUrl(model.url) 
+
+                ListView { 
+                    id: historyListView
+                    anchors.fill: parent
+                    anchors.topMargin: 30 
+                    anchors.bottomMargin: 30
+                    model: historyModel 
+                    delegate: historyDelegate
+                    ListModel { 
+                        id: historyModel
+                    }
+                    Component {
+                        id: historyDelegate
+                        Rectangle { 
+                            color: "transparent"
+                            height: Tab.DrawerHeight
+                            width: parent.width 
+                            Text { 
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                text: model.url + ' - ' + model.title 
+                                font.pointSize: 16 
+                                elide: Text.ElideRight
+                            }
+                            MouseArea { 
+                                anchors.fill: parent; 
+                                onClicked: loadUrl(model.url) 
+                            }
                         }
                     }
-                }
-                highlight: Rectangle { 
-                    color: "darkgray"
-                }
-                highlightMoveDuration: 2
-            } // end of historyListView
+                    highlight: Rectangle { 
+                        color: "darkgray"
+                    }
+                    highlightMoveDuration: 2
+                } // end of historyListView
+            }
+
+        }
+
+        DropShadow {
+            id: suggestionShadow;                
+            z: 5
+            visible: (urlText.focus && historyModel.count > 0)
+            anchors.fill: source
+            cached: true;                          
+            horizontalOffset: 3;
+            verticalOffset: 3;                         
+            radius: 12.0;
+            samples: 16;
+            color: "#80000000";
+            smooth: true;
+            source: suggestionContainer;
         }
 
         MouseArea { 
