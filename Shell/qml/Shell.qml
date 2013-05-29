@@ -376,8 +376,6 @@ Item {
         anchors.top: parent.top
         width: parent.width
         height: parent.height
-        //color: "#E4E4E8" // light gray
-        //color: "#333438"
         color: "#6B6C71" 
         z: 1 
         RadialGradient {
@@ -385,7 +383,7 @@ Item {
             anchors.fill: parent
             gradient: Gradient {
                 GradientStop { position: 0.0; color: "#00000000" }
-                GradientStop { position: 1.0; color: "#FF000000" }//000000" }
+                GradientStop { position: 1.0; color: "#FF000000" }
             }
             verticalOffset: -150
             horizontalRadius: root.width - 250 
@@ -396,7 +394,6 @@ Item {
             visible: (typeof(Tab.itemMap[currentTab])==="undefined")
             anchors.centerIn: parent
             text: "SlateKit Shell"
-            //color: "#636468" //#6B6C71"
             color: "#4D4E51"
             font.pointSize: 80
             font.bold: true 
