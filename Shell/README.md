@@ -23,7 +23,7 @@ Or compile executable by:
     qmake && make && ./shell
 
 ## License 
-The source codes are, unless otherwise specified, distributed under the terms of the Apache License 2.0
+The source codes are, unless otherwise specified, distributed under the terms of the MIT License
 
 Copyright © 2013 Ping-Hsun Chen ([@penk](http://twitter.com/penk)) <[penkia@gmail.com](mailto:penkia@gmail.com)>
 [![githalytics.com alpha](https://cruel-carlota.pagodabox.com/fbf22fe6e291e9f9a1c76036c8766f5e "githalytics.com")](http://githalytics.com/penk/SlateKit)
