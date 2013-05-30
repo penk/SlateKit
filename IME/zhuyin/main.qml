@@ -17,7 +17,7 @@ Item {
         font.pointSize: 30
         text: "input here"
         onTextChanged: { 
-            var result = JS.query(t.text);
+            var result = JS.getTerms(t.text);
             if (result !== undefined) {
                 candidates = result.map( function(i) { return i[0] });
                 console.log(candidates);
@@ -33,11 +33,10 @@ Item {
         anchors { top: t.bottom; left: parent.left } 
         model: candidates;  
         delegate: Rectangle {
-            width:40
-            height:80
+            width: modelData.length * 40
+            height: 80
             Text {
-                anchors.fill: parent;
-                anchors.margins: 5
+                id: text
                 font.pointSize: 30
                 text: modelData 
             }

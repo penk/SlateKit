@@ -43,34 +43,55 @@ var zhuyinMapping = {
     'z':'ㄈ'
 };
 
-function query(str) {
-    return jsonData[ [].map.call( str, function(i) { return zhuyinMapping[i] }).join('') ];
+function getTerms(str) {
+    var syllablesStr = [].map.call(str, function(i) { 
+        switch(i) { 
+            case ' ': 
+                return '-'; 
+                break;
+            case '3':
+            case '4': 
+            case '6':
+            case '7':
+                return zhuyinMapping[i]+'-';
+                break;
+            default: 
+                return zhuyinMapping[i];
+        }
+    }).join('');
+
+    syllablesStr = syllablesStr.replace(/\-$/, '');
+    console.log('Get terms for ' + syllablesStr + '.');
+    return jsonData[ syllablesStr ];
 }
 
 function loadJSON() {
     var xhr = new XMLHttpRequest();
-    var response;
     xhr.open("GET", "./words.json", true); 
     xhr.onreadystatechange = function()
     {
         if ( xhr.readyState == xhr.DONE) {
+            var response;
             try { response = JSON.parse(xhr.responseText); } catch (e) { console.error(e) } 
             if (typeof response !== 'object') { console.log('Failed to load words.json: Malformed JSON'); }
             for (var s in response) { jsonData[s] = response[s]; }
         }
     }
     xhr.send();
-/*
-    xhr.open("GET", "./phrases.json", true);
-    xhr.onreadystatechange = function()
+
+    var pxhr = new XMLHttpRequest();
+    pxhr.open("GET", "./phrases.json", true);
+    pxhr.onreadystatechange = function()
     {
-        if ( xhr.readyState == xhr.DONE) {
-            try {  response = JSON.parse(xhr.responseText); } catch (e) { console.error(e) }
+        if (pxhr.readyState == xhr.DONE) {
+            var response;
+            try { response = JSON.parse(pxhr.responseText); } catch (e) { console.error(e) }
             if (typeof response !== 'object') {  onsole.log('Failed to load phrases.json: Malformed JSON'); }
-            for (var s in response) { jsonData[s] = response[s]; }
+            for (var s in response) { 
+                jsonData[s] = response[s]; 
+            }
             console.log('JSON loaded');
         }
     }
-    xhr.send();
-*/
+    pxhr.send();
 }
