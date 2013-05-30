@@ -43,26 +43,69 @@ var zhuyinMapping = {
     'z':'ㄈ'
 };
 
+var processResult = function processResult(r) {
+    r = r.sort(
+        function sort_result(a, b) {
+        return (b[1] - a[1]);
+    }
+    );
+    var result = [];
+    var t = [];
+    r.forEach(function(term) {
+        if (t.indexOf(term[0]) !== -1) return;
+        t.push(term[0]);
+        result.push(term);
+    });
+    return result;
+};
+
 function getTerms(str) {
     var syllablesStr = [].map.call(str, function(i) { 
         switch(i) { 
             case ' ': 
                 return '-'; 
-                break;
+            break;
             case '3':
-            case '4': 
-            case '6':
-            case '7':
+                case '4': 
+                case '6':
+                case '7':
                 return zhuyinMapping[i]+'-';
-                break;
+            break;
             default: 
                 return zhuyinMapping[i];
         }
     }).join('');
 
-    syllablesStr = syllablesStr.replace(/\-$/, '');
+    if ( syllablesStr.match(/\-$/) )  
+        syllablesStr = syllablesStr.replace(/\-$/, '');
+    else 
+        syllablesStr += '*'; 
+
+    var matchRegEx;
+    if (syllablesStr.indexOf('*') !== -1) {
+        matchRegEx = new RegExp(
+            '^' + syllablesStr.replace(/\-/g, '\\-')
+            .replace(/\*/g, '[^\-]*') + '$');
+    }
     console.log('Get terms for ' + syllablesStr + '.');
-    return jsonData[ syllablesStr ];
+
+    if (jsonData && syllablesStr !== "*") {
+        if (!matchRegEx) { return jsonData[ syllablesStr ]; }
+        var result = [];
+        for (var s in jsonData) {
+            if (!matchRegEx.exec(s))
+                continue;
+            result = result.concat(jsonData[s]);
+        }
+        if (result.length) {
+            result = processResult(result);
+        } else {
+            result = false;
+        }
+        return result; 
+    } 
+
+
 }
 
 function loadJSON() {
