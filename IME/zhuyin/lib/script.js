@@ -89,9 +89,9 @@ function getTerms(str) {
     }
     console.log('Get terms for ' + syllablesStr + '.');
 
+    var result = [];
     if (jsonData && syllablesStr !== "*") {
         if (!matchRegEx) { return jsonData[ syllablesStr ]; }
-        var result = [];
         for (var s in jsonData) {
             if (!matchRegEx.exec(s))
                 continue;
@@ -102,9 +102,9 @@ function getTerms(str) {
         } else {
             result = false;
         }
-        return result; 
     } 
 
+    return result; 
 
 }
 
