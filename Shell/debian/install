@@ -1,0 +1,7 @@
+qml/PopOver.qml /usr/share/slatekit-shell
+qml/icons/fontawesome-webfont.ttf /usr/share/slatekit-shell/icons
+qml/icons/favicon.png /usr/share/slatekit-shell/icons
+qml/Shell.qml /usr/share/slatekit-shell
+qml/js/userscript.js /usr/share/slatekit-shell/js
+qml/js/script.js /usr/share/slatekit-shell/js
+slatekit-shell.desktop /usr/share/applications

@@ -3,6 +3,7 @@ Priority: extra
 Maintainer: Ping-Hsun Chen (penk) <penkia@gmail.com>
 Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.4
+Section: misc
 Homepage: https://github.com/penk/SlateKit/tree/master/Shell
 
 Package: slatekit-shell
