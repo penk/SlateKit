@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=SlateKit Shell
+GenericName=SlateKit Shell
+Comment=Web Browser with a Hamburger Button
+Type=Application
+Icon=webbrowser-app
+Exec=/usr/bin/qmlscene /usr/share/slatekit-shell/Shell.qml 
+Terminal=false
+Categories=Network;WebBrowser;
+Keywords=Internet;WWW;Browser;Web;Explorer
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;
+X-Ubuntu-Touch=true

@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.LocalStorage 2.0
 import QtGraphicalEffects 1.0
+//import QtQuick.Window 2.0
 
 import QtWebKit 3.0
 import QtWebKit.experimental 1.0
@@ -9,8 +10,7 @@ import "js/script.js" as Tab
 Item {
     id: root 
     width: 960; height: 640
-    //width: 320; height: 480
-    //width: 1024; height: 600
+    //width: Screen.width; height: Screen.height
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property string title: ""

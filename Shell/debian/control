@@ -1,0 +1,19 @@
+Source: slatekit-shell
+Priority: extra
+Maintainer: Ping-Hsun Chen (penk) <penkia@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: https://github.com/penk/SlateKit/tree/master/Shell
+
+Package: slatekit-shell
+Section: misc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ 	 qmlscene,
+         libqt5sql5-sqlite,
+         libqt5webkit5-qmlwebkitplugin,
+         qtdeclarative5-qtquick2-plugin,
+         qtdeclarative5-ubuntu-ui-toolkit-plugin,
+         qtdeclarative5-window-plugin,
+Description: slatekit-shell 
+ Web Browser with a Hamburger Button 
