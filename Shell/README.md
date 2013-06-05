@@ -1,5 +1,5 @@
 # SlateKit Shell
-Qt5/QML WebKit Browser with Sliding Drawer UI 
+Qt5/QML WebKit Browser with a Hamburger Button
 
 ![Drawer](https://raw.github.com/penk/SlateKit/master/Shell/screenshot.png)
 
@@ -12,6 +12,7 @@ More information: [http://penkia.blogspot.com/2013/05/slatekit-shell-qt5qml-webk
 - Custom event binding including [Open in New Tab](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/new_tab.gif)
 - Custom popover for [select elements](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/popover.png)
 - Built-in virtual keyboard for [English](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/keyboard.png) and [Chinese Handwriting](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/handwriting.png) 
+- [Reader mode](https://raw.github.com/penk/SlateKit/master/Shell/screenshots/reader.png) based on [readability.js](http://code.google.com/p/arc90labs-readability/source/browse/trunk/js/readability.js)
 
 ## Usage
 
