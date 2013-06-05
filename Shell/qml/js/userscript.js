@@ -49,7 +49,18 @@ document.documentElement.addEventListener('click', (function(e) {
 }), true);
 
 navigator.qt.onmessage = function(ev) {
-//    var data = JSON.parse(ev.data)
+    var data = JSON.parse(ev.data)
+    if (data.type == 'readability') {
+
+        readStyle='style-novel';
+        readSize='size-large';
+        readMargin='margin-wide';
+
+        _readability_script = document.createElement('SCRIPT');
+        _readability_script.type = 'text/javascript';
+        _readability_script.text = data.content;
+        document.getElementsByTagName('head')[0].appendChild(_readability_script);
+    }
 }
 
 // FIXME: experiementing on tap and hold 

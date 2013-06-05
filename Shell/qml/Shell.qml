@@ -13,7 +13,7 @@ Item {
     //width: Screen.width; height: Screen.height
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
-    property string title: ""
+    property bool readerMode: false 
 
     //FontLoader { id: fontAwesome; source: "http://netdna.bootstrapcdn.com/font-awesome/3.0/font/fontawesome-webfont.ttf" }
     FontLoader { id: fontAwesome; source: "icons/fontawesome-webfont.ttf" }  
@@ -88,7 +88,6 @@ Item {
         Tab.itemMap[currentTab].visible = true;
         // assign url to text bar
         urlText.text = Tab.itemMap[currentTab].url;
-        root.title = Tab.itemMap[currentTab].title;
     }
 
     function closeTab(deleteIndex, pageid) { 
@@ -187,6 +186,24 @@ Item {
         historyListView.currentIndex = 0;
     }
 
+    function toggleReaderMode() {
+        if (readerMode) {
+            Tab.itemMap[currentTab].reload();
+        } else { 
+            // FIXME: dirty hack to load js from local file 
+            var xhr = new XMLHttpRequest;
+            xhr.open("GET", "./js/readability.js");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    var read = new Object({'type':'readability', 'content': xhr.responseText });
+                    Tab.itemMap[currentTab].experimental.postMessage( JSON.stringify(read) );
+                }
+            }
+            xhr.send();
+        }
+        readerMode = !readerMode; 
+    }
+
     Component {
         id: tabView
         WebView { 
@@ -257,7 +274,6 @@ Item {
                 urlText.text = Tab.itemMap[currentTab].url;
                 if (loadRequest.status == WebView.LoadSucceededStatus) {
                     Tab.commandKey = false;
-                    root.title = Tab.itemMap[currentTab].title;
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }
             }
@@ -588,8 +604,12 @@ Item {
             Text { 
                 text: "\uF013"
                 font { family: fontAwesome.name; pointSize: 28 }
-                color: "#AAAAAA" 
+                color: (readerMode && hasTabOpen) ? "#FED164" : "#AAAAAA" 
                 style: Text.Sunken; styleColor: "gray"
+            }
+            MouseArea {
+                anchors.fill: parent; anchors.margins: -5
+                onClicked: if (hasTabOpen) toggleReaderMode();
             }
         }
 
