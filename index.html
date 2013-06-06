@@ -8,8 +8,9 @@
         <meta name="author" content="">
 
         <!-- Le styles -->
-        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
         <link href="http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
+
         <style type="text/css">
             body {
                 padding-top: 20px;
@@ -33,7 +34,13 @@
                 margin-top: -8px; 
                 margin-left: 8px;
             }
-            .center { text-align: center; }
+            .center { 
+                text-align: center; 
+            }
+            .tips {
+                margin-left: 40px;
+                line-height: 30px;
+            }
         </style>
 
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -51,7 +58,6 @@
                     <li class="active">Web Browser</li>
                     <li class="pull-right"><a href="mailto:penkia@gmail.com">Contact Us</a> <span class="divider"></span></li>
                     <li class="pull-right"><a href="https://github.com/penk/SlateKit/wiki/Customize-QML-Virtual-Keyboard">Keyboard</a> <span class="divider">/</span></li>
-                    <li class="pull-right"><a href="about.html">Launcher</a> <span class="divider">/</span></li>
                 </ul>
             </div>
             <div> <a href="http://penkia.blogspot.com/2013/05/slatekit-shell-qt5qml-webkit-browser.html"><img src="images/heroshot.png"></a></div>
@@ -62,7 +68,9 @@
                 <p class="pull-right">
                 <a class="btn btn-large btn-danger action" href="https://github.com/penk/SlateKit/tree/master/Shell">
                     <i class="icon-cloud-download icon-2x pull-left"></i>Get Source Code<br><small>from Github</small></a>
-                <br><span style="margin-left: 40px;">or <a href="http://penkia.blogspot.com/2013/06/slatekit-shell-is-now-available-on.html">install on Ubuntu Touch</a><span></p>
+                <br><span class="tips">or <a href="http://penkia.blogspot.com/2013/06/slatekit-shell-is-now-available-on.html">install on Ubuntu Touch</a>
+
+                <span></p>
 
                 <h2>
                     <span class="icon-stack">
@@ -86,12 +94,12 @@
                         <li class="span4 center">
                         <i class="icon-keyboard icon-4x"></i>
                         <h4>Virtual Keyboard</h4>
-                        <p>Built-in on-screen keyboard, perfect for kiosk, without the need of ime or window system.</p>
+                        <p>Built-in keyboard fits perfect for kiosk, without the need of input engine or window system.</p>
                         </li>
 
                         <li class="span4 center">
                         <i class="icon-edit-sign icon-4x"></i>
-                        <h4>Handwriting</h4>
+                        <h4>Handwriting and more</h4>
                         <p>Fully open source handwriting-recognition solution, integrated right into WebKit. </p>
                         </li>
                     </ul>
@@ -103,22 +111,22 @@
                     <ul class="thumbnails">
 
                         <li class="span6">
-                        <a class="thumbnail" href="images/keyboard.png"><img src="images/keyboard-s.png"></a>
+                        <a class="thumbnail" href="images/keyboard.png" title="On-Screen Keyboard"><img src="images/keyboard-s.png"></a>
                         </li>
 
                         <li class="span6">
-                        <a class="thumbnail" href="images/popover.png"><img src="images/popover-s.png"></a>
+                        <a class="thumbnail" href="images/popover.png" title="Popover of Select"><img src="images/popover-s.png"></a>
                         </li>
 
                     </ul>
 
                     <ul class="thumbnails">
                         <li class="span6">
-                        <a class="thumbnail" href="images/reader.png"><img src="images/reader-s.png"></a>
+                        <a class="thumbnail" href="images/reader.png" title="Reader Mode"><img src="images/reader-s.png"></a>
                         </li>
 
                         <li class="span6">
-                        <a class="thumbnail" href="images/handwriting.png"><img src="images/handwriting-s.png"></a>
+                        <a class="thumbnail" href="images/handwriting.png" title="Handwriting in Action"><img src="images/handwriting-s.png"></a>
                         </li>
 
                     </ul>
@@ -128,12 +136,12 @@
             </section>
 
             <section id="help">
-            <p class="center">Need help? <a href="mailto:penkia@gmail.com">Send us an email!</a></p>
+            <p class="center">Need help or got feedback? <a href="mailto:penkia@gmail.com">Send us an email!</a></p>
             </section>
             <hr>
 
             <div class="footer center muted" style="margin-top: -20px;">
-                <p>Creative Commons BY-NC-SA 3.0 © 2013 <a href="http://twitter.com/penk">penk</a></p>
+                <p>Creative Commons BY-NC-SA 3.0 © 2013 Ping-Hsun Chen (<a href="http://twitter.com/penk">penk</a>)</p>
             </div>
 
         </div> <!-- /container -->
@@ -143,8 +151,16 @@
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="./js-global/FancyZoom.js" type="text/javascript"></script>
         <script src="./js-global/FancyZoomHTML.js" type="text/javascript"></script>
+
+
         <!--
+         <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        -->
+    <!--
         <script src="http://twitter.github.com/bootstrap/assets/js/jquery.js"></script>
+        <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js"></script>
+
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-transition.js"></script>
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-alert.js"></script>
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
@@ -152,12 +168,10 @@
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-scrollspy.js"></script>
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tab.js"></script>
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tooltip.js"></script>
-        <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js"></script>
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-button.js"></script>
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-collapse.js"></script>
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-carousel.js"></script>
         <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-typeahead.js"></script>
-        -->
-
+    -->
     </body>
 </html>
