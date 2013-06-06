@@ -59,6 +59,7 @@
                     'sudo apt-get update\n'+
                     'sudo apt-get install slatekit-shell</pre>';
                     $("#popover").popover({ title: 'Install from Ubuntu PPA', content: code, html: true, placement: 'top' });
+                    $("a[rel=popover]").popover().click(function(e) { e.preventDefault(); });
                     });
                 </script>
             </head>
