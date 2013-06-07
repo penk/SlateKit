@@ -10,6 +10,7 @@ import "js/script.js" as Tab
 Item {
     id: root 
     width: 960; height: 640
+    //width: 800; height: 480
     //width: Screen.width; height: Screen.height
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
@@ -118,8 +119,7 @@ Item {
     }
 
     function fixUrl(url) {
-        url = url.replace( /^\s+/, "");
-        url = url.replace( /\s+$/, "")
+        url = url.replace( /^\s+/, "").replace( /\s+$/, ""); // remove white space
         url = url.replace( /(<([^>]+)>)/ig, ""); // remove <b> tag 
         if (url == "") return url;
         if (url[0] == "/") { return "file://"+url; }
@@ -129,6 +129,7 @@ Item {
             return str.substring(0, n)+url.substring(1);
         }
         //FIXME: search engine support here
+        if (url.indexOf('.') < 0) { return "http://www.google.com/search?q="+url; }
         if (url.indexOf(":")<0) { return "http://"+url; }
         else { return url;}
     }
@@ -274,6 +275,7 @@ Item {
                 urlText.text = Tab.itemMap[currentTab].url;
                 if (loadRequest.status == WebView.LoadSucceededStatus) {
                     Tab.commandKey = false;
+                    readerMode = false; 
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }
             }
