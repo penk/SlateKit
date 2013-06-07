@@ -8,13 +8,14 @@ Homepage: https://github.com/penk/SlateKit/tree/master/Shell
 
 Package: slatekit-shell
 Section: misc
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends},
+Architecture: i386 amd64 armhf
+Depends: ${misc:Depends},
+ 	 ${shlibs:Depends},
  	 qmlscene,
          libqt5sql5-sqlite,
          libqt5webkit5-qmlwebkitplugin,
          qtdeclarative5-qtquick2-plugin,
          qtdeclarative5-ubuntu-ui-toolkit-plugin,
          qtdeclarative5-window-plugin,
-Description: slatekit-shell 
- Web Browser with a Hamburger Button 
+Description: Web Browser with a Hamburger Button 
+ Based on Qt5/QtQuick2 WebKit, written entirely in QML/JavaScript

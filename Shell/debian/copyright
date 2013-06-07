@@ -2,14 +2,14 @@ Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: slatekit-shell
 Source: https://github.com/penk/SlateKit/tree/master/Shell
 
-File: qml/icons/fontawesome-webfont.ttf
+Files: qml/icons/fontawesome-webfont.ttf
 Copyright: Font Awesome by Dave Gandy - http://fontawesome.io
 License: SIL OFL 1.1
 URL: http://scripts.sil.org/OFL
 
-File: qml/js/readability.js
+Files: qml/js/readability.js
 Copyright: Copyright (c) 2010 Arc90 Inc
-License: Readability is licensed under the Apache License, Version 2.0.
+License: Apache License 2.0
 URL: http://code.google.com/p/arc90labs-readability
 
 Files: qml/*
