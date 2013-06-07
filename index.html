@@ -32,7 +32,7 @@
             }
             .subtitle {
                 margin-top: -8px; 
-                margin-left: 8px;
+                margin-left: 12px;
                 margin-bottom: 8px;
                 font-size: 120%;
             }
@@ -56,8 +56,7 @@
         <script type="text/javascript">
             $(function() { 
                     var code = '<pre>'+
-                    'sudo add-apt-repository \\\n'+
-                    ' ppa:ubuntu-touch-coreapps-drivers/collection\n'+ 
+                    'sudo add-apt-repository ppa:ubuntu-touch-coreapps-drivers/collection\n'+ 
                     'sudo apt-get update\n'+
                     'sudo apt-get install slatekit-shell</pre>';
                     $("#popover").popover({ title: 'For Ubuntu 13.04 and later:', content: code, html: true, placement: 'bottom' });
