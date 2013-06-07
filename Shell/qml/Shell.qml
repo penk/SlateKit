@@ -367,6 +367,7 @@ Item {
                 }
                 MouseArea { 
                     anchors.fill: parent;
+                    enabled: (container.state == "opened") 
                     onClicked: {
                         openNewTab("page-"+salt(), Tab.HomePage); 
                     }
