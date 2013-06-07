@@ -117,8 +117,8 @@ var readability = {
         /* Dirty hack by Ping-Hsun Chen (penk) to assign CSS style directly */
         innerDiv.style.margin = "0 auto";
         innerDiv.style.maxWidth = "625px"; 
-        innerDiv.style.fontSize = "1.7em";
-        innerDiv.style.lineHeight = "1.48em";
+        innerDiv.style.fontSize = "24px";
+        innerDiv.style.lineHeight = "32px";
         innerDiv.style.fontFamily = "serif";
         document.body.style.backgroundColor = "#f4f4f4";
 
@@ -350,6 +350,8 @@ var readability = {
         
         var articleTitle = document.createElement("H1");
         articleTitle.innerHTML = curTitle;
+        // hack by penk
+        articleTitle.style.lineHeight = "48px";
         
         return articleTitle;
     },
