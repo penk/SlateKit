@@ -464,6 +464,7 @@ Item {
             id: drawerButton
             width: 30; height: 30; anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; topMargin: 5 } 
             Text { 
+                id: drawerButtonIcon
                 text: (fontAwesome.status === FontLoader.Ready) ? "\uF0C9" : ""; 
                 font { family: fontAwesome.name; pointSize: 28 } 
                 color: "#AAAAAA" 
@@ -472,7 +473,9 @@ Item {
             MouseArea {
                 anchors.fill: parent;
                 anchors.margins: -5; // trick to handle touch 
+                onPressed: drawerButtonIcon.color = "#FED164"; 
                 onClicked: { container.state == "closed" ? container.state = "opened" : container.state = "closed"; }
+                onReleased: drawerButtonIcon.color = "#AAAAAA";
             }
         }
 
@@ -480,6 +483,7 @@ Item {
             id: backButton
             width: 30; height: 30; anchors { top: parent.top; left: drawerButton.right; margins: Tab.DrawerMargin; topMargin: 7}
             Text { 
+                id: backButtonIcon
                 text: "\uF053" 
                 font { family: fontAwesome.name; pointSize: 26 }
                 color: hasTabOpen ? (Tab.itemMap[currentTab].canGoBack ? "#AAAAAA" : "lightgray") : "lightgray"
@@ -487,7 +491,9 @@ Item {
             }
             MouseArea { 
                 anchors.fill: parent; anchors.margins: -5; 
+                onPressed: backButtonIcon.color = "#FED164";
                 onClicked: { if (Tab.itemMap[currentTab].canGoBack) Tab.itemMap[currentTab].goBack()  }
+                onReleased: backButtonIcon.color = "#AAAAAA";
             }
         }
         // TODO: forward button? \uF061 
@@ -608,6 +614,7 @@ Item {
             id: exportButton
             width: 30; height: 30; anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin; topMargin: 6}
             Text { 
+                id: exportButtonIcon
                 text: "\uF013"
                 font { family: fontAwesome.name; pointSize: 28 }
                 color: (readerMode && hasTabOpen) ? "#FED164" : "#AAAAAA" 
