@@ -20,14 +20,8 @@ Item {
     FontLoader { id: fontAwesome; source: "icons/fontawesome-webfont.ttf" }  
 
     Component.onCompleted: {
-        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
-        db.transaction(
-            function(tx) { 
-                tx.executeSql('CREATE TABLE IF NOT EXISTS history (url TEXT, title TEXT, icon TEXT, date INTEGER)');
-            }
-        );
+        var db = getDatabase(); 
         if (Tab.ReopenPreviousTab) {
-            db.transaction(function(tx) {tx.executeSql('CREATE TABLE IF NOT EXISTS previous (url TEXT)'); });
             db.transaction(
                 function(tx) {
                     var result = tx.executeSql("SELECT * FROM previous"); 
@@ -44,9 +38,8 @@ Item {
         bounce.start()
     }
     Component.onDestruction: { 
+        var db = getDatabase(); 
         if (Tab.ReopenPreviousTab) {
-            var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000);
-            db.transaction(function(tx) {tx.executeSql('CREATE TABLE IF NOT EXISTS previous (url TEXT)'); });
             for (var openedUrl in Tab.itemMap) {
                 db.transaction(
                     function(tx) { 
@@ -63,6 +56,17 @@ Item {
         PropertyAnimation { target: container; properties: "anchors.leftMargin"; to: Tab.DrawerWidth; duration: 200; easing.type: Easing.InOutQuad; }
         PropertyAnimation { target: container; properties: "anchors.leftMargin"; to: "0"; duration: 400; easing.type: Easing.InOutQuad; }
     } 
+
+    function getDatabase() {
+        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000);
+        db.transaction(
+            function(tx) { 
+                tx.executeSql('CREATE TABLE IF NOT EXISTS history (url TEXT, title TEXT, icon TEXT, date INTEGER)');
+            }
+        );
+        db.transaction(function(tx) {tx.executeSql('CREATE TABLE IF NOT EXISTS previous (url TEXT)'); });
+        return db;
+    }
     function openNewTab(pageid, url) {
         //console.log("openNewTab: "+ pageid + ', currentTab: ' + currentTab);
         if (hasTabOpen) {      
@@ -144,7 +148,7 @@ Item {
     }
     function updateHistory(url, title, icon) { 
         var date = new Date();
-        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
+        var db = getDatabase();
         db.transaction(
             function(tx) {
                 var result = tx.executeSql('delete from history where url=(?);',[url])
@@ -171,7 +175,7 @@ Item {
     }
 
     function queryHistory(str) {
-        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000)
+        var db = getDatabase();
         var result; 
         db.transaction(
             function(tx) {
