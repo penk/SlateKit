@@ -670,12 +670,25 @@ Item {
                             color: "transparent"
                             height: Tab.DrawerHeight
                             width: parent.width 
-                            Text { 
-                                anchors.fill: parent
-                                anchors.margins: 10
-                                text: model.url + ' - ' + model.title 
-                                font.pointSize: 16 
-                                elide: Text.ElideRight
+                            Text {                          
+                                anchors {                       
+                                    top: parent.top; left: parent.left; right: parent.right
+                                    margins: 8; leftMargin: 10;
+                                }                               
+                                text: '<b>'+ model.title +'<b>' 
+                                font.pointSize: 14    
+                                elide: Text.ElideRight          
+                            }  
+                            Text {                          
+                                anchors {                       
+                                    top: parent.top; left: parent.left; right: parent.right
+                                    margins: 8;          
+                                    topMargin: 26; leftMargin: 10;
+                                }                               
+                                color: "#565051" // darkgray    
+                                text: model.url                 
+                                font.pointSize: 10    
+                                elide: Text.ElideMiddle         
                             }
                             MouseArea { 
                                 anchors.fill: parent; 
