@@ -244,6 +244,56 @@ Item {
                 Tab.commandKey = false
             }
 
+            MouseArea { 
+                id: contextOverlay; 
+                anchors.fill: parent; 
+                enabled: contextMenu.visible
+                onClicked: contextMenu.visible = false 
+            }
+            
+            Rectangle{
+                id: contextMenu
+                visible: false 
+                width: 250; height: 230
+                color: "gray"
+                radius: 5 
+                Text {  
+                    id: contextUrl
+                    color: "white"
+                    wrapMode: Text.WrapAnywhere 
+                    anchors { 
+                        top: parent.top; left: parent.left; right: parent.right; 
+                        margins: 20; topMargin: 10
+                    }
+                }
+                Column {
+                    id: contextButtons
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 10
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: 8
+                    ContextButton { 
+                        label: "Open"; 
+                        onClicked: { Tab.itemMap[currentTab].url = contextUrl.text; contextMenu.visible = false }
+                    }
+                    ContextButton { 
+                        label: "Open in New Tab"; 
+                        onClicked: { bounce.start(); openNewTab("page"+salt(), contextUrl.text); contextMenu.visible = false }
+                    }
+                    // FIXME: clipboard?
+                    ContextButton { label: "Copy"; onClicked: { console.log('Copy: ' + contextUrl.text); contextMenu.visible = false } }
+                }
+            }
+
+            // FIXME: calculate scale and position of screen
+            function updateContextMenu(X, Y, url) {
+                contextMenu.x = X; contextMenu.y = Y
+                contextMenu.visible = true
+                contextUrl.text = url
+            }
+
+            property real scale: experimental.test.contentsScale
+
             experimental.itemSelector: PopOver {}
             experimental.preferences.fullScreenEnabled: true;
             experimental.preferences.developerExtrasEnabled: true;
@@ -261,12 +311,16 @@ Item {
                 }
                 switch (data.type) {
                     case 'link': {
+                        updateContextMenu(data.pageX, data.pageY, data.href) 
                         if (data.target === '_blank') { // open link in new tab
                             bounce.start()
                             openNewTab('page-'+salt(), data.href)
                         }
                         break;
                     } 
+                    case 'longpress': {
+                        updateContextMenu(data.pageX, data.pageY, fixUrl(data.href));
+                    }
                     case 'input': {
                         keyboard.state = data.state;
                         break;
@@ -276,13 +330,15 @@ Item {
             //experimental.userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3"
 
             onLoadingChanged: { 
+                contextMenu.visible = false;
+                readerMode = false;
                 urlText.text = Tab.itemMap[currentTab].url;
                 if (loadRequest.status == WebView.LoadSucceededStatus) {
                     Tab.commandKey = false;
-                    readerMode = false; 
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }
             }
+
         }
     }
 

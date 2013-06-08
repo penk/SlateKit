@@ -3,7 +3,7 @@ var frames = document.documentElement.getElementsByTagName('iframe');
 function checkNode(e, node) {
     // hook for Open in New Tab (link with target)
     if (node.tagName === 'A') {
-        var link = new Object({'type':'link'})
+        var link = new Object({'type':'link', 'pageX': e.pageX, 'pageY': e.pageY})
         if (node.hasAttribute('target'))
             link.target = node.getAttribute('target');
         link.href = node.getAttribute('href');
@@ -65,11 +65,32 @@ navigator.qt.onmessage = function(ev) {
 
 // FIXME: experiementing on tap and hold 
 var hold;
-function longPressed(x, y) { navigator.qt.postMessage('longpressed: '+x+', '+y) }
-window.document.addEventListener('mousedown', (function(e) {
-    //    hold = setTimeout(longPressed, 800, e.clientX, e.clientY); 
-    //    navigator.qt.postMessage('mousedown: '+e.clientX+', '+e.clientY)
+var longpressDetected = false; 
+var currentTouch = null;
+
+function longPressed(x, y) { 
+    longpressDetected = true; 
+    var element = document.elementFromPoint(x, y);
+
+    // FIXME: should travel nodes to find links
+    if (element.tagName === 'A') { 
+            var data = new Object({'type': 'longpress', 'pageX': x, 'pageY': y})
+            data.href = element.getAttribute('href');
+            navigator.qt.postMessage( JSON.stringify(data) );
+        }
+}
+document.addEventListener('touchstart', (function(currentTouchevent) {
+    if (event.touches.length == 1) {
+            currentTouch = event.touches[0];
+            hold = setTimeout(longPressed, 800, currentTouch.clientX, currentTouch.clientY);
+        }
 }), true);
-window.document.addEventListener('mouseup', (function() {
+
+document.addEventListener('touchend', (function(event) {
+    if (longpressDetected) {
+            longpressDetected = false
+            event.preventDefault();
+        }
+    currentTouch = null;
     clearTimeout(hold); 
 }), true);
