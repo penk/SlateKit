@@ -68,29 +68,59 @@ var hold;
 var longpressDetected = false; 
 var currentTouch = null;
 
-function longPressed(x, y) { 
+function longPressed(x, y, element) { 
     longpressDetected = true; 
-    var element = document.elementFromPoint(x, y);
+    //var element = document.elementFromPoint(x, y);
 
     // FIXME: should travel nodes to find links
+    var data = new Object({'type': 'longpress', 'pageX': x, 'pageY': y})
+    data.href = 'CANT FIND LINK'
     if (element.tagName === 'A') { 
-            var data = new Object({'type': 'longpress', 'pageX': x, 'pageY': y})
-            data.href = element.getAttribute('href');
-            navigator.qt.postMessage( JSON.stringify(data) );
+        data.href = element.getAttribute('href');
+    } else if (element.parentNode.tagName === 'A') { 
+        data.href = element.parentNode.getAttribute('href');
+    } 
+/*
+        var node = element.cloneNode(true);
+        while(node) {
+                if (node.tagName === 'A') { data.href = node.getAttribute('href'); } 
+                node = node.parentNode;
         }
+*/
+    if (element.hasChildNodes()) {
+        var children = element.childNodes;
+        for (var i = 0; i < children.length; i++) {
+            if(children[i].tagName === 'A') 
+                data.href = children[i].getAttribute('href');
+        }
+    }
+    navigator.qt.postMessage( JSON.stringify(data) );
 }
-document.addEventListener('touchstart', (function(currentTouchevent) {
+document.addEventListener('touchstart', (function(event) {
     if (event.touches.length == 1) {
-            currentTouch = event.touches[0];
-            hold = setTimeout(longPressed, 800, currentTouch.clientX, currentTouch.clientY);
-        }
+        currentTouch = event.touches[0];
+        hold = setTimeout(longPressed, 800, currentTouch.clientX, currentTouch.clientY, event.target);
+    }
 }), true);
 
 document.addEventListener('touchend', (function(event) {
     if (longpressDetected) {
-            longpressDetected = false
-            event.preventDefault();
-        }
+        longpressDetected = false
+        event.preventDefault();
+    }
     currentTouch = null;
     clearTimeout(hold); 
+}), true);
+
+
+function distance(touch1, touch2) {
+    return Math.sqrt(Math.pow(touch2.clientX - touch1.clientX, 2) +
+                     Math.pow(touch2.clientY - touch1.clientY, 2));
+}
+
+document.addEventListener('touchmove', (function(event) {
+    if ((event.changedTouches.length > 1) || (distance(event.changedTouches[0], currentTouch) > 3)) {
+        clearTimeout(hold);
+        currentTouch = null;
+    }
 }), true);

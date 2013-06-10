@@ -285,9 +285,21 @@ Item {
                 }
             }
 
-            // FIXME: calculate scale and position of screen
+            // FIXME: calculate scale, and position of screen
             function updateContextMenu(X, Y, url) {
                 contextMenu.x = X; contextMenu.y = Y
+                if (X + contextMenu.width/2 > root.width) {
+                    contextMenu.x = root.width - contextMenu.width - 30
+                } else if (X - contextMenu.width/2 < 0) { 
+                    contextMenu.x = 30
+                } else { 
+                    contextMenu.x = X - contextMenu.width/2 - 10;
+                }
+                if (Y - contextMenu.height - 40 < 0) {
+                    contextMenu.y = Y + 5
+                } else { 
+                    contextMenu.y = Y - contextMenu.height - 20
+                }
                 contextMenu.visible = true
                 contextUrl.text = url
             }
