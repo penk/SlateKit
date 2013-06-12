@@ -212,10 +212,8 @@ Item {
     Component {
         id: tabView
         WebView { 
-            anchors.left: parent.left 
-            anchors.top: parent.top
-            anchors.fill: parent
-
+            anchors { top: parent.top; left: parent.left; right: parent.right; }
+            anchors.bottom: Tab.EnableVirtualKeyboard ? keyboard.top : parent.bottom 
             z: 2 // for drawer open/close control  
             anchors.topMargin: 40 // FIXME: should use navigator bar item
 
@@ -509,12 +507,10 @@ Item {
             transitions: [ 
                 Transition {
                     from: "show"; to: "hide"
-                    PropertyAnimation { target: Tab.itemMap[currentTab]; properties: "contentHeight"; to: Tab.itemMap[currentTab].contentHeight-240; duration: 150; easing.type: Easing.InOutQuad; }
                     PropertyAnimation { target: keyboard; properties: "anchors.bottomMargin"; to: "-240"; duration: 150; easing.type: Easing.InOutQuad; }
                 },
                 Transition {
                     from: "hide"; to: "show"
-                    PropertyAnimation { target: Tab.itemMap[currentTab]; properties: "contentHeight"; to: Tab.itemMap[currentTab].contentHeight+240; duration: 150; easing.type: Easing.InOutQuad;}
                     PropertyAnimation { target: keyboard; properties: "anchors.bottomMargin"; to: "0"; duration: 50; easing.type: Easing.InOutQuad;}
                 }
             ]
