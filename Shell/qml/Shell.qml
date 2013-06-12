@@ -217,31 +217,6 @@ Item {
             z: 2 // for drawer open/close control  
             anchors.topMargin: 40 // FIXME: should use navigator bar item
 
-            // TODO: proper QShortcut / eventFilter support 
-            Keys.onPressed: {
-                if(event.key == Tab.MetaKey) Tab.commandKey = true
-                if(event.key == 84 && Tab.commandKey) { 
-                    openNewTab('page-'+salt(), ''); 
-                    bounce.start(); urlText.focus = true; 
-                } 
-                if(event.key == 87 && Tab.commandKey) {
-                    closeTab(tabListView.currentIndex, currentTab)
-                    bounce.start()
-                }
-                if(event.key >= 49 && event.key <= 57 && Tab.commandKey) { 
-                    var index = parseInt(event.key) - 49
-                    if (typeof(tabListView.model.get(index)) !== "undefined" ) {
-                        tabListView.currentIndex = index
-                        switchToTab(tabListView.model.get(index).pageid)
-                    }
-                    bounce.start()
-                }
-            } 
-            Keys.onReleased: {
-                if(event.key == Tab.MetaKey) 
-                Tab.commandKey = false
-            }
-
             MouseArea { 
                 id: contextOverlay; 
                 anchors.fill: parent; 
@@ -344,7 +319,6 @@ Item {
                 readerMode = false;
                 urlText.text = Tab.itemMap[currentTab].url;
                 if (loadRequest.status == WebView.LoadSucceededStatus) {
-                    Tab.commandKey = false;
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }
             }
@@ -585,7 +559,9 @@ Item {
             TextInput { 
                 id: urlText
                 text: hasTabOpen ? Tab.itemMap[currentTab].url : ""
-                anchors { fill: parent; margins: 5; rightMargin: 15 }
+                anchors { left: parent.left; top: parent.top; right: stopButton.left; margins: 5; }
+                height: parent.height
+                clip: true
                 Text { 
                     id: urlDisplayText
                     anchors.fill: parent; text: urlText.text; color: "black"; elide: Text.ElideRight 
@@ -633,7 +609,6 @@ Item {
                     } else { historyModel.clear() }
                 }
             }            
-
 
             Text {
                 id: stopButton
