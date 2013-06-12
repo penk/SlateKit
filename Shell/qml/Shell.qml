@@ -696,8 +696,9 @@ Item {
                 ListView { 
                     id: historyListView
                     anchors.fill: parent
-                    anchors.topMargin: 30 
-                    anchors.bottomMargin: 30
+                    anchors.topMargin: 15 
+                    anchors.bottomMargin: 15
+                    clip: true
                     model: historyModel 
                     delegate: historyDelegate
                     ListModel { 
