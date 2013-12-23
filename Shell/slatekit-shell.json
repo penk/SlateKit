@@ -1,0 +1,7 @@
+{
+"policy_groups": [
+"networking",
+"sensors"
+],
+"policy_version": 1
+}
