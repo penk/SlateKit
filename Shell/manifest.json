@@ -1,0 +1,14 @@
+{
+"description": "SlateKit Shell",
+"framework": "ubuntu-sdk-13.10",
+"hooks": {
+"slatekit-shell": {
+"apparmor": "slatekit-shell.json",
+"desktop": "slatekit-shell.desktop"
+}
+},
+"maintainer": "Penk Chen <penkia@gmail.com>",
+"name": "com.ubuntu.developer.penk.slatekit-shell",
+"title": "SlateKit Shell",
+"version": "0.3"
+}

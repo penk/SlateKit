@@ -1,11 +1,11 @@
 [Desktop Entry]
 Version=1.0
-Name=SlateKit Shell
+Name=SlateKit
 GenericName=SlateKit Shell
 Comment=Web Browser with a Hamburger Button
 Type=Application
 Icon=webbrowser-app
-Exec=/usr/bin/qmlscene /usr/share/slatekit-shell/Shell.qml 
+Exec=qmlscene ./qml/Shell.qml 
 Terminal=false
 Categories=Network;WebBrowser;
 Keywords=Internet;WWW;Browser;Web;Explorer

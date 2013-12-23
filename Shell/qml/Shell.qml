@@ -277,7 +277,8 @@ Item {
                 contextUrl.text = url
             }
 
-            property real scale: experimental.test.contentsScale
+            //property real scale: experimental.test.contentsScale
+            experimental.devicePixelRatio: 2.0; 
 
             experimental.itemSelector: PopOver {}
             experimental.preferences.fullScreenEnabled: true;
