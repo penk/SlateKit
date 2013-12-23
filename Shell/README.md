@@ -21,7 +21,7 @@ More information: [http://penkia.blogspot.com/2013/05/slatekit-shell-qt5qml-webk
 
 Or compile executable by:
 
-    qmake && make && ./shell
+    qmake && make && ./slatekit
 
 ## License 
 The source codes are, unless otherwise specified, distributed under the terms of the MIT License

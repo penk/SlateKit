@@ -1,0 +1,21 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/"> 
+    <file>qml/Button.qml</file>
+    <file>qml/ContextButton.qml</file>
+    <file>qml/English.qml</file>
+    <file>qml/Handwriting.qml</file>
+    <file>qml/icons/favicon.png</file>
+    <file>qml/icons/fontawesome-webfont.ttf</file>
+    <file>qml/js/readability.js</file>
+    <file>qml/js/script.js</file>
+    <file>qml/js/userscript.js</file>
+    <file>qml/layout/capslock.png</file>
+    <file>qml/layout/english.png</file>
+    <file>qml/layout/handwriting.png</file>
+    <file>qml/layout/numeric.png</file>
+    <file>qml/layout/punctuation.png</file>
+    <file>qml/PopOver.qml</file>
+    <file>qml/Shell.qml</file>
+</qresource>
+</RCC>
+
