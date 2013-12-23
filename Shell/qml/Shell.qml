@@ -16,7 +16,7 @@ Item {
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property bool readerMode: false 
 
-    //FontLoader { id: fontAwesome; source: "http://netdna.bootstrapcdn.com/font-awesome/3.0/font/fontawesome-webfont.ttf" }
+    //FontLoader { id: fontAwesome; source: "http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/fonts/fontawesome-webfont.ttf" }
     FontLoader { id: fontAwesome; source: "icons/fontawesome-webfont.ttf" }  
 
     Component.onCompleted: {
@@ -58,7 +58,7 @@ Item {
     } 
 
     function getDatabase() {
-        var db = LocalStorage.openDatabaseSync("shellbrowser", "0.1", "history db", 100000);
+        var db = LocalStorage.openDatabaseSync("slatekit-shell", "0.1", "history db", 100000);
         db.transaction(
             function(tx) { 
                 tx.executeSql('CREATE TABLE IF NOT EXISTS history (url TEXT, title TEXT, icon TEXT, date INTEGER)');
@@ -278,7 +278,7 @@ Item {
             }
 
             //property real scale: experimental.test.contentsScale
-            experimental.devicePixelRatio: 2.0; 
+            //experimental.devicePixelRatio: 2.0; 
 
             experimental.itemSelector: PopOver {}
             experimental.preferences.fullScreenEnabled: true;
