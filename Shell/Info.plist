@@ -9,9 +9,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>org.slatekit.shell</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>1.0</string>
+	<string>0.3</string>
 	<key>CFBundleName</key>
-	<string>slatekit</string>
+	<string>Slatekit Shell</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

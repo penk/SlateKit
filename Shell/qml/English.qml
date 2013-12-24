@@ -1,5 +1,5 @@
 import QtQuick 2.0
-//import Fakekey 1.0 
+import Fakekey 1.0 
 //download and install from: https://github.com/penk/SlateKit/tree/master/IME/fakekey
 
 Rectangle { 
@@ -16,8 +16,8 @@ Rectangle {
         else 'layout/capslock.png'
     }
 
-    //Fakekey { id: fakekey } 
-    Item { id: fakekey; function sendKey(s) {console.log(s)} }
+    Fakekey { id: fakekey } 
+    //Item { id: fakekey; function sendKey(s) {console.log(s)} }
 
     Row { 
         id: row1

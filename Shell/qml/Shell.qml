@@ -133,7 +133,7 @@ Item {
             return str.substring(0, n)+url.substring(1);
         }
         //FIXME: search engine support here
-        if (url.indexOf('.') < 0) { return "http://www.google.com/search?q="+url; }
+        if (url.indexOf('.') < 0) { return "https://duckduckgo.com/?q="+url; }
         if (url.indexOf(":")<0) { return "http://"+url; }
         else { return url;}
     }
@@ -428,6 +428,14 @@ Item {
                     GradientStop { position: 1.0; color: "#25252A" }
 
                 }
+            }
+            add: Transition {
+                NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
+            //    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
+            }
+
+            displaced: Transition {
+                NumberAnimation { properties: "x,y"; duration: 400; easing.type: Easing.OutBounce }
             }
             highlightMoveDuration: 2
             highlightFollowsCurrentItem: true 
