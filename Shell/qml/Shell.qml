@@ -1,20 +1,36 @@
 import QtQuick 2.0
+import QtQuick.Controls 1.1
 import QtQuick.LocalStorage 2.0
 import QtGraphicalEffects 1.0
-//import QtQuick.Window 2.0
+import QtQuick.Window 2.0
 
 import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import "js/script.js" as Tab 
 
-Item {
+ApplicationWindow {
     id: root 
-    width: 960; height: 640
-    //width: 800; height: 480
-    //width: Screen.width; height: Screen.height
+    //width: 960; height: 640
+    width: Screen.width; height: Screen.height
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property bool readerMode: false 
+
+    Action {
+        id: newTabAction
+        shortcut: "Ctrl+T" 
+        onTriggered: { bounce.start(); openNewTab('page-'+salt(), "about:blank"); urlText.focus = true; }
+    }
+    Action {
+        id: closeTabAction
+        shortcut: "Ctrl+W"
+        onTriggered: { closeTab(tabListView.currentIndex, currentTab); bounce.start(); }
+    }
+    Action {
+        id: reloadAction
+        shortcut: "Ctrl+R"
+        onTriggered: { Tab.itemMap[currentTab].reload(); }
+    }
 
     //FontLoader { id: fontAwesome; source: "http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/fonts/fontawesome-webfont.ttf" }
     FontLoader { id: fontAwesome; source: "icons/fontawesome-webfont.ttf" }  
