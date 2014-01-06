@@ -19,6 +19,12 @@ Canvas {
         hoverEnabled:true
         anchors.fill: parent
         onClicked: drawPoint()
+
+        onPressed: {
+            paintX = mouseX;
+            paintY = mouseY;
+        }
+
         onPositionChanged:  {
             if (mousearea.pressed) {
                 drawLineSegment();

@@ -47,7 +47,10 @@ Rectangle {
                 MouseArea { 
                     width: 140; height: 60
                     anchors { left: parent.left; top: parent.top }
-                    onClicked: fakekey.sendKey(modelData); 
+                    onClicked: { 
+                        fakekey.sendKey(modelData); canvas.clear(); 
+                        if (candidates[0] !== undefined) candidates = []; 
+                    }
                 }
             } 
         }
