@@ -7,3 +7,5 @@ Makefile
 Fakekey
 Zinnia
 *.dmg
+qrc_resources.*
+.qmake.*

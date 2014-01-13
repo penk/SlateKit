@@ -8,7 +8,7 @@ import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import "js/script.js" as Tab 
 
-ApplicationWindow {
+Item {
     id: root 
     //width: 960; height: 640
     width: Screen.width; height: Screen.height

@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = SlateKit
 
-QT += qml quick quick quick-private webkit webkit-private
+QT += qml quick 
 SOURCES += main.cpp
 RESOURCES += resources.qrc
 

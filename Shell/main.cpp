@@ -1,7 +1,5 @@
 #include <QtQuick/QQuickView>
 #include <QtGui/QGuiApplication>
-#include "private/qquickwebview_p.h"
-#include "private/qquickflickable_p.h"
 
 int main(int argc, char *argv[])
 {
