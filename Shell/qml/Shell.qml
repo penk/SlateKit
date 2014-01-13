@@ -8,10 +8,11 @@ import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import "js/script.js" as Tab 
 
-Item {
+Window {
     id: root 
-    //width: 960; height: 640
-    width: Screen.width; height: Screen.height
+    minimumHeight: 600; minimumWidth: 960 
+    height: 600; width: 960
+    visible: true
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property bool readerMode: false 
