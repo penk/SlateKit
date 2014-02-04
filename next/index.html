@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+	<title>SlateKit - Open Source Tablet UX Building Kit</title>
+	<meta name="description" content="fullPage full-screen apple iphone 5c similar website. Reproducing one sigle scrolling site like Apple iPhone." />
+	<meta name="keywords"  content="fullpage,jquery,demo,screen,fullscreen,apple,iphone5c,iphone5s,iphone,iphone-5c,like,reproduce,similar,how to" />
+	<meta name="Resource-type" content="Document" />
+
+	
+	<link rel="stylesheet" type="text/css" href="./fullPage.js/jquery.fullPage.css" />
+	<link rel="stylesheet" type="text/css" href="examples.css" />
+	<style>
+	
+	
+	body{
+		color: #333;
+		font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+	}
+	
+	
+	/* Style for our header texts 
+	* --------------------------------------- */
+	h1{
+		font-size: 5em;	
+		font-family: arial,helvetica;
+		margin:0;
+		padding:0;
+	}
+	h2{
+		font-size: 2em;
+		margin: 0 0 18px 0;
+		font-family: arial,helvetica;
+	}
+	
+	
+
+	
+	/* Common styles
+	* --------------------------------------- */
+	img{
+	    -webkit-transition: all 0.7s ease-out;
+		-moz-transition: all 0.7s ease-out;
+		-o-transition: all 0.7s ease-out;
+		transition: all 0.7s ease-out;
+	}
+	.section{
+		text-align:center;
+		overflow:hidden;
+	}
+	.wrap{
+		width: 1180px;
+		height: 100%;
+		margin-left: auto;
+		margin-right: auto;
+		position: relative;
+	}
+	.box{
+		text-align: left;
+		color: #808080;
+		font-size: 1.2em;
+		line-height: 1.6em;
+	}
+	
+	
+	
+	
+	/* Section 0
+	* --------------------------------------- */
+	#section0{
+		padding: 60px 0;
+	}
+
+	#section0 img{
+		height: 100%;
+		margin: 80px 0 0 0;
+	}
+	
+	/* Section 1
+	* --------------------------------------- */
+	#section1 img{
+		position:absolute;
+		left: 40px;
+		top: 240px;
+	}
+	
+	#section1 .box{
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-top: -192px;
+		margin-left: 20px;
+		width: 320px;
+		z-index: 1;
+	}
+	#section1 .imgsContainer{
+		display: block;
+		position: absolute;
+		z-index: 1;
+		top: 42%;
+		left: 58%;
+		margin-top: -325px;
+		margin-left: -747px;
+		width: 800px;
+		height: 696px;
+	}
+	#section1 img{
+		height: 100%;
+	}
+	/*screen resolutions between 620px and 800px*/
+	@media all and (min-width: 620px) and (max-width: 800px){
+		#section1 .imgsContainer{
+			margin-top: -278px;
+			margin-left: -685px;
+			width: 647px;
+			height: 563px;
+		}
+	}
+	
+	/*screen resolutions lower than 620px*/
+	@media all and (max-width: 620px){
+		#section1 .imgsContainer{
+			margin-top: -208px;
+			margin-left: -516px;
+			width: 534px;
+			height: 464px;
+		}
+	}
+        #layer0 { z-index: 14; opacity: 0;}
+        #layer0.active { opacity: 1; 
+            -webkit-transition: opacity 0.5s ease-in;
+                -moz-transition: opacity 0.5s ease-in;
+                    -o-transition: opacity 0.5s ease-in;
+                        -ms-transition: opacity 0.5s ease-in;
+                            transition: opacity 0.5s ease-in;
+        }
+	#iphone2{
+		z-index: 13;
+	}
+	#iphone2.active{		
+	    /*
+		-webkit-transform: translate3d(-134px, 0px, 0px);
+		-moz-transform: translate3d(-134px, 0px, 0px);
+		-ms-transform:translate3d(-134px, 0px, 0px);
+		transform: translate3d(-134px, 0px, 0px);
+                */
+                -webkit-transform: translate3d(0px, -70px, 0px);
+                -moz-transform: translate3d(0px, -70px, 0px);
+                -ms-transform:translate3d(0px, -70px, 0px);
+                transform: translate3d(0px, -70px, 0px);
+	}
+	
+	#iphone3{
+		z-index: 12;
+	}
+	#iphone3.active{		
+	    /*
+		-webkit-transform: translate3d(213px, 0px, 0px);
+		-moz-transform: translate3d(213px, 0px, 0px);
+		-ms-transform:translate3d(213px, 0px, 0px);
+		transform: translate3d(213px, 0px, 0px);
+		*/
+	}
+	
+	#iphone4{
+		z-index: 10;
+	}
+	
+	#iphone4.active{		
+            -webkit-transform: translate3d(0px, 40px, 0px);
+            -moz-transform: translate3d(0px, 40px, 0px);
+            -ms-transform:translate3d(0px, 40px, 0px);
+            transform: translate3d(0px, 40px, 0px);
+	}
+	
+	
+	
+	
+	/* Section 2 
+	* --------------------------------------- */
+	#section2 img{
+		position:absolute;
+	}
+        #section3 img { position: absolute; }
+        #section3 .imgsContainer { 
+		position: absolute;
+		z-index: 1;
+		right: 635px;
+		display: block;
+
+		-webkit-transition: all .8s ease-in-out;
+		-moz-transition: all .8s ease-in-out;
+		-o-transition: all .8s ease-in-out;
+		transition: all .8s ease-in-out;
+        }
+        #section2 .imgsContainer{
+		position: absolute;
+		z-index: 1;
+		top: 20%;
+		display: block;
+		width: 0;
+		height: 0;
+		
+		-webkit-transition: all .8s ease-in-out;
+		-moz-transition: all .8s ease-in-out;
+		-o-transition: all .8s ease-in-out;
+		transition: all .8s ease-in-out;
+	}
+
+	#section2.moveUp .imgsContainer{
+		left: 10px;
+	}
+	
+    #section2.moveDown .imgsContainer { left: 10px } 
+	#section2.active .imgsContainer{
+		left: 170px;
+	}
+
+        #section3.moveUp .imgsContainer { top: 80%; }
+        #section3.moveDown .imgsContainer { top: 80%; }
+	
+        #section3.active .imgsContainer { top: 300px }
+	
+        #section3 .box { top: 22%; right: 650px; position: absolute; width: 320px;}
+	#section2 .box{
+		top: 22%;
+		left: 220px;
+		position: absolute;
+		width: 582px;
+	}
+	
+	#iphone-yellow{
+		top: -35px;
+		left: -222px;
+	}
+	
+	#iphone-red{
+		top: -194px;
+		left: 106px;
+	}
+	
+	#iphone-blue{
+		top: 320px;
+		left: 448px;
+	}
+	
+	#iphone-green{
+		left: 106px;
+		position:absolute;
+	}
+	
+	#productheader {
+		position: absolute;
+		z-index: 1;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 54px;
+		padding-left: 10px;
+		background-color: rgba(240,242,244,.85);
+		border-bottom-width: 1px;
+		border-bottom-style: solid;
+   		border-bottom-color: lightgray;
+
+	}
+	
+	#logo {
+		width: 256px;
+		-webkit-transition: all 0.5s ease-out;
+		-moz-transition: all 0.5s ease-out;
+		-o-transition: all 0.5s ease-out;
+		transition: all 0.5s ease-out;
+	}
+	#logo.small {
+		width: 50px;
+	}
+	
+	/* Menu
+	* --------------------------------------- */
+	#footer.whiteLinks li:nth-child(1) a,
+	#footer.whiteLinks li:nth-child(2) a,
+	#footer.whiteLinks li:nth-child(3) a{
+		color: #fff;
+	}
+	#footer{
+		font-family: arial, helvetica;
+	}
+	
+	
+	/* Overwriting fullPage.js tooltip color
+	* --------------------------------------- */
+	.fullPage-tooltip{
+		color: #AAA;
+	}
+	#fullPage-nav span, .fullPage-slidesNav span{
+		border-color: #AAA;
+	}
+	#fullPage-nav li .active span, .fullPage-slidesNav .active span{
+		background: #AAA;
+	}
+	
+	</style>
+
+	<!--[if IE]>
+		<script type="text/javascript">
+			 var console = { log: function() {} };
+		</script>
+	<![endif]-->
+		
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>	
+	
+	<script type="text/javascript" src="fullPage.js/jquery.fullPage.min.js"></script>
+	<script type="text/javascript" src="examples.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$.fn.fullpage({
+				'verticalCentered': false,
+				'css3': true,
+				'slidesColor': ['#F0F2F4', '#fff', '#F0F2F4', '#fff'],
+				'navigation': true,
+				'navigationPosition': 'right',
+				
+				'afterLoad': function(anchorLink, index){
+					if(index == 3){
+						$('#layer0, #iphone3, #iphone2, #iphone4').addClass('active');
+					}				
+					if (index != 0) {
+						$('#logo').addClass('small');
+					} 
+				},
+				
+				'onLeave': function(index, direction){
+					if (index == 2 && direction == 'down'){
+						$('.section').eq(index -1).removeClass('moveDown').addClass('moveUp');
+					}
+					else if(index == 2 && direction == 'up'){
+						$('.section').eq(index -1).removeClass('moveUp').addClass('moveDown');
+					}
+				},
+				
+				afterRender: function(){
+					$('#footer').appendTo('body');
+					$('#productheader').appendTo('body');
+				}
+				
+			});
+		});
+	</script>
+
+</head>
+<body>
+
+<div id="productheader">
+<!--<img src="logo.png" id="logo">-->
+</div>
+
+<div class="section " id="section0">
+	<h2>SlateKit - Open Source Tablet UX Building Kit</h2>
+	
+
+	<div style="width: 100%;">
+	<div style="width: 500px; text-align: center; margin-left: auto; margin-right: auto; font-size: 1.0em; line-height: 1.6em;">Sed veri fastidii pericula in. Ea magna explicari dignissim ius. Ne tota aperiri pro. Invidunt repudiandae ex mea, cu meliore tractatos est. Mea eu omnium aperiam percipit, et esse reque dissentias has, an eum ridens epicurei.</div>
+    </div>
+
+    <img src="mockup.png" />
+
+</div>
+
+<div class="section moveDown" id="section2">
+	<div class="wrap">
+                    <img src="browser-tab.png" style="position: absolute; top: 20%; left: 20px;
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);" />
+
+		<div class="imgsContainer">
+            <img src="browser-content.png">
+		</div>
+		
+		<div class="box" style="z-index: 5; top: 30px; height: 500px; left: 580px; padding: 30px; padding-top: 250px; width: 350px; background: white">
+			<h2>Powered by QtQuick</h2>
+			Lorem ipsum dolor sit amet, duo eu vocent aliquam repudiare, tempor putant meliore ea mel. Quidam nonumes principes mei eu, mea hinc purto tation cu. 
+
+		</div>
+	</div>
+</div>
+
+<div class="section" id="section1">
+	<div class="wrap">
+		<div class="imgsContainer">
+                        <img src="layer-0.png" alt="iphone" id="layer0" style="height: 350px" />
+			<img src="layer-1.png" alt="iphone" id="iphone2" style="height: 300px" />
+			<img src="layer-2.png" alt="iphone" id="iphone3" style="height: 300px" />
+			<img src="layer-3.png" alt="iphone" id="iphone4" style="height: 300px" />
+		</div>
+		
+		<div class="box">
+			<h2>Standalone UI</h2>
+			Paulo dolor saperet mel ne, mea constituam persequeris intellegebat et. Ne ignota imperdiet est, qui ea harum utamur ancillae. Sea id inani graecis consequat, cu habeo commune reprehendunt sea, ridens prompta vel in.
+		</div>
+	</div>
+</div>
+
+
+<div class="section moveDown" id="section3">
+    <div calss="wrap">
+        <img src="search.png" style="position: absolute; right: 75px; top: 90px; 
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+        ">
+        <div class="imgsContainer">
+            <img src="keyboard.png" id="shell-keyboard" />
+        </div>
+        <div class="box">
+            <h2>Cross-platform</h2>
+            Vim ex autem suavitate. Persius omittam ut pri, idque epicuri delectus pri in, eruditi lucilius ea eum. Mei ex ignota adversarium, ius facilisi recusabo salutatus no, porro quaerendum pri no.  
+        </div>
+    </div>
+</div>
+
+<div id="footer">
+	<ul>
+		<li><a href="">Download</a></li>
+		<li><a href="">Source</a></li>
+		<li><a href="">Documentation</a></li>
+		<li><a href="">Contact</a></li>
+	</ul>
+</div>
+
+</body>
+</html>
