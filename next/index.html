@@ -81,7 +81,7 @@
 	* --------------------------------------- */
 	#section1 img{
 		position:absolute;
-		left: 40px;
+		left: 80px;
 		top: 240px;
 	}
 	
@@ -90,7 +90,7 @@
 		top: 50%;
 		left: 50%;
 		margin-top: -192px;
-		margin-left: 20px;
+		margin-left: 120px;
 		width: 320px;
 		z-index: 1;
 	}
@@ -186,7 +186,7 @@
         #section3 .imgsContainer { 
 		position: absolute;
 		z-index: 1;
-		right: 635px;
+		right: 730px;
 		display: block;
 
 		-webkit-transition: all .8s ease-in-out;
@@ -208,6 +208,20 @@
 		transition: all .8s ease-in-out;
 	}
 
+	#browser-content {
+		position: absolute; top: 20%; left: 20px;
+    	-webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    	-moz-box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    	box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+	}
+
+	#search-window {
+		position: absolute; right: 170px; top: 180px; 
+    	-webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    	-moz-box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    	box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+	}
+
 	#section2.moveUp .imgsContainer{
 		left: 10px;
 	}
@@ -217,39 +231,22 @@
 		left: 170px;
 	}
 
-        #section3.moveUp .imgsContainer { top: 65%; }
-        #section3.moveDown .imgsContainer { top: 65%; }
-	
-        #section3.active .imgsContainer { top: 390px }
-	
-        #section3 .box { top: 250px; right: 650px; position: absolute; width: 320px;}
+    #section2 .cover {
+		position: absolute; 
+		z-index: 3; top: 30px; height: 500px; left: 580px; width: 350px; background: white;
+    }
 	#section2 .box{
 		top: 22%;
-		left: 220px;
 		position: absolute;
-		width: 582px;
+		z-index: 4; padding: 30px; top: -20px; left: 580px; width: 350px; padding-top: 250px;
 	}
+        #section3.moveUp .imgsContainer { top: 75%; }
+        #section3.moveDown .imgsContainer { top: 75%; }
 	
-	#iphone-yellow{
-		top: -35px;
-		left: -222px;
-	}
+        #section3.active .imgsContainer { top: 390px; }
 	
-	#iphone-red{
-		top: -194px;
-		left: 106px;
-	}
-	
-	#iphone-blue{
-		top: 320px;
-		left: 448px;
-	}
-	
-	#iphone-green{
-		left: 106px;
-		position:absolute;
-	}
-	
+        #section3 .box { top: 250px; right: 770px; position: absolute; width: 320px;}
+
 	#productheader {
 		position: absolute;
 		z-index: 1;
@@ -264,6 +261,54 @@
    		border-bottom-color: lightgray;
 
 	}
+
+	/* iPhone and iPad */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px), 
+@media only screen and (max-device-width: 480px) {
+		#section1 .imgsContainer{
+			top: 20%;
+			left: 72%;
+		}
+		#section1 .box {
+			margin-top: -80px;
+			margin-left: -370px;
+			width: 520px;
+			font-size: 2.1em;
+		}
+		#section2 .imgsContainer{
+				top: 12%;
+				left: 170px;
+		}
+		#section2.active .imgsContainer{
+				left: 320px;
+		}
+		#browser-content {
+				top: 12%;
+				left: 170px;
+		}
+		#section2 .cover {
+				left: 730px;
+		}
+		#section2 .box{ 
+			top: 24%;
+			width: 620px;
+			left: 150px;
+			font-size: 2.1em;
+		}
+        #section3.moveUp .imgsContainer { top: 45%; }
+        #section3.moveDown .imgsContainer { top: 45%; }
+        #section3.active .imgsContainer { top: 390px;}
+
+		#section3 .box { top: 600px; 
+			right: 26%;
+			width: 450px;
+			font-size: 2.1em;
+		}
+}
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px){
+		.box { font-size: 0.6em; line-height: 1.2em;}
+		.box h2 { font-size: 1.2em; }
+}
 	
 	#logo {
 		width: 256px;
@@ -365,40 +410,40 @@
 	<div style="width: 500px; text-align: center; margin-left: auto; margin-right: auto; font-size: 1.0em; line-height: 1.6em;">Sed veri fastidii pericula in. Ea magna explicari dignissim ius. Ne tota aperiri pro. Invidunt repudiandae ex mea, cu meliore tractatos est. Mea eu omnium aperiam percipit, et esse reque dissentias has, an eum ridens epicurei.</div>
     </div>
 
-    <img src="mockup.png" />
+    <img id="mockup" src="mockup.png" style="-webkit-transform:rotateX(60deg) rotateY(10deg) rotateZ(35deg); margin: 10px;" />
+    <!-- jQuery('#mockup').animate({ 'margin-left' : '10px'}, 80, "easeOutCubic"); -->
 
 </div>
 
 <div class="section moveDown" id="section2">
 	<div class="wrap">
-                    <img src="browser-tab.png" style="position: absolute; top: 20%; left: 20px;
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.4);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);" />
+                    <img src="browser-tab.png" id="browser-content" style="" />
 
 		<div class="imgsContainer">
             <img src="browser-content.png">
 		</div>
-		
-		<div class="box" style="z-index: 5; top: 30px; height: 500px; left: 580px; padding: 30px; padding-top: 250px; width: 350px; background: white">
-			<h2>Powered by QtQuick</h2>
-			Lorem ipsum dolor sit amet, duo eu vocent aliquam repudiare, tempor putant meliore ea mel. Quidam nonumes principes mei eu, mea hinc purto tation cu. 
-
+		<div class="cover">
 		</div>
+		<div class="box"><h2>QtQuick Powered</h2>
+			Lorem ipsum dolor sit amet, duo eu vocent aliquam repudiare, tempor putant meliore ea mel. Quidam nonumes principes mei eu, mea hinc purto tation cu. </div>
 	</div>
 </div>
 
 <div class="section" id="section1">
 	<div class="wrap">
 		<div class="imgsContainer">
-                        <img src="layer-0.png" alt="iphone" id="layer0" style="height: 350px" />
+            <img src="layer-0.png" alt="iphone" id="layer0" style="height: 350px" />
 			<img src="layer-1.png" alt="iphone" id="iphone2" style="height: 300px" />
 			<img src="layer-2.png" alt="iphone" id="iphone3" style="height: 300px" />
 			<img src="layer-3.png" alt="iphone" id="iphone4" style="height: 300px" />
+<!--
+<img src="mockup.png" style="height: 400px; width: 520px;
+-webkit-transform:rotateX(60deg) rotateY(10deg) rotateZ(35deg); margin-left: 17px; margin-top: -10px" />
+-->
 		</div>
 		
 		<div class="box">
-			<h2>Standalone UI</h2>
+			<h2>Single View</h2>
 			Paulo dolor saperet mel ne, mea constituam persequeris intellegebat et. Ne ignota imperdiet est, qui ea harum utamur ancillae. Sea id inani graecis consequat, cu habeo commune reprehendunt sea, ridens prompta vel in.
 		</div>
 	</div>
@@ -407,16 +452,12 @@
 
 <div class="section moveDown" id="section3">
     <div calss="wrap">
-        <img src="search.png" style="position: absolute; right: 75px; top: 180px; 
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.4);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-        ">
+        <img src="search.png" id="search-window">
         <div class="imgsContainer">
             <img src="keyboard.png" id="shell-keyboard" />
         </div>
         <div class="box">
-            <h2>Cross-platform</h2>
+            <h2>Standalone UI</h2>
             Vim ex autem suavitate. Persius omittam ut pri, idque epicuri delectus pri in, eruditi lucilius ea eum. Mei ex ignota adversarium, ius facilisi recusabo salutatus no, porro quaerendum pri no.  
         </div>
     </div>
