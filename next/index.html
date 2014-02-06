@@ -44,19 +44,19 @@
 	}
 
 	#layer0.active { opacity: 1; 
-		-webkit-transition: opacity 0.8s ease-in;
-		-moz-transition: opacity 0.8s ease-in;
-		-o-transition: opacity 0.8s ease-in;
-		-ms-transition: opacity 0.8s ease-in;
-		transition: opacity 0.8s ease-in;
+		-webkit-transition: opacity .8s ease-in;
+		-moz-transition: opacity .8s ease-in;
+		-o-transition: opacity .8s ease-in;
+		-ms-transition: opacity .8s ease-in;
+		transition: opacity .8s ease-in;
     }
 
     #layer1 { 
     	margin-top: -320px; 
-		-webkit-transition: all .7s ease-in-out;
-		-moz-transition: all .7s ease-in-out;
-		-o-transition: all .7s ease-in-out;
-		transition: all .7s ease-in-out;
+		-webkit-transition: all .5s ease-in-out;
+		-moz-transition: all .5s ease-in-out;
+		-o-transition: all .5s ease-in-out;
+		transition: all .5s ease-in-out;
     }
     #layer1.active { 
         -webkit-transform: translate3d(0px, -60px, 0px);
@@ -66,10 +66,10 @@
     }
     #layer3 {
     	top: 60px;
-		-webkit-transition: all .7s ease-in-out;
-		-moz-transition: all .7s ease-in-out;
-		-o-transition: all .7s ease-in-out;
-		transition: all .7s ease-in-out;
+		-webkit-transition: all .5s ease-in-out;
+		-moz-transition: all .5s ease-in-out;
+		-o-transition: all .5s ease-in-out;
+		transition: all .5s ease-in-out;
     }
     #layer3.active {
         -webkit-transform: translate3d(0px, 45px, 0px);
@@ -127,7 +127,7 @@
 						$('#layer0, #layer1, #layer2, #layer3').removeClass('active');
 					}
 				},
-				'anchors': ['slatekit', 'qtquick', 'singleview', 'standalone'],
+				'anchors': ['slatekit', 'qtquick', 'standalone', 'singleview'],
 				'afterRender': function(){
 					//$('#footer').appendTo('body');
 					$('#productheader').appendTo('body');
@@ -146,8 +146,8 @@
 	<li>Source Code<span class="divider">/</span></li>
 	<li>Documentation<span class="divider">/</span></li>
 	<li>Technical Preview</li>
-	<li class="pull-right"><a class="btn btn-danger" href="#" style="margin-right: 40px;">
-  <i class="fa fa-envelope-o fa-fw fa-lg pull-left"></i>Contact Us</a>
+	<li class="pull-right"><a class="btn btn-danger btn-sm" href="mailto:penkia+slatekit@gmail.com" style="margin-right: 40px;">
+  <i class="fa fa-envelope-o fa-fw fa-lg"></i> Contact Us</a>
 	</ul>
 </div>
 
@@ -161,15 +161,22 @@
 					<div style="padding-left: 30px; padding-right: 30px">
                     <h2>SlateKit - Tablet UX Building Kit</span></h2>
 
-                    <p class="muted lead subtitle">Sed veri fastidii pericula in. Ea magna explicari dignissim ius. Ne tota aperiri pro. Invidunt repudiandae ex mea, cu meliore tractatos est. Mea eu omnium aperiam percipit, et esse reque dissentias has, an eum ridens epicurei.</p>
-                    <img src="launcher.png" style="width: 560px" alt="launcher">
+                    <p class="muted lead subtitle">Lorem ipsum dolor sit amet, duo eu vocent aliquam repudiare, tempor putant meliore ea mel. Quidam nonumes principes mei eu, mea hinc purto tation cu.</p>
+
+                    <p>
+                    	<ul class="fa-ul" style="font-size: 160%; font-color: gray">
+							<li style="margin-bottom: 20px"><i class="fa-li fa fa-check-square"></i>Ready to Use Applications</li>
+							<li style="margin-bottom: 20px"><i class="fa-li fa fa-check-square"></i>Easily Customizable</li>
+							<li style="margin-bottom: 20px"><i class="fa-li fa fa-check-square"></i>Multiple Platform Support</li>
+                    	</ul>
+                    </p>
                 	</div>
 				</li>
 				<li class="span4">
-                    <div style="padding-top: 40px; padding-left: 10px;">
+                    <div style="padding-top: 40px;">
                     	<p>
-                    <a class="btn btn-large btn-primary" href=""><i class="fa fa-download pull-left"></i><span style="margin-left: 5px">Get Technical Preview</span></a><br>
-                    <span style="font-size: 1.2em; line-height: 2">Or check <a href="https://github.com/penk/SlateKit">Source Code on Github</a></span></p>
+                    <a class="btn btn-large btn-primary" href=""><i class="fa fa-download fa-fw fa-2x pull-left"></i><span style="margin-left: 5px; font-size: 120%; line-height: 2">Download Image</span></a><br>
+                    <span style="font-size: 1.2em; line-height: 2">Or check out <a href="https://github.com/penk/SlateKit">Source Code on Github</a></span></p>
                 </li>
 
 			</ul>
@@ -185,8 +192,8 @@
 				<li class="span4">
 					<div style="text-align: left; padding-left: 10px">
 					<h2>QtQuick Powered</h2>
-					<p  class="muted lead subtitle">Lorem ipsum dolor sit amet, duo eu vocent aliquam repudiare, tempor putant meliore ea mel. Quidam nonumes principes mei eu, mea hinc purto tation cu.</p>
-					</div>
+					<p  class="muted lead">Components are written in QML and JavaScript, thanks to Qt5, this makes it trivial to customize. With tools like <a href="https://github.com/penk/qml-livereload">QML LiveReload</a>, live preview on device while editing is made possible.</p>
+					<p class="muted lead" style="font-size: 130%;"><a href="http://penkia.blogspot.com/2013/05/slatekit-shell-qt5qml-webkit-browser.html">Learn more about SlateKit Shell<snap style="font-size: 80%;"><i class="fa fa-chevron-right fa-fw"></i></snap></a></p>
 				</li>
 				<li class="span8">
 					<img src="browser-tab.png" style="position: relative; box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);">
@@ -214,8 +221,9 @@
 
 				<li class="span4">
 					<div style="text-align: left; padding-left: 10px">
-					<h2>Single View</h2>
-					<p  class="muted lead subtitle">Lorem ipsum dolor sit amet, duo eu vocent aliquam repudiare, tempor putant meliore ea mel. Quidam nonumes principes mei eu, mea hinc purto tation cu.</p>
+					<h2>Standalone UI</h2>
+					<p  class="muted lead">SlateKit works on bare metal. Relies on nothing but EGL and framebuffer, there's no need of display server like Xorg or Wayland, hence reduced size of image and porting effort. </p>
+					<p class="muted lead" style="font-size: 130%;"><a href="">Learn more about SlateKit Base <snap style="font-size: 80%;"><i class="fa fa-chevron-right fa-fw"></i></snap></a></p>
 					</div>
 				</li>
 
@@ -233,8 +241,10 @@
 			<ul class="thumbnails">
 				<li class="span4">
 					<div style="text-align: left; padding-left: 10px">
-					<h2>Standalone UI</h2>
+					<h2>Single View</h2>
 					<p  class="muted lead subtitle">Lorem ipsum dolor sit amet, duo eu vocent aliquam repudiare, tempor putant meliore ea mel. Quidam nonumes principes mei eu, mea hinc purto tation cu.</p>
+					<p class="muted lead subtitle" style="font-size: 130%;"><a href="">Learn more about SlateKit IME <snap style="font-size: 80%;"><i class="fa fa-chevron-right fa-fw"></i></snap></a></p>
+
 					</div>
 				</li>
 				<li class="span8">
