@@ -1,5 +1,4 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.1
 import QtQuick.LocalStorage 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.Window 2.0
@@ -10,30 +9,12 @@ import "js/script.js" as Tab
 
 Window {
     id: root 
-    minimumHeight: 600; minimumWidth: 960 
     height: 600; width: 960
     visible: true
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property bool readerMode: false 
 
-    Action {
-        id: newTabAction
-        shortcut: "Ctrl+T" 
-        onTriggered: { bounce.start(); openNewTab('page-'+salt(), "about:blank"); urlText.focus = true; }
-    }
-    Action {
-        id: closeTabAction
-        shortcut: "Ctrl+W"
-        onTriggered: { closeTab(tabListView.currentIndex, currentTab); bounce.start(); }
-    }
-    Action {
-        id: reloadAction
-        shortcut: "Ctrl+R"
-        onTriggered: { Tab.itemMap[currentTab].reload(); }
-    }
-
-    //FontLoader { id: fontAwesome; source: "http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/fonts/fontawesome-webfont.ttf" }
     FontLoader { id: fontAwesome; source: "icons/fontawesome-webfont.ttf" }  
 
     Component.onCompleted: {
@@ -588,37 +569,11 @@ Window {
                 anchors { left: parent.left; top: parent.top; right: stopButton.left; margins: 5; }
                 height: parent.height
                 clip: true
-                Text { 
-                    id: urlDisplayText
-                    anchors.fill: parent; text: urlText.text; color: "black"; elide: Text.ElideRight 
-                    // FIXME: display while urlText.lengh is too long? 
-                    visible: (historyModel.count > 0)
-                }
-                Keys.onPressed: { 
-                    if (event.key == Qt.Key_Backspace && urlDisplayText.text != "") {
-                        urlDisplayText.text =""; event.accepted = true; urlText.color = "black"
-                    }
-                }
                 onAccepted: { 
-                    (urlDisplayText.text !== urlText.text) ? loadUrl(urlDisplayText.text) : loadUrl(urlText.text)
-                    urlDisplayText.text = urlText.text;
-                    urlText.color = "black"
+                    loadUrl(urlText.text)
+                    urlText.text = urlText.text;
                 }
-                Keys.onUpPressed: {
-                    if (historyListView.currentIndex > 0) {
-                        historyListView.currentIndex-- 
-                    } else { historyListView.currentIndex = 0 }
-                    urlText.color = "white"
-                    urlDisplayText.text = historyListView.model.get(historyListView.currentIndex).url.replace( /(<([^>]+)>)/ig, "")
-                }
-                Keys.onDownPressed: {
-                    if (historyListView.currentIndex < historyModel.count-1) {
-                        historyListView.currentIndex++ 
-                    } else { historyListView.currentIndex = historyModel.count-1 }
-                    urlText.color = "white"
-                    urlDisplayText.text = historyListView.model.get(historyListView.currentIndex).url.replace( /(<([^>]+)>)/ig, "")
-                }
-                Keys.onEscapePressed: { urlText.focus = false; urlDisplayText.text = urlText.text }
+                Keys.onEscapePressed: { urlText.focus = false; }
                 onActiveFocusChanged: { 
                     // FIXME: use State to change property  
                     if (urlText.activeFocus) { 
