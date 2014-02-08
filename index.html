@@ -1,177 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <title>SlateKit Shell - Open Source Mobile Browser Using Qt5/WebKit</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="shortcut icon" href="favicon.ico" >
-        <!-- Le styles -->
-        <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet">
-        <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
+	<meta charset="utf-8">
+	<title>SlateKit - Open Source Tablet UX Building Kit</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="penkia@gmail.com" />
+	<link rel="shortcut icon" href="favicon.ico" >
+    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" href="fullPage.js/jquery.fullPage.css" />
+	<style>
+	.wrap{
+		margin-left: auto;
+		margin-right: auto;
+		width: 960px;
+		position: relative;
+	}
+	h1{
+		font-size: 5em;	
+		font-family: arial,helvetica;
+	}
+	.muted {
+		color: #6B6A6A;
+	}
+	.container-narrow {
+		margin: 0 auto;
+		max-width: 960px;
+	}
+	#section1 .target {
+		margin-left: 0;
+	    -webkit-transition: all 0.6s ease-out;
+		-moz-transition: all 0.6s ease-out;
+		-o-transition: all 0.6s ease-out;
+		transition: all 0.6s ease-out;
+	}
+	#section1.active .target {
+		margin-left: 162px;
+	}
 
-        <style type="text/css">
-            body {
-                padding-top: 20px;
-                padding-bottom: 40px;
-            }
-            /* Custom container */
-            .container-narrow {
-                margin: 0 auto;
-                max-width: 700px;
-            }
-            .container-narrow > hr {
-                margin: 30px 0;
-            }
+	#section2 img { position: relative; height: 300px; }
+	#layer0{
+		opacity: 0;
+	}
 
-            .action {
-                margin-top: 3px; 
-                margin-right: 10px;
+	#layer0.active { opacity: 1; 
+		-webkit-transition: opacity .8s ease-in;
+		-moz-transition: opacity .8s ease-in;
+		-o-transition: opacity .8s ease-in;
+		-ms-transition: opacity .8s ease-in;
+		transition: opacity .8s ease-in;
+    }
 
-            }
-            .subtitle {
-                margin-top: -8px; 
-                margin-left: 12px;
-                margin-bottom: 8px;
-                font-size: 140%;
-            }
-            .center { 
-                text-align: center; 
-            }
-            .tips {
-                margin-left: 5px;
-                line-height: 30px;
-            }
-            .popover {
-                max-width: 800px;
-            }
-        </style>
+    #layer1 { 
+    	margin-top: -320px; 
+		-webkit-transition: all .5s ease-in-out;
+		-moz-transition: all .5s ease-in-out;
+		-o-transition: all .5s ease-in-out;
+		transition: all .5s ease-in-out;
+    }
+    #layer1.active { 
+        -webkit-transform: translate3d(0px, -60px, 0px);
+        -moz-transform: translate3d(0px, -60px, 0px);
+        -ms-transform:translate3d(0px, -60px, 0px);
+        transform: translate3d(0px, -60px, 0px);
+    }
+    #layer3 {
+    	top: 60px;
+		-webkit-transition: all .5s ease-in-out;
+		-moz-transition: all .5s ease-in-out;
+		-o-transition: all .5s ease-in-out;
+		transition: all .5s ease-in-out;
+    }
+    #layer3.active {
+        -webkit-transform: translate3d(0px, 45px, 0px);
+        -moz-transform: translate3d(0px, 45px, 0px);
+        -ms-transform:translate3d(0px, 45px, 0px);
+        transform: translate3d(0px, 45px, 0px);	
+    }
+    #section3 .target {
+    	top: 80px; margin-bottom: -80px;
+		-webkit-transition: all .8s ease-in-out;
+		-moz-transition: all .8s ease-in-out;
+		-o-transition: all .8s ease-in-out;
+		transition: all .8s ease-in-out;
+    }
+    #section3.active .target {
+    	top: -140px; 
+    }
+	#productheader {
+		position: absolute;
+		z-index: 1;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 54px;
+		padding-left: 10px;
+		background-color: rgba(240,242,244,.85);
+		border-bottom-width: 1px;
+		border-bottom-style: solid;
+   		border-bottom-color: lightgray;
+	}
+	</style>
+	<!--[if IE]>
+		<script type="text/javascript">
+			 var console = { log: function() {} };
+		</script>
+	<![endif]-->
+		
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>	
+	
+	<script type="text/javascript" src="fullPage.js/jquery.fullPage.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$.fn.fullpage({
+				'verticalCentered': true,
+				'css3': true,
+				'slidesColor': ['#F0F2F4', '#fff', '#F0F2F4', '#fff'],
+				'navigation': true,
+				'navigationPosition': 'right',
 
-        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-        <!--[if lt IE 9]>
-        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-        <script src="http://code.jquery.com/jquery.js"></script>
-        <script type="text/javascript">
-            $(function() { 
-                    var code = '<pre>'+
-                    'sudo add-apt-repository ppa:ubuntu-touch-coreapps-drivers/collection\n'+ 
-                    'sudo apt-get update\n'+
-                    'sudo apt-get install slatekit-shell</pre>';
-                    $("#popover").popover({ title: 'For Ubuntu 13.04 and later:', content: code, html: true, placement: 'bottom' });
-                    $("a[rel=popover]").popover().click(function(e) { e.preventDefault(); });
-            });
-        </script>
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
+				'afterLoad': function(anchorLink, index){
+					if(index == 3){
+						$('#layer0, #layer1, #layer2, #layer3').addClass('active');
+					} else {
+						$('#layer0, #layer1, #layer2, #layer3').removeClass('active');
+					}
+				},
+				'anchors': ['slatekit', 'qtquick', 'standalone', 'singleview'],
+				'afterRender': function(){
+					//$('#footer').appendTo('body');
+					$('#productheader').appendTo('body');
+				}
+			});
+		});
+	</script>
 
-            ga('create', 'UA-2040009-5', 'slatekit.org');
-            ga('send', 'pageview');
+</head>
+<body>
 
-        </script>
-    </head>
-    <body onload="setupZoom()">
-        <div class="container-narrow">
-                    <ul class="breadcrumb">
-                        <li class="active">Shell<span class="divider">/</span></li>
-                        <li><a href="https://github.com/penk/SlateKit/wiki/Customize-QML-Virtual-Keyboard">Keyboard</a> <span class="divider">/</span></li>
-                        <li><a href="https://github.com/penk/MeeTo/tree/master/Launcher">Launcher</a></li>
-                        <li class="pull-right"><a href="mailto:penkia@gmail.com">Contact Us</a> <span class="divider"></span></li>
-                    </ul>
+<div id="productheader">
+	<ul class="breadcrumb" style="background-color: transparent;">
+	<li><a href="http://slatekit.org/" style="color: black; text-decoration: none"><span style="font-size: 2em; font-weight: bold;">SlateKit</span></a>
+		<span class="divider">:</span></li>
+	<li><a href="https://github.com/penk/SlateKit/">Source Code</a><span class="divider">/</span></li>
+	<li><a href="https://github.com/penk/SlateKit/wiki/Customize-QML-Virtual-Keyboard">Documentation</a><span class="divider">/</span></li>
+	<li><a href="http://penkia.blogspot.tw/2014/02/introducing-slatekit-base-technical.html">SlateKit Base</a></li>
+	<li class="pull-right"><a class="btn btn-danger btn-sm" href="mailto:penkia+slatekit@gmail.com" style="margin-right: 40px;">
+  <i class="fa fa-envelope-o fa-fw fa-lg"></i>Contact Us</a>
+	</ul>
+</div>
 
-            <div class="row-fluid">
-                <ul class="thumbnails">
-                    <li class="span8">
-                    <h2 style="margin-left: 5px">
-                        <span class="icon-stack">
-                            <i class="icon-sign-blank icon-stack-base"></i>
-                            <i class="icon-globe icon-light icon-large"></i>
-                    </span><span style="margin-left: 10px">SlateKit Shell</span></h2>
-                    <p class="muted lead subtitle">The Web Browser with a Hamburger Button</p>
-                    </li>
+<div class="section active" id="section0">
+<div class="container-narrow">
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<ul class="thumbnails">
 
-                    <li class="span4">
-                    <p class="center" style="margin-top: 30px">
-                    <a class="btn btn-large btn-primary" id="popover" rel="popover" href="#"><i class="icon-download-alt pull-left"></i><span style="margin-left: 5px">Install on Ubuntu</span></a>
-                    <br><span class="tips">or <a href="https://github.com/penk/SlateKit/tree/master/Shell">check source on Github</a></span></p>
-                    </li>
-                </ul>
-            </div>
+				<li class="span8">
+					<div style="padding-left: 30px; padding-right: 30px">
+                    <h2>SlateKit - Tablet UX Building Kit</span></h2>
 
-                    <section id="heroshot">
-                    <a href="http://penkia.blogspot.com/2013/05/slatekit-shell-qt5qml-webkit-browser.html"><img src="images/heroshot.png"></a>
-                    <div class="page-header">
-                        <p class="lead center">Touch-centric interface designed for the mobile form factors.</p>
-                    </div>
-                    </section>
+                    <p class="muted lead subtitle">Ever dream about designing a tablet? Want to have an entirely new interface running on a rooted Android device? Here's the the best building blocks: </p>
 
-                    <div class="container-fluid">
-                        <div class="row-fluid">
-                            <ul class="thumbnails">
-                                <li class="span4 center">
-                                <i class="icon-reorder icon-4x"></i>
-                                <h4>Side Tabs</h4>
-                                <p>Move faster between contents, save space yet still have everything at your fingertips.</p>
-                                </li>
+                    <p>
+                    	<ul class="fa-ul" style="font-size: 160%; font-color: gray">
+							<li style="margin-bottom: 20px"><i class="fa-li fa fa-check-square"></i>Ready to Use Graphic Environment</li>
+							<li style="margin-bottom: 20px"><i class="fa-li fa fa-check-square"></i>Easily Customizable Applications</li>
+							<li style="margin-bottom: 20px"><i class="fa-li fa fa-check-square"></i>Multiple Platform Support for x86/ARM</li>
+                    	</ul>
+                    </p>
+                	</div>
+				</li>
+				<li class="span4">
+                    <div style="padding-top: 40px;">
+                    	<p>
+                    <a class="btn btn-large btn-primary" href="http://penkia.blogspot.tw/2014/02/introducing-slatekit-base-technical.html"><i class="fa fa-download fa-fw fa-2x pull-left"></i><span style="margin-left: 5px; font-size: 120%; line-height: 2">Download Image</span></a><br>
+                    <span style="font-size: 1.2em; line-height: 2">Or check out <a href="https://github.com/penk/SlateKit">Source Code on Github</a></span></p>
+                </li>
 
-                                <li class="span4 center">
-                                <i class="icon-keyboard icon-4x"></i>
-                                <h4>Virtual Keyboard</h4>
-                                <p>Built-in on-screen keyboard eliminating the need for input engine or window system.</p>
-                                </li>
+			</ul>
+		</div>
+	</div>
+</div>
+</div>
+<div class="section" id="section1">
+<div class="container-narrow">
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<ul class="thumbnails">
+				<li class="span4">
+					<div style="text-align: left; padding-left: 10px">
+					<h2>QtQuick Powered</h2>
+					<p  class="muted lead">SlateKit is written in QML and JavaScript, thanks to Qt5, this makes it trivial to customize. With tools like <a href="https://github.com/penk/qml-livereload">QML LiveReload</a>, live preview on device while editing is made possible.</p>
+					<p class="muted lead" style="font-size: 130%;"><a href="http://penkia.blogspot.com/2013/05/slatekit-shell-qt5qml-webkit-browser.html">Learn more about SlateKit Shell<snap style="font-size: 80%;"><i class="fa fa-chevron-right fa-fw"></i></snap></a></p>
+				</li>
+				<li class="span8">
+					<img src="browser-tab.png" style="position: relative; box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);">
+					<img src="browser-content.png" class="target" style="position: relative; top: -361px; margin-bottom: -350px;">
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+</div>
 
-                                <li class="span4 center">
-                                <i class="icon-edit-sign icon-4x"></i>
-                                <h4>Handwriting and more</h4>
-                                <p>Reader mode, custom elements, handwriting solution, all integrated right into WebKit.</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+</div>
+<div class="section" id="section2">
 
-                    <div class="container-fluid">
-                        <div class="row-fluid">
-                            <ul class="thumbnails">
+<div class="container-narrow">
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<ul class="thumbnails">
+				<li class="span8">
+					<img src="layer-3.png" id="layer3">
+					<img src="layer-2.png" id="layer2" style="margin-top: -240px;">
+					<img src="layer-1.png" id="layer1">
+					<img src="layer-0.png" id="layer0" style="height: 350px; margin-left: 30px; margin-top: -310px;">
+				</li>
 
-                                <li class="span6">
-                                <a class="thumbnail" href="images/keyboard.png" title="On-Screen Keyboard"><img src="images/keyboard-s.png"></a>
-                                </li>
+				<li class="span4">
+					<div style="text-align: left; padding-left: 10px">
+					<h2>Standalone UI</h2>
+					<p  class="muted lead">SlateKit works on bare metal. Relies on nothing but EGL and framebuffer, there's no need of display server like Xorg or Wayland, hence reduced size of image and porting effort. </p>
+					<p class="muted lead" style="font-size: 130%;"><a href="http://penkia.blogspot.com/2014/02/introducing-slatekit-base-technical.html">Learn more about SlateKit Base <snap style="font-size: 80%;"><i class="fa fa-chevron-right fa-fw"></i></snap></a></p>
+					</div>
+				</li>
 
-                                <li class="span6">
-                                <a class="thumbnail" href="images/popover.png" title="Popover of Select"><img src="images/popover-s.png"></a>
-                                </li>
+			</ul>
+		</div>
+	</div>
+</div>
 
-                            </ul>
+</div>
 
-                            <ul class="thumbnails">
-                                <li class="span6">
-                                <a class="thumbnail" href="images/reader.png" title="Reader Mode"><img src="images/reader-s.png"></a>
-                                </li>
+<div class="section" id="section3">
+<div class="container-narrow">
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<ul class="thumbnails">
+				<li class="span4">
+					<div style="text-align: left; padding-left: 10px">
+					<h2>Single View</h2>
+					<p  class="muted lead subtitle">Components consist in one single view, plus the <a href="https://github.com/libhybris/libhybris">libhybris</a> HW adaption layer, SlateKit has great cross-platform compatibility and supports many Android running devices.</p>
+					<p class="muted lead subtitle" style="font-size: 130%;"><a href="https://github.com/penk/SlateKit/wiki/Customize-QML-Virtual-Keyboard">Learn more about SlateKit IME <snap style="font-size: 80%;"><i class="fa fa-chevron-right fa-fw"></i></snap></a></p>
 
-                                <li class="span6">
-                                <a class="thumbnail" href="images/handwriting.png" title="Handwriting in Action"><img src="images/handwriting-s.png"></a>
-                                </li>
+					</div>
+				</li>
+				<li class="span8">
+					<img src="search.png" style="position: relative; box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);">
+					<img src="keyboard.png" class="target" style="position: relative;">
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
 
-                            </ul>
+</div>
 
-                        </div>
-                    </div>
 
-                    <section id="help">
-                    <p class="center">Need help or got feedback? <a href="mailto:penkia@gmail.com">Send us an email!</a></p>
-                    </section>
-                    <hr>
-                    <div class="footer center muted" style="margin-top: -20px;">
-                        <p>Creative Commons BY-NC-SA 3.0 © 2013-2014 Ping-Hsun Chen (<a href="http://twitter.com/penk">penk</a>)</p>
-                    </div>
-                </div> 
-                <script src="./js-global/FancyZoom.js" type="text/javascript"></script>
-                <script src="./js-global/FancyZoomHTML.js" type="text/javascript"></script>
-                <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-            </body>
-        </html>
+</body>
+</html>
