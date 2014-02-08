@@ -1,1 +1,2 @@
+module Zinnia
 plugin qmlzinniaplugin
