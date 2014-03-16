@@ -3,8 +3,7 @@ import QtQuick.LocalStorage 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.Window 2.0
 
-import QtWebKit 3.0
-import QtWebKit.experimental 1.0
+import com.canonical.Oxide 0.1
 import "js/script.js" as Tab 
 
 Window {
@@ -217,6 +216,7 @@ Window {
 
             MouseArea { 
                 id: contextOverlay; 
+                z: 3
                 anchors.fill: parent; 
                 enabled: contextMenu.visible
                 onClicked: contextMenu.visible = false 
@@ -228,6 +228,7 @@ Window {
                 width: 250; height: 230
                 color: "gray"
                 radius: 5 
+                z: 3
                 Text {  
                     id: contextUrl
                     color: "white"
@@ -255,69 +256,51 @@ Window {
                     ContextButton { label: "Copy"; onClicked: { console.log('Copy: ' + contextUrl.text); contextMenu.visible = false } }
                 }
             }
+            popupMenu: PopOver {}
 
-            // FIXME: calculate scale, and position of screen
-            function updateContextMenu(X, Y, url) {
-                contextMenu.x = X; contextMenu.y = Y
-                if (X + contextMenu.width/2 > root.width) {
-                    contextMenu.x = root.width - contextMenu.width - 30
-                } else if (X - contextMenu.width/2 < 0) { 
-                    contextMenu.x = 30
-                } else { 
-                    contextMenu.x = X - contextMenu.width/2 - 10;
-                }
-                if (Y - contextMenu.height - 40 < 0) {
-                    contextMenu.y = Y + 5
-                } else { 
-                    contextMenu.y = Y - contextMenu.height - 20
-                }
-                contextMenu.visible = true
-                contextUrl.text = url
+            context: WebContext {
+                userScripts: [
+                    UserScript {
+                        context: "oxide://osk/"
+                        url: Qt.resolvedUrl("userscript.js")
+                        incognitoEnabled: true
+                        matchAllFrames: true
+                    },
+                    UserScript {
+                        context: "oxide://selection/"
+                        url: Qt.resolvedUrl("js/selection.js")
+                        incognitoEnabled: true
+                        matchAllFrames: true
+                    }
+                ]
             }
-
-            //property real scale: experimental.test.contentsScale
-            //experimental.devicePixelRatio: 2.0; 
-
-            experimental.itemSelector: PopOver {}
-            experimental.preferences.fullScreenEnabled: true;
-            experimental.preferences.developerExtrasEnabled: true;
-
-            experimental.userScripts: [Qt.resolvedUrl("js/userscript.js")];
-            experimental.preferences.navigatorQtObjectEnabled: true;
-            experimental.onMessageReceived: {
-                console.log('onMessageReceived: ' + message.data );
-                var data = null
-                try {
-                    data = JSON.parse(message.data)
-                } catch (error) {
-                    console.log('onMessageReceived: ' + message.data );
-                    return
-                }
-                switch (data.type) {
-                    case 'link': {
-                        updateContextMenu(data.pageX, data.pageY, data.href) 
-                        if (data.target === '_blank') { // open link in new tab
-                            bounce.start()
-                            openNewTab('page-'+salt(), data.href)
+            messageHandlers: [
+                ScriptMessageHandler {
+                    msgId: 'inputmethod'
+                    contexts: ["oxide://osk/"]
+                    callback: function(msg, frame) {
+                    if (msg.args.type == 'input')
+                        keyboard.state = msg.args.state
+                    }
+                },
+                ScriptMessageHandler {
+                    msgId: "contextmenu"
+                    contexts: ["oxide://selection/"]
+                    callback: function(msg, frame) {
+                        if (('href' in msg.args)) {
+                            contextUrl.text = msg.args.href
+                            contextMenu.x = msg.args.left * msg.args.scaleX
+                            contextMenu.y = msg.args.top * msg.args.scaleY
+                            contextMenu.visible = true
                         }
-                        break;
-                    } 
-                    case 'longpress': {
-                        updateContextMenu(data.pageX, data.pageY, fixUrl(data.href));
-                    }
-                    case 'input': {
-                        keyboard.state = data.state;
-                        break;
                     }
                 }
-            }
-            //experimental.userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3"
-
+            ]
             onLoadingChanged: { 
                 contextMenu.visible = false;
                 readerMode = false;
                 urlText.text = Tab.itemMap[currentTab].url;
-                if (loadRequest.status == WebView.LoadSucceededStatus) {
+                if (loadEvent.type === LoadEvent.TypeSucceeded) {
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }
             }
