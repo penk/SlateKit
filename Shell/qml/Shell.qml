@@ -209,10 +209,9 @@ Window {
     Component {
         id: tabView
         WebView { 
-            anchors { top: parent.top; left: parent.left; right: parent.right; }
+            anchors { top: navigator.bottom; left: parent.left; right: parent.right; }
             anchors.bottom: Tab.EnableVirtualKeyboard ? keyboard.top : parent.bottom 
             z: 2 // for drawer open/close control  
-            anchors.topMargin: 40 // FIXME: should use navigator bar item
 
             MouseArea { 
                 id: contextOverlay; 
@@ -481,7 +480,8 @@ Window {
         }
 
         Rectangle { 
-            height: 40; width: parent.width; anchors.top: parent.top; anchors.left: parent.left
+            id: navigator
+            height: 50; width: parent.width; anchors.top: parent.top; anchors.left: parent.left
             gradient: Gradient { 
                 GradientStop { position: 0.0; color: "#ffffff" } 
                 GradientStop { position: 1.0; color: "#eaeaea" } 
@@ -510,7 +510,7 @@ Window {
 
         Item {
             id: backButton
-            width: 30; height: 30; anchors { top: parent.top; left: drawerButton.right; margins: Tab.DrawerMargin; topMargin: 7}
+            width: 30; height: 30; anchors { top: parent.top; left: drawerButton.right; margins: Tab.DrawerMargin; topMargin: 8; leftMargin: 20; }
             Text { 
                 id: backButtonIcon
                 text: "\uF053" 
@@ -529,9 +529,9 @@ Window {
 
         Rectangle { 
             id: urlBar 
-            anchors { left: backButton.right; top: parent.top; right: exportButton.left; margins: 6; rightMargin: 14; } 
+            anchors { left: backButton.right; top: parent.top; right: exportButton.left; margins: 12; topMargin: 10; } 
             color: "white"
-            height: 25 
+            height: 30
             border { width: 1; color: "black" }
             radius: 5 
             width: parent.width - 60
