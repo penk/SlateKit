@@ -5,10 +5,11 @@ import QtQuick.Window 2.0
 
 import com.canonical.Oxide 0.1
 import "js/script.js" as Tab 
+import "js/units.js" as Units
 
 Window {
     id: root 
-    height: 600; width: 960
+    height: Screen.height; width: Screen.width
     visible: true
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
@@ -50,7 +51,7 @@ Window {
 
     SequentialAnimation { 
         id: bounce 
-        PropertyAnimation { target: container; properties: "anchors.leftMargin"; to: Tab.DrawerWidth; duration: 200; easing.type: Easing.InOutQuad; }
+        PropertyAnimation { target: container; properties: "anchors.leftMargin"; to: Units.dp(Tab.DrawerWidth); duration: 200; easing.type: Easing.InOutQuad; }
         PropertyAnimation { target: container; properties: "anchors.leftMargin"; to: "0"; duration: 400; easing.type: Easing.InOutQuad; }
     } 
 
@@ -220,29 +221,30 @@ Window {
                 enabled: contextMenu.visible
                 onClicked: contextMenu.visible = false 
             }
-            
+
             Rectangle{
                 id: contextMenu
                 visible: false 
-                width: 250; height: 230
+                width: Units.dp(250); height: Units.dp(230)
                 color: "gray"
-                radius: 5 
+                radius: Units.dp(5) 
                 z: 3
                 Text {  
                     id: contextUrl
                     color: "white"
                     wrapMode: Text.WrapAnywhere 
+                    font.pointSize: Units.dp(12)
                     anchors { 
                         top: parent.top; left: parent.left; right: parent.right; 
-                        margins: 20; topMargin: 10
+                        margins: Units.dp(20); topMargin: Units.dp(10)
                     }
                 }
                 Column {
                     id: contextButtons
                     anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 10
+                    anchors.bottomMargin: Units.dp(10)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    spacing: 8
+                    spacing: Units.dp(8)
                     ContextButton { 
                         label: "Open"; 
                         onClicked: { Tab.itemMap[currentTab].url = contextUrl.text; contextMenu.visible = false }
@@ -278,7 +280,7 @@ Window {
                     msgId: 'inputmethod'
                     contexts: ["oxide://osk/"]
                     callback: function(msg, frame) {
-                    if (msg.args.type == 'input')
+                        if (msg.args.type == 'input')
                         keyboard.state = msg.args.state
                     }
                 },
@@ -311,7 +313,7 @@ Window {
         id: drawer
         anchors.left: parent.left
         anchors.top: parent.top
-        width: Tab.DrawerWidth
+        width: Units.dp(Tab.DrawerWidth)
         height: parent.height
         color: "#33343E" 
 
@@ -320,26 +322,27 @@ Window {
         Component {
             id: tabDelegate
             Row {
-                spacing: 10
+                spacing: Units.dp(10)
                 Rectangle {
-                    width: Tab.DrawerWidth
-                    height: Tab.DrawerHeight
+                    width: Units.dp(Tab.DrawerWidth)
+                    height: Units.dp(Tab.DrawerHeight)
                     color: "transparent"
                     Image { 
-                        height: 16; width: 16; 
+                        height: Units.dp(16); width: Units.dp(16); 
                         source: hasTabOpen ? Tab.itemMap[model.pageid].icon : "icons/favicon.png";
-                        anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; } 
+                        anchors { top: parent.top; left: parent.left; margins: Units.dp(Tab.DrawerMargin); } 
                     }
                     Text { 
                         text: (typeof(Tab.itemMap[model.pageid]) !== "undefined" && Tab.itemMap[model.pageid].title !== "") ? 
                         Tab.itemMap[model.pageid].title : "Loading..";
                         color: "white"; 
-                        anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; 
-                        leftMargin: Tab.DrawerMargin+30; right: parent.right } 
+                        font.pointSize: Units.dp(12)
+                        anchors { top: parent.top; left: parent.left; margins: Units.dp(Tab.DrawerMargin); 
+                        leftMargin: Units.dp(Tab.DrawerMargin+30); right: parent.right } 
                         elide: Text.ElideRight 
                     }
                     MouseArea { 
-                        anchors { top: parent.top; left: parent.left; bottom: parent.bottom; right: parent.right; rightMargin: 40}
+                        anchors { top: parent.top; left: parent.left; bottom: parent.bottom; right: parent.right; rightMargin: Units.dp(40)}
                         onClicked: { 
                             tabListView.currentIndex = index;
                             switchToTab(model.pageid);
@@ -347,15 +350,15 @@ Window {
                     }
 
                     Rectangle {
-                        width: 40; height: 40
+                        width: Units.dp(40); height: Units.dp(40)
                         color: "transparent"
                         anchors { right: parent.right; top: parent.top}
                         Text {  // closeTab button
                             visible: tabListView.currentIndex === index
-                            anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin }
+                            anchors { top: parent.top; right: parent.right; margins: Units.dp(Tab.DrawerMargin) }
                             text: "\uF057"
                             font.family: fontAwesome.name
-                            font.pointSize: 16
+                            font.pointSize: Units.dp(16)
                             color: "gray"
 
                             MouseArea { 
@@ -373,18 +376,18 @@ Window {
 
             // new tab button 
             header: Rectangle { 
-                width: Tab.DrawerWidth
-                height: Tab.DrawerHeight
+                width: Units.dp(Tab.DrawerWidth)
+                height: Units.dp(Tab.DrawerHeight)
                 color: "transparent"
                 Text { 
-                    text: "\uF067"; font.family: fontAwesome.name; color: "white"; font.pointSize: 14
-                    anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin+2; leftMargin: Tab.DrawerMargin+10 }
+                    text: "\uF067"; font.family: fontAwesome.name; color: "white"; font.pointSize: Units.dp(14)
+                    anchors { top: parent.top; left: parent.left; margins: Units.dp(Tab.DrawerMargin+2); leftMargin: Units.dp(Tab.DrawerMargin+10) }
                 }
                 Text { 
                     text: "<b>New Tab</b>"
                     color: "white"
-                    font.pointSize: 15
-                    anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; leftMargin: Tab.DrawerMargin+30 }
+                    font.pointSize: Units.dp(15)
+                    anchors { top: parent.top; left: parent.left; margins: Units.dp(Tab.DrawerMargin); leftMargin: Units.dp(Tab.DrawerMargin+30) }
                 }
                 MouseArea { 
                     anchors.fill: parent;
@@ -400,7 +403,7 @@ Window {
             highlight: 
 
             Rectangle { 
-                width: Tab.DrawerWidth; height: Tab.DrawerHeight 
+                width: Units.dp(Tab.DrawerWidth); height: Units.dp(Tab.DrawerHeight)
                 gradient: Gradient {
                     GradientStop { position: 0.1; color: "#1F1F23" }
                     GradientStop { position: 0.5; color: "#28282F" }
@@ -411,7 +414,6 @@ Window {
             }
             add: Transition {
                 NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
-            //    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
             }
 
             displaced: Transition {
@@ -481,7 +483,7 @@ Window {
 
         Rectangle { 
             id: navigator
-            height: 50; width: parent.width; anchors.top: parent.top; anchors.left: parent.left
+            height: Units.dp(50); width: parent.width; anchors.top: parent.top; anchors.left: parent.left
             gradient: Gradient { 
                 GradientStop { position: 0.0; color: "#ffffff" } 
                 GradientStop { position: 1.0; color: "#eaeaea" } 
@@ -491,17 +493,17 @@ Window {
         // drawer button 
         Item { 
             id: drawerButton
-            width: 30; height: 30; anchors { top: parent.top; left: parent.left; margins: Tab.DrawerMargin; topMargin: 5 } 
+            width: Units.dp(30); height: Units.dp(30); anchors { top: parent.top; left: parent.left; margins: Units.dp(Tab.DrawerMargin); topMargin: Units.dp(5) } 
             Text { 
                 id: drawerButtonIcon
                 text: (fontAwesome.status === FontLoader.Ready) ? "\uF0C9" : ""; 
-                font { family: fontAwesome.name; pointSize: 28 } 
+                font { family: fontAwesome.name; pointSize: Units.dp(28) } 
                 color: "#AAAAAA" 
                 style: Text.Sunken; styleColor: "gray"
             }
             MouseArea {
                 anchors.fill: parent;
-                anchors.margins: -5; // trick to handle touch 
+                anchors.margins: Units.dp(-5); // trick to handle touch 
                 onPressed: drawerButtonIcon.color = "#FED164"; 
                 onClicked: { container.state == "closed" ? container.state = "opened" : container.state = "closed"; }
                 onReleased: drawerButtonIcon.color = "#AAAAAA";
@@ -510,16 +512,16 @@ Window {
 
         Item {
             id: backButton
-            width: 30; height: 30; anchors { top: parent.top; left: drawerButton.right; margins: Tab.DrawerMargin; topMargin: 8; leftMargin: 20; }
+            width: Units.dp(30); height: Units.dp(30); anchors { top: parent.top; left: drawerButton.right; margins: Units.dp(Tab.DrawerMargin); topMargin: Units.dp(8); leftMargin: Units.dp(20); }
             Text { 
                 id: backButtonIcon
                 text: "\uF053" 
-                font { family: fontAwesome.name; pointSize: 26 }
+                font { family: fontAwesome.name; pointSize: Units.dp(26) }
                 color: hasTabOpen ? (Tab.itemMap[currentTab].canGoBack ? "#AAAAAA" : "lightgray") : "lightgray"
                 style: Text.Sunken; styleColor: "gray"
             }
             MouseArea { 
-                anchors.fill: parent; anchors.margins: -5; 
+                anchors.fill: parent; anchors.margins: Units.dp(-5); 
                 onPressed: backButtonIcon.color = "#FED164";
                 onClicked: { if (Tab.itemMap[currentTab].canGoBack) Tab.itemMap[currentTab].goBack()  }
                 onReleased: backButtonIcon.color = "#AAAAAA";
@@ -529,18 +531,18 @@ Window {
 
         Rectangle { 
             id: urlBar 
-            anchors { left: backButton.right; top: parent.top; right: exportButton.left; margins: 12; topMargin: 10; } 
+            anchors { left: backButton.right; top: parent.top; right: exportButton.left; margins: Units.dp(12); topMargin: Units.dp(10); } 
             color: "white"
-            height: 30
+            height: Units.dp(30)
             border { width: 1; color: "black" }
-            radius: 5 
-            width: parent.width - 60
+            radius: Units.dp(5) 
+            width: Units.dp(parent.width - 60)
 
             Rectangle {
                 anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
-                radius: 3
+                radius: Units.dp(3)
 
-                width: hasTabOpen ?  parent.width / 100 * Math.max(5, Tab.itemMap[currentTab].loadProgress) : 0 
+                width: hasTabOpen ? parent.width / 100 * Math.max(5, Tab.itemMap[currentTab].loadProgress) : 0 
                 color: "#FED164" // light yellow 
                 opacity: 0.4
                 visible: hasTabOpen ? Tab.itemMap[currentTab].loading : false 
@@ -549,8 +551,9 @@ Window {
             TextInput { 
                 id: urlText
                 text: hasTabOpen ? Tab.itemMap[currentTab].url : ""
-                anchors { left: parent.left; top: parent.top; right: stopButton.left; margins: 5; }
+                anchors { left: parent.left; top: parent.top; right: stopButton.left; margins: Units.dp(5); }
                 height: parent.height
+                font.pointSize: Units.dp(12)
                 clip: true
                 onAccepted: { 
                     loadUrl(urlText.text)
@@ -576,39 +579,39 @@ Window {
 
             Text {
                 id: stopButton
-                anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
+                anchors { right: urlBar.right; rightMargin: Units.dp(5); verticalCenter: parent.verticalCenter}
                 text: "\uF00D"
-                font { family: fontAwesome.name; pointSize: 18 }
+                font { family: fontAwesome.name; pointSize: Units.dp(18) }
                 color: "gray"
                 visible: ( hasTabOpen && Tab.itemMap[currentTab].loadProgress < 100 && !urlText.focus) ? 
                 true : false
                 MouseArea {
-                    anchors { fill: parent; margins: -10; }
+                    anchors { fill: parent; margins: Units.dp(-10); }
                     onClicked: { Tab.itemMap[currentTab].stop(); }
                 }
             }
             Text {
                 id: reloadButton
-                anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
+                anchors { right: urlBar.right; rightMargin: Units.dp(5); verticalCenter: parent.verticalCenter}
                 text: "\uF01E"
-                font { family: fontAwesome.name; pointSize: 16 }
+                font { family: fontAwesome.name; pointSize: Units.dp(16) }
                 color: "gray"
                 visible: ( hasTabOpen && Tab.itemMap[currentTab].loadProgress == 100 && !urlText.focus ) ? 
                 true : false 
                 MouseArea {
-                    anchors { fill: parent; margins: -10; }
+                    anchors { fill: parent; margins: Units.dp(-10); }
                     onClicked: { Tab.itemMap[currentTab].reload(); }
                 }
             }
             Text {
                 id: clearButton
-                anchors { right: urlBar.right; rightMargin: 5; verticalCenter: parent.verticalCenter}
+                anchors { right: urlBar.right; rightMargin: Units.dp(5); verticalCenter: parent.verticalCenter}
                 text: "\uF057"
-                font { family: fontAwesome.name; pointSize: 18 }
+                font { family: fontAwesome.name; pointSize: Units.dp(18) }
                 color: "gray"
                 visible: urlText.focus
                 MouseArea {
-                    anchors { fill: parent; margins: -10; }
+                    anchors { fill: parent; margins: Units.dp(-10); }
                     onClicked: { urlText.text = ""; }
                 }
             }
@@ -616,43 +619,43 @@ Window {
 
         Item {
             id: exportButton
-            width: 30; height: 30; anchors { top: parent.top; right: parent.right; margins: Tab.DrawerMargin; topMargin: 6}
+            width: Units.dp(30); height: Units.dp(30); anchors { top: parent.top; right: parent.right; margins: Units.dp(Tab.DrawerMargin); topMargin: Units.dp(6) }
             Text { 
                 id: exportButtonIcon
                 text: "\uF013"
-                font { family: fontAwesome.name; pointSize: 28 }
+                font { family: fontAwesome.name; pointSize: Units.dp(28) }
                 color: (readerMode && hasTabOpen) ? "#FED164" : "#AAAAAA" 
                 style: Text.Sunken; styleColor: "gray"
             }
             MouseArea {
-                anchors.fill: parent; anchors.margins: -5
+                anchors.fill: parent; anchors.margins: Units.dp(-5)
                 onClicked: if (hasTabOpen) toggleReaderMode();
             }
         }
 
         Item { 
             id: suggestionContainer
-            width: root.width - 180 + 24
-            height: suggestionDialog.height + 24 + 30 
-            anchors { top: parent.top; topMargin: 22; left: parent.left; leftMargin: 100; }
+            width: root.width + Units.dp(- 180 + 24)
+            height: suggestionDialog.height + Units.dp(24 + 30) 
+            anchors { top: parent.top; topMargin: Units.dp(22); left: parent.left; leftMargin: Units.dp(100); }
             visible: (urlText.focus && historyModel.count > 0)
             z: 5
 
             Rectangle {
                 id: suggestionDialog
                 color: "lightgray"
-                radius: 5 
+                radius: Units.dp(5)
                 anchors.centerIn: parent 
-                width: root.width - 180 
-                height: (historyModel.count > 3) ? ((historyModel.count <= 8) ? historyModel.count * 40 : 330) : 120
-                anchors { top: parent.top; topMargin: 50; left: parent.left; leftMargin: 100; }
+                width: root.width - Units.dp(180) 
+                height: (historyModel.count > 3) ? ((historyModel.count <= 8) ? historyModel.count * Units.dp(40) : Units.dp(330)) : Units.dp(120)
+                anchors { top: parent.top; topMargin: Units.dp(50); left: parent.left; leftMargin: Units.dp(100); }
 
                 Text { // caret-up 
                     anchors.top: parent.top
-                    anchors.topMargin: -34
+                    anchors.topMargin: Units.dp(-34)
                     anchors.left: parent.horizontalCenter
-                    anchors.leftMargin: -30
-                    font { family: fontAwesome.name; pointSize: 53 }
+                    anchors.leftMargin: Units.dp(-30)
+                    font { family: fontAwesome.name; pointSize: Units.dp(53) }
                     text: "\uF0D8"; 
                     color: "lightgray" 
                 }
@@ -660,8 +663,8 @@ Window {
                 ListView { 
                     id: historyListView
                     anchors.fill: parent
-                    anchors.topMargin: 15 
-                    anchors.bottomMargin: 15
+                    anchors.topMargin: Units.dp(15) 
+                    anchors.bottomMargin: Units.dp(15)
                     clip: true
                     model: historyModel 
                     delegate: historyDelegate
@@ -672,26 +675,26 @@ Window {
                         id: historyDelegate
                         Rectangle { 
                             color: "transparent"
-                            height: Tab.DrawerHeight
+                            height: Units.dp(Tab.DrawerHeight)
                             width: parent.width 
                             Text {                          
                                 anchors {                       
                                     top: parent.top; left: parent.left; right: parent.right
-                                    margins: 8; leftMargin: 10;
+                                    margins: Units.dp(8); leftMargin: Units.dp(10);
                                 }                               
                                 text: '<b>'+ model.title +'<b>' 
-                                font.pointSize: 14    
+                                font.pointSize: Units.dp(14)
                                 elide: Text.ElideRight          
                             }  
                             Text {                          
                                 anchors {                       
                                     top: parent.top; left: parent.left; right: parent.right
-                                    margins: 8;          
-                                    topMargin: 26; leftMargin: 10;
+                                    margins: Units.dp(8);
+                                    topMargin: Units.dp(26); leftMargin: Units.dp(10);
                                 }                               
                                 color: "#565051" // darkgray    
                                 text: model.url                 
-                                font.pointSize: 10    
+                                font.pointSize: Units.dp(10)    
                                 elide: Text.ElideMiddle         
                             }
                             MouseArea { 
@@ -727,13 +730,13 @@ Window {
         MouseArea { 
             z: (container.state == "opened") ? 3 : 1
             anchors.fill: parent
-            anchors.topMargin: 40 
+            anchors.topMargin: Units.dp(40)
             onClicked: { container.state == "closed" ? container.state = "opened" : container.state = "closed"; }
         }
         states: [
             State{
                 name: "opened"
-                PropertyChanges { target: container; anchors.leftMargin: Tab.DrawerWidth }
+                PropertyChanges { target: container; anchors.leftMargin: Units.dp(Tab.DrawerWidth) }
             },
             State {
                 name: "closed"

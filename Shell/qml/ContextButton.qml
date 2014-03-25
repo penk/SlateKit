@@ -1,5 +1,5 @@
 import QtQuick 2.0
-
+import "js/units.js" as Units 
 Rectangle { 
     id: button
     property string label: ""
@@ -12,10 +12,10 @@ Rectangle {
         GradientStop { position: 1.0; color: "#D1D3D6" }
     }
     radius: 4.0
-    height: 50; width: 220 
+    height: Units.dp(50); width: Units.dp(220) 
     Text { 
         anchors.centerIn: parent
-        font { pixelSize: 20; bold: true } 
+        font { pixelSize: Units.dp(20); bold: true } 
         text: button.label
     } 
     MouseArea {
