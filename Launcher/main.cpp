@@ -2,7 +2,10 @@
 #include <QQuickView>
 #include <QQuickItem>
 #include <QDebug>
-
+#if defined(ENABLE_COMPOSITING)
+#include <QOpenGLContext>
+#include "QtQuick/private/qsgcontext_p.h"
+#endif
 class Launcher: public QGuiApplication {
     Q_OBJECT
 public: 
@@ -34,6 +37,11 @@ protected:
 
 int main(int argc, char* argv[]) {
     Launcher app(argc,argv);
+#if defined(ENABLE_COMPOSITING)
+    QOpenGLContext glcontext;
+    glcontext.create();
+    QSGContext::setSharedOpenGLContext(&glcontext);
+#endif
     return app.exec();
 }
 
