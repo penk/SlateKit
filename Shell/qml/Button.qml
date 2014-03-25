@@ -1,12 +1,13 @@
 import QtQuick 2.0
+import "js/units.js" as Units
 
 Item {
     id: button
     signal clicked()
     property string type: "default"
 
-    height: 50
-    width: 75
+    height: Units.dp(50)
+    width: Units.dp(75)
 
     Rectangle { 
         visible: (type === "default") ? true : false 

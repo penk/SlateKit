@@ -7,8 +7,9 @@ import com.canonical.Oxide 0.1
 import "js/script.js" as Tab 
 import "js/units.js" as Units
 
-Window {
+Rectangle {
     id: root 
+    color: 'black'
     height: Screen.height; width: Screen.width
     visible: true
     property string currentTab: ""
@@ -457,12 +458,12 @@ Window {
         Item { 
             id: keyboard 
             z: 5
-            width: 960
-            height: 240 
+            width: Units.dp(960)
+            height: Units.dp(240) 
             state: "hide"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: -240
+            anchors.bottomMargin: Units.dp(-240)
             Loader { 
                 id: keyboardLoader
                 anchors.fill: parent
@@ -472,7 +473,7 @@ Window {
             transitions: [ 
                 Transition {
                     from: "show"; to: "hide"
-                    PropertyAnimation { target: keyboard; properties: "anchors.bottomMargin"; to: "-240"; duration: 150; easing.type: Easing.InOutQuad; }
+                    PropertyAnimation { target: keyboard; properties: "anchors.bottomMargin"; to: Units.dp(-240); duration: 150; easing.type: Easing.InOutQuad; }
                 },
                 Transition {
                     from: "hide"; to: "show"
@@ -635,9 +636,9 @@ Window {
 
         Item { 
             id: suggestionContainer
-            width: root.width + Units.dp(- 180 + 24)
+            width: root.width - Units.dp(150)
             height: suggestionDialog.height + Units.dp(24 + 30) 
-            anchors { top: parent.top; topMargin: Units.dp(22); left: parent.left; leftMargin: Units.dp(100); }
+            anchors { top: parent.top; topMargin: Units.dp(22); left: parent.left; leftMargin: Units.dp(100); right: parent.right; rightMargin: Units.dp(60) }
             visible: (urlText.focus && historyModel.count > 0)
             z: 5
 
@@ -647,7 +648,7 @@ Window {
                 radius: Units.dp(5)
                 anchors.centerIn: parent 
                 width: root.width - Units.dp(180) 
-                height: (historyModel.count > 3) ? ((historyModel.count <= 8) ? historyModel.count * Units.dp(40) : Units.dp(330)) : Units.dp(120)
+                height: (historyModel.count > 3) ? ((historyModel.count <= 8) ? historyModel.count * Units.dp(55) : Units.dp(330)) : Units.dp(120)
                 anchors { top: parent.top; topMargin: Units.dp(50); left: parent.left; leftMargin: Units.dp(100); }
 
                 Text { // caret-up 
@@ -675,12 +676,12 @@ Window {
                         id: historyDelegate
                         Rectangle { 
                             color: "transparent"
-                            height: Units.dp(Tab.DrawerHeight)
+                            height: Units.dp(Tab.DrawerHeight + 5)
                             width: parent.width 
                             Text {                          
                                 anchors {                       
                                     top: parent.top; left: parent.left; right: parent.right
-                                    margins: Units.dp(8); leftMargin: Units.dp(10);
+                                    margins: Units.dp(8); leftMargin: Units.dp(10); topMargin: Units.dp(6);
                                 }                               
                                 text: '<b>'+ model.title +'<b>' 
                                 font.pointSize: Units.dp(14)

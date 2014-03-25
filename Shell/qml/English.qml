@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Fakekey 1.0 
+import "js/units.js" as Units 
 //download and install from: https://github.com/penk/SlateKit/tree/master/IME/fakekey
 
 Rectangle { 
@@ -10,10 +11,10 @@ Rectangle {
 
     Image {
         anchors { left: parent.left; top: parent.top }
-        source: if (!inNumView && !inPunView && !isShifted) 'layout/english.png' 
-        else if (inPunView) 'layout/punctuation.png'
-        else if (inNumView) 'layout/numeric.png'
-        else 'layout/capslock.png'
+        source: if (!inNumView && !inPunView && !isShifted) 'layout/english2x.png' 
+        else if (inPunView) 'layout/punctuation2x.png'
+        else if (inNumView) 'layout/numeric2x.png'
+        else 'layout/capslock2x.png'
     }
 
     Fakekey { id: fakekey } 
@@ -21,8 +22,8 @@ Rectangle {
 
     Row { 
         id: row1
-        anchors { top: parent.top; left: parent.left; leftMargin: 13; topMargin: 8 }
-        spacing: 11
+        anchors { top: parent.top; left: parent.left; leftMargin: Units.dp(13); topMargin: Units.dp(8) }
+        spacing: Units.dp(11)
         Repeater {
             model: ["q1[", "w2]", "e3{", "r4}", "t5#", "y6%", "u7^", "i8*", "o9+", "p0="]
             Button { 
@@ -39,8 +40,8 @@ Rectangle {
 
     Row {
         id: row2 
-        anchors { top: row1.bottom; left: parent.left; leftMargin: 50; topMargin: 8 }
-        spacing: 12
+        anchors { top: row1.bottom; left: parent.left; leftMargin: Units.dp(50); topMargin: Units.dp(8) }
+        spacing: Units.dp(12)
         Repeater {
             model: ["a-_", "s/\\", "d:|", "f;~", "g(<", "h)>", "j$€", "k&£", "l@¥"]
             Button {
@@ -52,14 +53,14 @@ Rectangle {
                 }
             }
         }
-        Button { width: 116; onClicked: fakekey.sendKey(':enter') }
+        Button { width: Units.dp(116); onClicked: fakekey.sendKey(':enter') }
     }
 
     Row { 
         id: row3
         visible: !inNumView && !inPunView 
-        anchors { top: row2.bottom; left: parent.left; leftMargin: 13; topMargin: 8 }
-        spacing: 12
+        anchors { top: row2.bottom; left: parent.left; leftMargin: Units.dp(13); topMargin: Units.dp(8) }
+        spacing: Units.dp(12)
         Button { onClicked: { isShifted = !isShifted; } }
         Repeater {
             model: [ "z", "x", "c", "v", "b", "n", "m" ]
@@ -70,58 +71,58 @@ Rectangle {
                 }
             }
         }
-        Button { width: 66; onClicked: { if (isShifted) {fakekey.sendKey('!')} else {fakekey.sendKey(',')} } } 
-        Button { width: 66; onClicked: { if (isShifted) {fakekey.sendKey('?')} else {fakekey.sendKey('.')} } }
-        Button { width: 85; onClicked: { isShifted = !isShifted;} }
+        Button { width: Units.dp(66); onClicked: { if (isShifted) {fakekey.sendKey('!')} else {fakekey.sendKey(',')} } } 
+        Button { width: Units.dp(66); onClicked: { if (isShifted) {fakekey.sendKey('?')} else {fakekey.sendKey('.')} } }
+        Button { width: Units.dp(85); onClicked: { isShifted = !isShifted;} }
     }
 
     Row {
         id: row3_num
         visible: !isShifted && inNumView && !inPunView 
-        anchors { top: row2.bottom; left: parent.left; leftMargin: 13; topMargin: 8 }
-        spacing: 12
+        anchors { top: row2.bottom; left: parent.left; leftMargin: Units.dp(13); topMargin: Units.dp(8) }
+        spacing: Units.dp(12)
         Button { onClicked: { inNumView = false; inPunView = true; } }
-        Button { width: 162; onClicked: console.log('undo') }
+        Button { width: Units.dp(162); onClicked: console.log('undo') }
         Repeater {
             model: [ ".", ",", "?", "!", "'" ]
             Button { onClicked: fakekey.sendKey(modelData[0]) } 
         }
-        Button { width: 66; onClicked: fakekey.sendKey('"')}
-        Button { type: "block"; width: 65 }
-        Button { width: 84; onClicked: {inNumView = false; inPunView = true;} }
+        Button { width: Units.dp(66); onClicked: fakekey.sendKey('"')}
+        Button { type: "block"; width: Units.dp(65) }
+        Button { width: Units.dp(84); onClicked: {inNumView = false; inPunView = true;} }
     }
 
     Row {
         id: row3_pun
         visible: !isShifted && !inNumView && inPunView 
-        anchors { top: row2.bottom; left: parent.left; leftMargin: 13; topMargin: 8 }
-        spacing: 12
+        anchors { top: row2.bottom; left: parent.left; leftMargin: Units.dp(13); topMargin: Units.dp(8) }
+        spacing: Units.dp(12)
         Button { onClicked: { inNumView = true; inPunView = false; } }
-        Button { width: 162; onClicked: console.log('redo') }
+        Button { width: Units.dp(162); onClicked: console.log('redo') }
         Repeater {
             model: [ ".", ",", "?", "!", "'" ]
             Button { onClicked: fakekey.sendKey(modelData[0]) }
         }
-        Button { width: 66; onClicked: fakekey.sendKey('"')}
-        Button { type: "block"; width: 65 }
-        Button { width: 84; onClicked: { inNumView = true; inPunView = false;} }
+        Button { width: Units.dp(66); onClicked: fakekey.sendKey('"')}
+        Button { type: "block"; width: Units.dp(65) }
+        Button { width: Units.dp(84); onClicked: { inNumView = true; inPunView = false;} }
     }
 
     Row {
         id: row4
-        anchors { top: row3.bottom; left: parent.left; leftMargin: 12; topMargin: 8 }
-        spacing: 12
+        anchors { top: row3.bottom; left: parent.left; leftMargin: Units.dp(12); topMargin: Units.dp(8) }
+        spacing: Units.dp(12)
         Button { 
-            width: 150; 
+            width: Units.dp(150); 
             onClicked: { 
                 isShifted = false; 
                 if (inPunView) { inPunView = false; inNumView=false;} else {inNumView = !inNumView}; 
             }
         }
-        Button { width: 91; onClicked: keyboardLoader.source = 'Handwriting.qml'}
-        Button { width: 422; onClicked: fakekey.sendKey(' ') }
+        Button { width: Units.dp(91); onClicked: keyboardLoader.source = 'Handwriting.qml'}
+        Button { width: Units.dp(422); onClicked: fakekey.sendKey(' ') }
         Button { 
-            width: 150
+            width: Units.dp(150)
             onClicked: { 
                 isShifted = false; 
                 if (inPunView) {inPunView=false; inNumView=false; } else { inNumView = !inNumView }; 
