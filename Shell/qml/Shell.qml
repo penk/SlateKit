@@ -282,7 +282,7 @@ Rectangle {
                     contexts: ["oxide://osk/"]
                     callback: function(msg, frame) {
                         if (msg.args.type == 'input')
-                        keyboard.state = msg.args.state
+                            keyboard.state = msg.args.state
                     }
                 },
                 ScriptMessageHandler {
@@ -432,6 +432,7 @@ Rectangle {
         width: parent.width
         height: parent.height
         color: "#6B6C71" 
+        state: "closed"
         z: 1 
         RadialGradient {
             visible: (typeof(Tab.itemMap[currentTab])==="undefined")
@@ -505,8 +506,11 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent;
                 anchors.margins: Units.dp(-5); // trick to handle touch 
-                onPressed: drawerButtonIcon.color = "#FED164"; 
-                onClicked: { container.state == "closed" ? container.state = "opened" : container.state = "closed"; }
+                onPressed: 
+                {
+                    drawerButtonIcon.color = "#FED164"; 
+                    container.state == "closed" ? container.state = "opened" : container.state = "closed"; 
+                }
                 onReleased: drawerButtonIcon.color = "#AAAAAA";
             }
         }
