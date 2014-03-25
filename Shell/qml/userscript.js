@@ -1,12 +1,12 @@
 window.document.addEventListener('click', (function(e) {
-	if (e.srcElement.tagName === ('INPUT'||'TEXTAREA')) {
+	if (e.srcElement.tagName.toLowerCase() === ('input'||'textarea')) {
 		var inputContext = new Object({'type': 'input', 'state': 'show'})
 		oxide.sendMessage('inputmethod', inputContext)
 	}
 }), true);
 
 window.document.addEventListener('focus', (function(e) {
-	if (e.srcElement.tagName === ('INPUT'||'TEXTAREA')) {
+	if (e.srcElement.tagName.toLowerCase() === ('input'||'textarea')) {
 		var inputContext = new Object({'type': 'input', 'state': 'show'})
 		oxide.sendMessage('inputmethod', inputContext)
 	}
