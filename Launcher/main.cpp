@@ -10,6 +10,14 @@ public:
           view.setSource(QUrl("./main.qml"));
           view.show();
           view.installEventFilter(this);
+
+          // Necessary for Screen.orientation (from import QtQuick.Window 2.0) to work
+          QGuiApplication::primaryScreen()->setOrientationUpdateMask(
+            Qt::PortraitOrientation |
+            Qt::LandscapeOrientation |
+            Qt::InvertedPortraitOrientation |
+            Qt::InvertedLandscapeOrientation);
+
       };
       QQuickView view;
 
