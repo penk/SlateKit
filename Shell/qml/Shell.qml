@@ -652,7 +652,7 @@ Rectangle {
                 radius: Units.dp(5)
                 anchors.centerIn: parent 
                 width: root.width - Units.dp(180) 
-                height: (historyModel.count > 3) ? ((historyModel.count <= 8) ? historyModel.count * Units.dp(55) : Units.dp(330)) : Units.dp(120)
+                height: (historyModel.count > 3) ? ((historyModel.count <= 8) ? historyModel.count * Units.dp(55) : Units.dp(300)) : Units.dp(120)
                 anchors { top: parent.top; topMargin: Units.dp(50); left: parent.left; leftMargin: Units.dp(100); }
 
                 Text { // caret-up 
