@@ -9,3 +9,5 @@ Zinnia
 *.dmg
 qrc_resources.*
 .qmake.*
+IME/immodule
+Launcher/Lockscreen
