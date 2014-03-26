@@ -15,6 +15,7 @@ Rectangle {
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property bool readerMode: false 
+    property bool isPortrait: Screen.orientation == 1 || Screen.orientation == 4
 
     FontLoader { id: fontAwesome; source: "icons/fontawesome-webfont.ttf" }  
 
@@ -459,8 +460,8 @@ Rectangle {
         Item { 
             id: keyboard 
             z: 5
-            width: Units.dp(960)
-            height: Units.dp(240) 
+            width: isPortrait ? Units.dp(600) : Units.dp(960)
+            height: isPortrait ? Units.dp(150) : Units.dp(240)
             state: "hide"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom

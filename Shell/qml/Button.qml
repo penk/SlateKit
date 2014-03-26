@@ -1,13 +1,15 @@
 import QtQuick 2.0
+import QtQuick.Window 2.0
 import "js/units.js" as Units
 
 Item {
     id: button
     signal clicked()
     property string type: "default"
+    property bool isPortrait: Screen.orientation == 1 || Screen.orientation == 4
 
-    height: Units.dp(50)
-    width: Units.dp(75)
+    height: isPortrait ? Units.dp(32) : Units.dp(50)
+    width: isPortrait ? Units.dp(47) : Units.dp(75)
 
     Rectangle { 
         visible: (type === "default") ? true : false 
