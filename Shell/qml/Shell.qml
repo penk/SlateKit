@@ -580,6 +580,11 @@ Rectangle {
                         queryHistory(urlText.text)
                     } else { historyModel.clear() }
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    visible: keyboard.state === 'hide'
+                    onClicked: { urlText.forceActiveFocus(); keyboard.state = 'show' }
+                }
             }            
 
             Text {
