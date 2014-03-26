@@ -6,6 +6,28 @@ Rectangle {
     property variant offset: Units.dp(50)
     FontLoader { id: fontAwesome; source: "../Shell/qml/icons/fontawesome-webfont.ttf" }
     Text { 
+        id: shortTime 
+        anchors {
+            top: parent.top
+            horizontalCenter: parent.horizontalCenter
+            topMargin: Units.dp(50)
+        }
+        text: Qt.formatDateTime(new Date(), "hh:mm"); 
+        font { 
+            pointSize: Units.dp(45); 
+            bold: true;
+        }
+    }
+    Text {
+        anchors {
+            top: shortTime.bottom
+            horizontalCenter: parent.horizontalCenter
+            margins: Units.dp(5)
+        }
+        text: Qt.formatDateTime(new Date(), "dddd, MMMM d"); 
+        font.pointSize: Units.dp(20)
+    }
+    Text { 
         id: hint
         anchors { 
             //top: parent.top
