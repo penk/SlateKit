@@ -466,6 +466,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: Units.dp(-240)
+            MouseArea { anchors.fill: parent; preventStealing: true }
             Loader { 
                 id: keyboardLoader
                 anchors.fill: parent
@@ -742,7 +743,7 @@ Rectangle {
             z: (container.state == "opened") ? 3 : 1
             anchors.fill: parent
             anchors.topMargin: Units.dp(40)
-            onClicked: { container.state == "closed" ? container.state = "opened" : container.state = "closed"; }
+            onPressed: { container.state == "closed" ? container.state = "opened" : container.state = "closed"; }
         }
         states: [
             State{
