@@ -3,7 +3,7 @@ import QtQuick.LocalStorage 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.Window 2.0
 
-import com.canonical.Oxide 0.1
+import com.canonical.Oxide 1.0
 import "js/script.js" as Tab 
 import "js/units.js" as Units
 
