@@ -7,10 +7,9 @@ Handwriting recognition software panel based on QML, Zinnia, ShortStrawJS and Te
 ### Dependency
 
     sudo apt-get install libzinnia-dev tegaki-zinnia-traditional-chinese 
-    
-### Compile 
-
+    cd ../zinnia 
     qmake && make && sudo make install 
+    cd - 
     
 ### Test 
 
