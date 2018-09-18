@@ -2,15 +2,17 @@ import QtQuick 2.0
 import QtQuick.LocalStorage 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.Window 2.0
-
-import QtWebKit 3.0
-import QtWebKit.experimental 1.0
+import QtQuick.VirtualKeyboard 2.2
+import QtQuick.VirtualKeyboard.Settings 2.2
+import QtWebEngine 1.7
 import "js/script.js" as Tab 
 
 Window {
     id: root 
-    height: 600; width: 960
+    height: 600; width: 1024
     visible: true
+    //flags: Qt.FramelessWindowHint
+
     property string currentTab: ""
     property bool hasTabOpen: (tabModel.count !== 0) && (typeof(Tab.itemMap[currentTab]) !== "undefined")
     property bool readerMode: false 
@@ -209,9 +211,9 @@ Window {
 
     Component {
         id: tabView
-        WebView { 
+        WebEngineView { 
             anchors { top: parent.top; left: parent.left; right: parent.right; }
-            anchors.bottom: Tab.EnableVirtualKeyboard ? keyboard.top : parent.bottom 
+            anchors.bottom: Tab.EnableVirtualKeyboard ? keyboard.top : inputPanel.top //parent.bottom 
             z: 2 // for drawer open/close control  
             anchors.topMargin: 40 // FIXME: should use navigator bar item
 
@@ -221,7 +223,7 @@ Window {
                 enabled: contextMenu.visible
                 onClicked: contextMenu.visible = false 
             }
-            
+
             Rectangle{
                 id: contextMenu
                 visible: false 
@@ -275,49 +277,52 @@ Window {
                 contextUrl.text = url
             }
 
+            // FIXME: find alternatives in QtWebEngine
             //property real scale: experimental.test.contentsScale
             //experimental.devicePixelRatio: 2.0; 
 
-            experimental.itemSelector: PopOver {}
-            experimental.preferences.fullScreenEnabled: true;
-            experimental.preferences.developerExtrasEnabled: true;
+            /*
+             experimental.itemSelector: PopOver {}
+             experimental.preferences.fullScreenEnabled: true;
+             experimental.preferences.developerExtrasEnabled: true;
 
-            experimental.userScripts: [Qt.resolvedUrl("js/userscript.js")];
-            experimental.preferences.navigatorQtObjectEnabled: true;
-            experimental.onMessageReceived: {
-                console.log('onMessageReceived: ' + message.data );
-                var data = null
-                try {
-                    data = JSON.parse(message.data)
-                } catch (error) {
-                    console.log('onMessageReceived: ' + message.data );
-                    return
-                }
-                switch (data.type) {
-                    case 'link': {
-                        updateContextMenu(data.pageX, data.pageY, data.href) 
-                        if (data.target === '_blank') { // open link in new tab
-                            bounce.start()
-                            openNewTab('page-'+salt(), data.href)
-                        }
-                        break;
-                    } 
-                    case 'longpress': {
-                        updateContextMenu(data.pageX, data.pageY, fixUrl(data.href));
-                    }
-                    case 'input': {
-                        keyboard.state = data.state;
-                        break;
-                    }
-                }
-            }
+             experimental.userScripts: [Qt.resolvedUrl("js/userscript.js")];
+             experimental.preferences.navigatorQtObjectEnabled: true;
+             experimental.onMessageReceived: {
+                 console.log('onMessageReceived: ' + message.data );
+                 var data = null
+                 try {
+                     data = JSON.parse(message.data)
+                 } catch (error) {
+                     console.log('onMessageReceived: ' + message.data );
+                     return
+                 }
+                 switch (data.type) {
+                     case 'link': {
+                         updateContextMenu(data.pageX, data.pageY, data.href) 
+                         if (data.target === '_blank') { // open link in new tab
+                             bounce.start()
+                             openNewTab('page-'+salt(), data.href)
+                         }
+                         break;
+                     } 
+                     case 'longpress': {
+                         updateContextMenu(data.pageX, data.pageY, fixUrl(data.href));
+                     }
+                     case 'input': {
+                         keyboard.state = data.state;
+                         break;
+                     }
+                 }
+             }
+             */
             //experimental.userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3"
 
             onLoadingChanged: { 
                 contextMenu.visible = false;
                 readerMode = false;
                 urlText.text = Tab.itemMap[currentTab].url;
-                if (loadRequest.status == WebView.LoadSucceededStatus) {
+                if (loadRequest.status == WebEngineView.LoadSucceededStatus) {
                     updateHistory(Tab.itemMap[currentTab].url, Tab.itemMap[currentTab].title, Tab.itemMap[currentTab].icon)
                 }
             }
@@ -429,7 +434,7 @@ Window {
             }
             add: Transition {
                 NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
-            //    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
+                //    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
             }
 
             displaced: Transition {
@@ -763,5 +768,41 @@ Window {
                 NumberAnimation { target: container; properties: "anchors.leftMargin"; duration: 300; easing.type: Easing.InOutQuad; }
             }
         ]
+
+        InputPanel {
+            id: inputPanel
+            z: 89
+            y: parent.height
+            anchors.left: parent.left
+            anchors.right: parent.right
+            states: State {
+                name: "visible"
+                when: inputPanel.active
+                PropertyChanges {
+                    target: inputPanel
+                    y: parent.height - inputPanel.height
+                }
+            }
+            transitions: Transition {
+                id: inputPanelTransition
+                from: ""
+                to: "visible"
+                reversible: true
+                enabled: !VirtualKeyboardSettings.fullScreenMode
+                ParallelAnimation {
+                    NumberAnimation {
+                        properties: "y"
+                        duration: 250
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            }
+            Binding {
+                target: InputContext
+                property: "animating"
+                value: inputPanelTransition.running
+            }
+            //AutoScroller {}
+        }
     }
 }
